@@ -1,7 +1,15 @@
-import { AppRoutes } from './routes'
+import React from "react"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import LoginPage from "./pages/LoginPage"
 
-function App() {
-  return <AppRoutes />
+const App: React.FC = () =>{
+  return(
+    <Router>
+      <Routes>
+        <Route path="/" element={<LoginPage/>}/>
+      </Routes>
+    </Router>
+  )
 }
 
 export default App
