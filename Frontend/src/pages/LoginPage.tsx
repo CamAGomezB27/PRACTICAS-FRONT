@@ -11,66 +11,57 @@ const LoginPage: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col min-h-screen bg-gray-100 w-screen overflow-x-hidden">
-            {/* Contenedor principal - ocupa todo el ancho disponible */}
-            <div className="flex flex-col items-center justify-between py-6 flex-grow">
-                {/* Logo Casa del Colaborador */}
-                <div className="w-full flex justify-center mb-6">
-                    <img 
-                        src={Logo_casa_colaborador} 
-                        alt="Logo Casa del Colaborador" 
-                        className="h-12 object-contain" 
-                    />
-                </div>
+        <div className="relative min-h-screen w-screen bg-gray-200 overflow-hidden">
+            {/* FONDO */}
+            <div className="absolute inset-0 z-0">
+                {/* IMAGENES */}
 
-                {/* Contenido principal con ancho controlado */}
-                <div className="flex w-full max-w-4xl mx-auto items-center justify-between px-6">
-                    {/* Franco */}
-                    <div className="w-1/5 flex justify-center">
-                        <img 
-                            src={Franco} 
-                            alt="Franco" 
-                            className="w-full max-w-[140px] h-auto object-contain" 
-                        />
+                {/* CASA COLABORADOR */}
+                <img 
+                src={Logo_casa_colaborador}
+                alt="Logo Casa del Colaborador"
+                className="absolute top-[-90px] left-1/2 transform -translate-x-1/2 w-[600px] object-contain" 
+                />
+                {/* LOGO HOME */}
+                <img 
+                src={Logo_Home} 
+                alt="Logo Homecenter" 
+                className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-[150px] object-contain"
+                />
+                {/* FRANCO */}
+                <img 
+                src={Franco} 
+                alt="Franco" 
+                className="absolute left-[-190px] top-1/2 transfotrm -translate-y-1/2 w-[750px] object-contain"
+                />
+                {/* TRABAJADORES */}
+                <img 
+                src={Trabajadores} 
+                alt="Trabajadores" 
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 w-[400px] object-contain"
+                />
+            </div>
+
+            {/* CONTENEDOR DEL FORMULARIO */}
+            <div className="relative z-10 flex items-center justify-center min-h-screen px-4">
+                {/* FORMULARIO */}
+                <div className="bg-[#4669AF] p-8 rounded-md text-center space-y-6 shadow-2xl w-full max-w-xl">
+                    <h2 className="text-xl font-bold text-white">
+                    Bienvenido(a), aquí podrás gestionar tus diferentes procesos de Nómina
+                    </h2>
+
+                    <LoginForm onGoogleLogin={handleLogin} />
+
+                    <div className="space-y-2 text-white">
+                        <p className="cursor-pointer">
+                            ¿Tienes dudas del portal? <br />
+                            <span className=" text-white text-sm">Resuélvelas aquí</span>
+                        </p>
+                        <p className="cursor-pointer">
+                            ¿No logras ingresar? <br />
+                            <span className=" text-white text-sm">Crear caso con soporte SODI</span>
+                        </p>
                     </div>
-
-                    {/* FORMULARIO */}
-                    <div className="w-3/5 bg-[#4669AF] p-6 rounded-md text-center space-y-4 shadow-lg">
-                        <h2 className="text-lg font-bold text-white">
-                            Bienvenido(a) aquí podrás gestionar tus diferentes procesos de Nómina
-                        </h2>
-
-                        <LoginForm onGoogleLogin={handleLogin} />
-
-                        <div className="mt-4 space-y-2 text-blue-100">
-                            <p className="hover:underline cursor-pointer">
-                                ¿Tienes dudas del portal? <br />
-                                <span className="text-blue-200">Resuélvelas aquí</span>
-                            </p>
-                            <p className="hover:underline cursor-pointer">
-                                ¿No logras ingresar? <br />
-                                <span className="text-blue-200">Crear caso con soporte SODI</span>
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* TRABAJADORES */}
-                    <div className="w-1/5 flex justify-center">
-                        <img 
-                            src={Trabajadores} 
-                            alt="Trabajadores" 
-                            className="w-full max-w-[140px] h-auto object-contain" 
-                        />
-                    </div>
-                </div>
-
-                {/* LOGO HOMECENTER */}
-                <div className="w-full flex justify-center mt-auto pt-8">
-                    <img 
-                        src={Logo_Home} 
-                        alt="Logo Homecenter" 
-                        className="h-8 object-contain" 
-                    />
                 </div>
             </div>
         </div>
