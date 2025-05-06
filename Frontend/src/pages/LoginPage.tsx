@@ -3,10 +3,19 @@ import LoginForm from "../components/Form_Login/LoginForm";
 import Franco from "../assets/images/Franco.png";
 import Trabajadores from "../assets/images/Trabajadores.png";
 import Logo_Home from "../assets/logos/Logo_home.png";
+import { loginWithGoogle } from "../services/authService";
 
 const LoginPage: React.FC = () => {
     const handleLogin = (email: string, idToken: string) => {
         console.log("Login Exitoso con:", email, idToken);
+
+        loginWithGoogle(idToken)
+        .then((data) => {
+            console.log("Usuario autenticado desde el backend:", data )
+        })
+        .catch((error) => {
+            console.error("Error en el login con Google:", error)
+        })
     };
 
     return (

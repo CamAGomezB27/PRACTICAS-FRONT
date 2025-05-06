@@ -1,23 +1,23 @@
 {
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "@components/*": ["components/*"],
+      "@pages/*": ["pages/*"],
+      "@hooks/*": ["hooks/*"],
+      "@services/*": ["services/*"],
+      "@utils/*": ["utils/*"],
+      "@styles/*": ["styles/*"],
+      "@assets/*": ["assets/*"],
+      "@routes/*": ["routes/*"],
+      "@context/*": ["context/*"]
+    },
+    "forceConsistentCasingInFileNames": true,
+    "strict": true
+  },
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ],
-  "compilerOptions": {
-    "baseUrl": "Frontend/src",
-    "paths": {
-      "@components/*": ["Frontend/src/components/*"],
-      "@pages/*": ["Frontend/src/pages/*"],
-      "@hooks/*": ["Frontend/src/hooks/*"],
-      "@services/*": ["Frontend/src/services/*"],
-      "@utils/*": ["Frontend/src/utils/*"],
-      "@styles/*": ["Frontend/src/styles/*"],
-      "@assets/*": ["Frontend/src/assets/*"],
-      "@routes/*": ["Frontend/src/routes/*"],
-      "@context/*": ["Frontend/src/context/*"]
-    },
-    "forceConsistentCasingInFileNames": true,
-    "strict": true
-  }
+  ]
 }
