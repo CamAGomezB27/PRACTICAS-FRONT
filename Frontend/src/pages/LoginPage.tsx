@@ -11,6 +11,9 @@ const LoginPage: React.FC = () => {
 
         loginWithGoogle(idToken)
         .then((data) => {
+            {/* Se guarda JWT en localStorage */}
+            localStorage.setItem('token', data.token) //Se almacena token
+
             console.log("Usuario autenticado desde el backend:", data )
         })
         .catch((error) => {
