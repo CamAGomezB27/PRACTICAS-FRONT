@@ -60,7 +60,7 @@ const LoginPage: React.FC = () => {
                 <img 
                 src={Logo_Home} 
                 alt="Logo Homecenter" 
-                className="absolute top-3 left-1/2 transform -translate-x-1/2 w-[150px] object-contain" 
+                className="absolute top-5 left-1/2 transform -translate-x-1/2 w-[150px] object-contain" 
                 />
                 {/* FRANCO */}
                 <img 
@@ -86,15 +86,25 @@ const LoginPage: React.FC = () => {
                     
                     <LoginForm onGoogleLogin={handleLogin} />
 
-                    <div className="space-y-3 text-white">
-                        <p className="cursor-pointer font-bold hover:text-gray-200 transition duration-300">
-                            ¿Tienes dudas del portal? <br />
-                            <span className="font-normal text-white text-sm">Resuélvelas aquí</span>
-                        </p>
-                        <p className="cursor-pointer font-bold hover:text-gray-200 transition duration-300">
-                            ¿No logras ingresar? <br />
-                            <span className="font-normal text-white text-sm">Crear caso con soporte SODI</span>
-                        </p>
+                    <div className="space-y-3 text-white text-sm">
+                    <p className="font-bold">
+                        ¿Tienes dudas del portal? <br />
+                        <span
+                        className="font-normal cursor-pointer hover:underline hover:text-yellow-200 transition duration-200"
+                        onClick={() => console.log("Redirigir a preguntas frecuentes")}
+                        >
+                        Resuélvelas aquí
+                        </span>
+                    </p>
+                    <p className="font-bold">
+                        ¿No logras ingresar? <br />
+                        <span
+                        className="font-normal cursor-pointer hover:underline hover:text-yellow-200 transition duration-200"
+                        onClick={() => console.log("Redirigir a soporte")}
+                        >
+                        Crear caso con soporte SODI
+                        </span>
+                    </p>
                     </div>
                 </div>
             </div>
