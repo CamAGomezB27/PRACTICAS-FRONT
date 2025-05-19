@@ -1,11 +1,18 @@
 import React from "react";
-import LoginForm from "../components/Form_Login/LoginForm";
-import Franco from "../assets/images/Franco.png";
-import Trabajadores from "../assets/images/Trabajadores.png";
-import Logo_Home from "../assets/logos/Logo_home.png";
-import { loginWithGoogle } from "../services/authService";
+import LoginForm from "../../components/Form_Login/LoginForm";
+import Franco from "../../assets/images/Franco.png";
+import Trabajadores from "../../assets/images/Trabajadores.png";
+import Logo_Home from "../../assets/logos/Logo_home.png";
+import { loginWithGoogle } from "../../services/authService";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/useAuth";
+import { useState } from "react";
 
 const LoginPage: React.FC = () => {
+    const navigate = useNavigate()
+    const { setUser } = useAuth()
+    const [ errorMsg, setErrorMsg] = useState("")
+
     const handleLogin = (email: string, idToken: string) => {
         console.log("Login Exitoso con:", email, idToken);
 
@@ -13,8 +20,20 @@ const LoginPage: React.FC = () => {
         .then((data) => {
             {/* Se guarda JWT en localStorage */}
             localStorage.setItem('token', data.token) //Se almacena token
+            localStorage.setItem('user', JSON.stringify(data)) //Guarda el usuario
+            setUser(data) //Actualiza el contexto
 
             console.log("Usuario autenticado desde el backend:", data )
+
+            console.log("¿Es admin?", data.esAdmin)
+
+            //RUTA A SEGUIR SEGUN ROL DEL EMAIL
+            if(data.esAdmin){
+                navigate('/dashboar-administrador')
+            } else {
+                setErrorMsg("No hay vista disponible para el usuario.")
+                setTimeout(() => setErrorMsg(""), 5000);
+            }
         })
         .catch((error) => {
             console.error("Error en el login con Google:", error)
@@ -23,6 +42,16 @@ const LoginPage: React.FC = () => {
 
     return (
         <div className="relative min-h-screen w-screen bg-gray-200 overflow-hidden">
+
+            {/* ✅ Mensaje flotante superior si hay error */}
+            {errorMsg && (
+            <div className="fixed top-0 left-1/2 transform -translate-x-1/2 mt-4 z-50">
+                <div className="bg-yellow-300 border border-yellow-500 text-black px-6 py-3 rounded shadow-lg animate-slideDown">
+                {errorMsg}
+                </div>
+            </div>
+            )}
+
             {/* FONDO */}
             <div className="absolute inset-0 z-0">
                 {/* IMAGENES */}
@@ -54,7 +83,7 @@ const LoginPage: React.FC = () => {
                     <h2 className="text-xl font-bold text-white">
                     Bienvenido(a), aquí podrás gestionar tus diferentes procesos de Nómina
                     </h2>
-
+                    
                     <LoginForm onGoogleLogin={handleLogin} />
 
                     <div className="space-y-3 text-white">
