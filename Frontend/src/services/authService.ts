@@ -7,13 +7,15 @@ export const loginWithGoogle = async (idToken: string) => {
     const response = await axios.post(`${API_URL}/auth/google`, {
       token: idToken,
     });
-    
-    const { token, user } = response.data
-    //Token en localStorage
-    localStorage.setItem('token', token)
-    return user; // Devuelve los datos del usuario autenticado
+
+    const { token, user } = response.data;
+
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    return user;
   } catch (error) {
     console.error('Error al autenticar con Google:', error);
     throw error;
   }
 };
+

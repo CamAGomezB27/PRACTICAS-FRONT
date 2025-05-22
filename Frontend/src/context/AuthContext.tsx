@@ -3,6 +3,7 @@ import { createContext } from 'react';
 interface User {
   correo: string;
   id_usuario: number;
+  nombre: string;
   esAdmin: boolean;
 }
 
@@ -12,4 +13,6 @@ export interface AuthContextType {
 }
 
 // 👇 solo exportamos el contexto
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined,
+);
