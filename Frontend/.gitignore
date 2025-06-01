@@ -1,0 +1,36 @@
+# node modules
+node_modules/
+
+# environment variables
+.env
+.env.local
+.env.*.local
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# build outputs
+dist/
+build/
+
+# editor folders
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# coverage reports
+coverage/
+
+# eslint cache
+.eslintcache
+
+# Optional: next.js / turbo / vite cache
+.next/
+.turbo/
+.cache/
