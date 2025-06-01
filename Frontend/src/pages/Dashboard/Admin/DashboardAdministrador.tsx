@@ -18,7 +18,10 @@ const DashboardAdministrador: React.FC = () => {
 
   return (
     <div className="min-h-screen w-screen flex flex-col bg-white">
-      <Navbar />
+      <Navbar 
+      panelTitle='Administrador'
+      userRoleTitle='Admin'
+      />
 
       <main className="flex-grow px-8 py-4">
         {/* Bienvenida */}
