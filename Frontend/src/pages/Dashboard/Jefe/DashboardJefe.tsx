@@ -17,11 +17,15 @@ const DashboardJefe: React.Fc = () => {
     const { user } = useAuth()
 
     return(
-        <div className='min-h-screen w-screen flex flex-col bg-white'>
+        <div className="min-h-screen w-screen flex flex-col bg-white">
         <Navbar 
             panelTitle='Jefe Tienda Calle 80'
             userRoleTitle='Jefe Tienda'
         />
+
+        <main className="flex-grow px-8 pt-8 pb-4">
+            
+        </main>
 
         <Footer />
         </div>
