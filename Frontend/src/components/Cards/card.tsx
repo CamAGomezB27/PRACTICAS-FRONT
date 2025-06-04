@@ -14,7 +14,7 @@ const Card: React.FC<CardProps> = ({
   iconPosition = 'left',
 }) => {
   // Sombra base visible
-  const baseShadow = 'shadow-[2px_8px_12px_rgba(0,0,0,0.8)]'; // gris 
+  const baseShadow = 'shadow-[2px_8px_12px_rgba(0,0,0,0.8)]'; // gris
 
   // Hover: sombra azul fuerte + efecto de crecimiento
   const hoverEffects =
