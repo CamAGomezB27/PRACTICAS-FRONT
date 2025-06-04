@@ -19,13 +19,11 @@ const DashboardAdministrador: React.FC = () => {
   return (
     <div className="min-h-screen w-screen flex flex-col bg-white">
       <Navbar 
-      panelTitle='Administrador'
-      userRoleTitle='Admin'
+        panelTitle='Administrador'
+        userRoleTitle='Admin'
       />
-
-      <main className="flex-grow px-8 py-4">
-        {/* Bienvenida */}
-        <div className="flex justify-between mb-4">
+      <main className="flex-grow px-8 pt-8 pb-4">
+        <div className="flex justify-between mb-6">
           <div>
             <h2 className="text-xl font-bold text-black">
               ¡Bienvenido, {user?.nombre || 'Administrador'}!
@@ -36,50 +34,47 @@ const DashboardAdministrador: React.FC = () => {
             </p>
           </div>
 
-          {/* ACCIONES título centrado sobre las cards */}
           <div className="w-1/3 flex justify-center mt-2">
-            <h3 className="text-lg font-bold text-black mb-4">ACCIONES</h3>
+            <h2 className="text-xl font-bold text-black">Acciones que puedes realziar</h2>
           </div>
         </div>
 
-        {/* Contenedor de tarjetas */}
-        <div className="flex justify-between">
-          {/* Columna izquierda - Cards con tamaño igual y respetando espacios */}
-          <div className="flex flex-col w-1/3 mt-8">
+    
+        <div className="flex justify-between pl-6"> 
+          {/* Columna izquierda - Ajusté márgenes */}
+          <div className="flex flex-col w-1/3 mt-6 pt-4"> 
             <div className="flex justify-between mb-4">
-              {/* Primera fila con dos cards del mismo tamaño que la de abajo */}
-              <div className="pr-2">
+              <div className="pr-2 mr-4"> 
                 <Card
                   title="Usuarios Registrados"
-                  icon={<FaUsers />}
+                  icon={<FaUsers size={50}/>}
                   className="h-[130px] w-[250px] rounded-2xl"
                 />
               </div>
               <div className="pl-2">
                 <Card
                   title="Usuarios Activos"
-                  icon={<FaUserCheck />}
+                  icon={<FaUserCheck size={50} />}
                   className="h-[130px] w-[250px] rounded-2xl"
                 />
               </div>
             </div>
 
-            {/* Segunda fila con card central */}
-            <div className="flex justify-center mt-8 pl-16">
+            <div className="flex justify-center mt-6 pl-12"> 
               <Card
                 title="Módulos del Sistema"
-                icon={<FaThLarge />}
+                icon={<FaThLarge size={50}/>}
                 className="h-[130px] w-[270px] rounded-2xl"
               />
             </div>
           </div>
 
-          {/* Columna central - imagen */}
-          <div className="w-1/3 flex justify-center items-center pl-20">
+          {/* Columna central - Reduje padding izquierdo */}
+          <div className="w-1/3 flex justify-center items-center pl-32"> 
             <img
               src={Franco}
               alt="Franco"
-              className="object-contain max-w-[400px]"
+              className="object-contain max-w-[400px]" 
             />
           </div>
 
@@ -87,21 +82,21 @@ const DashboardAdministrador: React.FC = () => {
           <div className="w-1/3 pl-5 flex flex-col space-y-8 items-center">
             <Card
               title="Registrar Usuario"
-              icon={<FaUserPlus />}
+              icon={<FaUserPlus  size={50}/>}
               iconPosition="top"
               className="h-30 w-[200px] rounded-2xl"
             />
 
             <Card
               title="Gestionar Permisos"
-              icon={<FaUserShield />}
+              icon={<FaUserShield  size={50}/>}
               iconPosition="top"
               className="h-30 w-[200px] rounded-2xl"
             />
 
             <Card
               title="Notificaciones"
-              icon={<FaBell />}
+              icon={<FaBell  size={50}/>}
               iconPosition="top"
               className="h-30 w-[200px] rounded-2xl"
             />

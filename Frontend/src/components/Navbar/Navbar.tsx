@@ -1,7 +1,8 @@
 import React from 'react';
 import { FaUserCircle } from 'react-icons/fa';
  import { FiLogOut } from 'react-icons/fi';
-import { useAuth } from '../../context/useAuth'; 
+import { useAuth } from '../../context/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 interface NavbarProps {
   panelTitle?: string,
@@ -9,19 +10,33 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> =({
-  panelTitle = 'Panel Administrador',
-  userRoleTitle = 'Administración',
+  panelTitle = '',
+  userRoleTitle = '',
 })=> {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   return (
-    <nav className="bg-[#4669AF] text-white px-6 py-3 flex items-center justify-between shadow-md">
+    <nav className="
+      bg-[#4669AF]
+      text-white 
+      px-6
+      flex 
+      items-center
+      justify-between
+      shadow-lg
+      drop-shadow-[0_4px_8px_rgba(96,165,250,0.8)] 
+      hover:transform hover:translate-y-[-2px]
+      hover:drop-shadow-[0_6px_12px_rgba(96,165,250,1)]
+      transition-all
+      ">
       {/* BOTON SALIR*/}
       <button
         type="button"
         aria-label="Cerrar Sesión"
         title="Salir"
-        className="text-3xl"
+        className="text-3xl cursor-pointer"
+        onClick={() => navigate("/")}
       >
         <FiLogOut />
       </button>
@@ -42,7 +57,7 @@ const Navbar: React.FC<NavbarProps> =({
         </div>
 
         {/* Icono del usuario */}
-        <FaUserCircle className="text-4xl sm:text-5xl" />
+        <FaUserCircle className="text-4xl sm:text-5xl cursor-pointer" aria-label='Usuario' title='Configuraciones'  />
       </div>
     </nav>
   );

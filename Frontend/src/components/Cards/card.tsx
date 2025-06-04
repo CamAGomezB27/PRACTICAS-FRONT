@@ -14,11 +14,11 @@ const Card: React.FC<CardProps> = ({
   iconPosition = 'left',
 }) => {
   // Sombra base visible
-  const baseShadow = 'shadow-[0_8px_15px_rgba(0,0,0,0.8)]'; // gris 
+  const baseShadow = 'shadow-[2px_8px_12px_rgba(0,0,0,0.8)]'; // gris 
 
   // Hover: sombra azul fuerte + efecto de crecimiento
   const hoverEffects =
-    'hover:shadow-[0_8px_15px_rgba(70,105,175,1.5)] hover:scale-[1.05]';
+    'hover:shadow-[4px_8px_15px_rgba(10,10,200,1.5)] hover:scale-[1.05]';
 
   // Layout según posición icono
   const layoutClasses =
@@ -34,7 +34,7 @@ const Card: React.FC<CardProps> = ({
       className={`bg-white rounded-md cursor-pointer transition-all duration-300 ease-in-out transform ${baseShadow} ${hoverEffects} ${layoutClasses} ${className}`}
     >
       {icon && <div className={iconSizeClass}>{icon}</div>}
-      <span className="text-md font-semibold">{title}</span>
+      <span className="text-md font-bold">{title}</span>
     </div>
   );
 };
