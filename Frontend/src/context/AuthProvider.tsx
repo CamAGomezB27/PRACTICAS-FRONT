@@ -24,10 +24,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     checkSession();
   }, []);
 
+  const logout = () => {
+    setUser(null);
+    document.cookie = 'jwt=; Max-Age=0; Path=/';
+    localStorage.removeItem('token');
+  };
+
   if (loading) return <div>Cargando Sesión...</div>;
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, setUser, logout }}>
       {children}
     </AuthContext.Provider>
   );
