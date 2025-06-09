@@ -20,6 +20,7 @@ const LoginPage: React.FC = () => {
       const userData = await loginWithGoogle(idToken);
 
       setUser(userData.user); //Se guarda usuario en el contexto
+      console.log('Nombre que recibe frontend:', userData.user.nombre);
       console.log('🎉 Usuario autenticado desde el backend:', userData.user);
 
       //Ruta a seguir segun rol del usuario
