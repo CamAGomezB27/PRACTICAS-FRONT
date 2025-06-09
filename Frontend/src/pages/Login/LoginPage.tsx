@@ -13,33 +13,31 @@ const LoginPage: React.FC = () => {
   const { setUser } = useAuth();
   const [errorMsg, setErrorMsg] = useState('');
 
-  const handleLogin = (email: string, idToken: string) => {
-    console.log('Login Exitoso con:', email, idToken);
+  const handleLogin = async (email: string, idToken: string) => {
+    console.log('✅ Login Exitoso con Google:', email);
 
-    loginWithGoogle(idToken)
-      .then((data) => {
-        {
-          /* Se guarda JWT en localStorage */
-        }
-        localStorage.setItem('token', data.token); //Se almacena token
-        localStorage.setItem('user', JSON.stringify(data)); //Guarda el usuario
-        setUser(data.user); // Actualizar contexto con solo el user (que tiene nombre, correo, etc.)
+    try {
+      const userData = await loginWithGoogle(idToken);
 
-        console.log('Usuario autenticado desde el backend:', data);
+      setUser(userData.user); //Se guarda usuario en el contexto
+      console.log('🎉 Usuario autenticado desde el backend:', userData.user);
 
-        console.log('¿Es admin?', data.esAdmin);
-
-        //RUTA A SEGUIR SEGUN ROL DEL EMAIL
-        if (data.esAdmin) {
-          navigate('/dashboard-administrador');
-        } else {
-          setErrorMsg('No hay vista disponible para el usuario.');
-          setTimeout(() => setErrorMsg(''), 5000);
-        }
-      })
-      .catch((error) => {
-        console.error('Error en el login con Google:', error);
-      });
+      //Ruta a seguir segun rol del usuario
+      if (userData.user.esAdmin) {
+        navigate('/dashboard-administrador');
+      } else if (userData.user.esNomina) {
+        navigate('/dashboard-nomina');
+      } else if (userData.user.esJefe) {
+        navigate('/dashboard-jefe');
+      } else {
+        setErrorMsg('Tu rol no tiene una vista asignada. Contacta al soporte.');
+        setTimeout(() => setErrorMsg(''), 5000);
+      }
+    } catch (error) {
+      console.error('Error en el login con Google:', error);
+      setErrorMsg('Error al iniciar sesión. Intenta nuevamente.');
+      setTimeout(() => setErrorMsg(''), 5000);
+    }
   };
 
   return (
@@ -114,4 +112,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage
+export default LoginPage;
