@@ -24,10 +24,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     checkSession();
   }, []);
 
-  const logout = () => {
-    setUser(null);
-    document.cookie = 'jwt=; Max-Age=0; Path=/';
-    localStorage.removeItem('token');
+  const logout = async () => {
+    try {
+      //Se indica al back logout
+      await axios.post('http://localhost:3000/auth/logout', null, {
+        withCredentials: true,
+      });
+    } catch (error) {
+      console.error('error al cerrar sesión:', error);
+    } finally {
+      setUser(null); //Limpiar usuario
+    }
   };
 
   if (loading) return <div>Cargando Sesión...</div>;
