@@ -9,10 +9,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await axios.get('/auth/profile', {
+        const response = await axios.get('http://localhost:3000/auth/profile', {
           withCredentials: true, //Cookies
         });
-        setUser(response.data);
+        setUser(response.data.user);
       } catch (error) {
         console.error('No hay sesión activa o el token expiró.', error);
         setUser(null);
