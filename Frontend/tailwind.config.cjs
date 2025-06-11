@@ -1,3 +1,4 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
@@ -6,14 +7,33 @@ module.exports = {
         poppins: ['Poppins', 'sans-serif'],
       },
       animation: {
-        'fade-slide': 'fadeSlide 0.5s ease-out',
+        slideDown: 'slideDown 0.4s ease-out',
+        'ping-slow': 'ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite',
+        slideUp: 'slideUp 0.5s ease-out',
       },
       keyframes: {
-        fadeSlide: {
-          '0%': { opacity: '0', transform: 'translateY(-20px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
+        slideDown: {
+          '0%': {
+            transform: 'translateY(-100%)',
+            opacity: '0',
+          },
+          '100%': {
+            transform: 'translateY(0)',
+            opacity: '1',
+          },
+        },
+        slideUp: {
+          '0%': {
+            transform: 'translateY(100%)',
+            opacity: '0',
+          },
+          '100%': {
+            transform: 'translateY(0)',
+            opacity: '1',
+          },
         },
       },
     },
   },
+  plugins: [],
 };

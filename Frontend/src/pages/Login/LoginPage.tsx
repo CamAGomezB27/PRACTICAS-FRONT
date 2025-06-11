@@ -3,6 +3,7 @@ import LoginForm from '../../components/Form_Login/LoginForm';
 import Franco from '../../assets/images/Franco_saluda.png';
 import Trabajadores from '../../assets/images/Trabajadores.png';
 import Logo_Home from '../../assets/logos/Logo_home.png';
+import ErrorAlert from '../../components/Alerts/ErrorAlert';
 import { loginWithGoogle } from '../../services/authService';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
@@ -45,11 +46,7 @@ const LoginPage: React.FC = () => {
     <div className="relative min-h-screen w-screen bg-gray-200 overflow-hidden">
       {/* ✅ Mensaje flotante superior si hay error */}
       {errorMsg && (
-        <div className="fixed top-0 left-1/2 transform -translate-x-1/2 mt-4 z-50">
-          <div className="bg-yellow-300 border border-yellow-500 text-black px-6 py-3 rounded shadow-lg animate-slideDown">
-            {errorMsg}
-          </div>
-        </div>
+        <ErrorAlert message={errorMsg} onClose={() => setErrorMsg} />
       )}
 
       {/* FONDO */}
