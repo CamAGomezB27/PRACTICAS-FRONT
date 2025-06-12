@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState, useCallback } from 'react';
 import { AuthContext, AuthContextType } from './AuthContext';
 import SplashScreen from '../components/Loading/SplashScreen';
 import axios from 'axios';
@@ -7,7 +7,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<AuthContextType['user']>(null);
   const [loading, setLoading] = useState(true);
   const [splashVisible, setSplashVisible] = useState(false);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -27,42 +26,39 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     checkSession();
   }, []);
 
+  // Función para mostrar splash
+  const showSplash = useCallback((reason: string) => {
+    console.log('Mostrando splash por:', reason);
+    setSplashVisible(true);
+
+    const timeout = setTimeout(() => {
+      setSplashVisible(false);
+    }, 4500);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
   useEffect(() => {
     if (!loading) {
       const hasShownSplash = sessionStorage.getItem('splashShown');
-      const isLoginPage =
-        window.location.pathname === '/login' ||
-        window.location.pathname === '/';
+      const isLoginPage = window.location.pathname === '/';
 
-      // Mostrar splash si:
-      // 1. No se ha mostrado antes en esta sesión, O
-      // 2. Estamos en la página de login, O
-      // 3. Venimos de un logout
-      if (!hasShownSplash || isLoginPage || isLoggingOut) {
-        setSplashVisible(true);
-
-        // Solo marcar como mostrado si NO estamos en login
-        if (!isLoginPage) {
-          sessionStorage.setItem('splashShown', 'true');
-        }
-
-        const timeout = setTimeout(() => {
-          setSplashVisible(false);
-          // Limpiar el estado de logout después del splash
-          if (isLoggingOut) {
-            setIsLoggingOut(false);
-          }
-        }, 4500);
-
-        return () => clearTimeout(timeout);
+      // Solo mostrar splash en login si no se ha mostrado antes (refresh o primera vez)
+      if (isLoginPage && !hasShownSplash) {
+        showSplash('login-first-time');
+      }
+      // Primera visita a la app (no login)
+      else if (!hasShownSplash && !isLoginPage) {
+        showSplash('first-visit');
+        sessionStorage.setItem('splashShown', 'true');
       }
     }
-  }, [loading, isLoggingOut]);
+  }, [loading, showSplash]);
 
   const logout = async () => {
     try {
-      // Activar el estado de logout ANTES de hacer la petición
-      setIsLoggingOut(true);
+      // Mostrar splash inmediatamente al hacer logout
+      showSplash('logout');
 
       await axios.post('http://localhost:3000/auth/logout', null, {
         withCredentials: true,
