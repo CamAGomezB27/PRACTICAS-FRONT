@@ -5,6 +5,7 @@ import App from './App';
 import './index.css';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './context/AuthProvider';
+import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 
