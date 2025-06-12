@@ -7,6 +7,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<AuthContextType['user']>(null);
   const [loading, setLoading] = useState(true);
   const [splashVisible, setSplashVisible] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -35,8 +36,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       // Mostrar splash si:
       // 1. No se ha mostrado antes en esta sesión, O
-      // 2. Estamos en la página de login
-      if (!hasShownSplash || isLoginPage) {
+      // 2. Estamos en la página de login, O
+      // 3. Venimos de un logout
+      if (!hasShownSplash || isLoginPage || isLoggingOut) {
         setSplashVisible(true);
 
         // Solo marcar como mostrado si NO estamos en login
@@ -46,15 +48,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         const timeout = setTimeout(() => {
           setSplashVisible(false);
+          // Limpiar el estado de logout después del splash
+          if (isLoggingOut) {
+            setIsLoggingOut(false);
+          }
         }, 4500);
 
         return () => clearTimeout(timeout);
       }
     }
-  }, [loading]);
+  }, [loading, isLoggingOut]);
 
   const logout = async () => {
     try {
+      // Activar el estado de logout ANTES de hacer la petición
+      setIsLoggingOut(true);
+
       await axios.post('http://localhost:3000/auth/logout', null, {
         withCredentials: true,
       });

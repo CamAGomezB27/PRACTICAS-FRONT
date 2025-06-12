@@ -115,13 +115,11 @@ const DashboardJefe: React.FC = () => {
             </div>
           </div>
 
-          {/* Columna 3 - Novedades*/}
+          {/* Columna 3 - Novedades */}
           <div className="w-1/3 pl-5s flex flex-col items-center space-y-3">
             {/* Novedades Recientes */}
             <div className="text-sm font-bold w-[450px] bg-gray-400 rounded-2xl shadow-inner flex flex-col space-y-3 p-3">
-              {/* Contenedor Scrollable */}
-              <div className="flex flex-col space-y-3 max-h-[400px] overflow-y-auto pr-1">
-                {/* Tarjeta de novedad - puede copiarse n veces */}
+              <div className="flex flex-col space-y-3 max-h-[200px] overflow-y-auto pr-1">
                 {[...Array(10)].map((_, i) => (
                   <div
                     key={i}
@@ -136,10 +134,15 @@ const DashboardJefe: React.FC = () => {
                             : 'bg-red-500'
                       }`}
                     />
-
                     <div className="pl-3 pr-1 flex-1">
                       <p className="text-sm font-semibold text-gray-800">
-                        {`SOLICITUD #0${i + 1111} ${i % 3 === 0 ? 'GESTIONADA' : i % 3 === 1 ? 'EN PROCESO' : 'RECHAZADA'}`}
+                        {`SOLICITUD #0${i + 1111} ${
+                          i % 3 === 0
+                            ? 'GESTIONADA'
+                            : i % 3 === 1
+                              ? 'EN PROCESO'
+                              : 'RECHAZADA'
+                        }`}
                       </p>
                       <p className="text-xs text-gray-400">
                         {i % 3 === 0
@@ -149,7 +152,6 @@ const DashboardJefe: React.FC = () => {
                             : 'Tu solicitud del Empleado fue rechazada'}
                       </p>
                     </div>
-
                     <span className="text-[10px] text-gray-800 absolute top-2 right-3">
                       9:41 AM
                     </span>
@@ -157,9 +159,34 @@ const DashboardJefe: React.FC = () => {
                 ))}
               </div>
             </div>
+
+            {/* HISTÓRICO DE SOLICITUDES */}
+            <div className="w-[280px] mt-8 bg-[#4669AF] text-white shadow-xl rounded-xl p-5 hover:scale-[1.03] transition-transform duration-300 cursor-pointer group">
+              <div className="flex items-center gap-3 mb-3">
+                <FaFileAlt className="text-white" size={26} />
+                <h3 className="text-lg font-bold">Histórico de Solicitudes</h3>
+              </div>
+
+              <p className="text-sm text-white/90 mb-3">
+                Consulta novedades anteriores o descarga el consolidado
+                completo.
+              </p>
+
+              <div className="flex justify-between mt-2">
+                <button className="flex items-center gap-1 text-xs bg-white text-[#4669AF] font-semibold px-3 py-1.5 rounded-md hover:bg-gray-100 transition-colors">
+                  <FaList size={12} />
+                  Consultar
+                </button>
+                <button className="flex items-center gap-1 text-xs bg-white text-[#4669AF] font-semibold px-3 py-1.5 rounded-md hover:bg-gray-100 transition-colors">
+                  <FaFileSignature size={12} />
+                  Exportar
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </main>
+
       <Footer />
     </div>
   );
