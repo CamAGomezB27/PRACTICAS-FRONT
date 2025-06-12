@@ -2,6 +2,13 @@ import { Routes, Route } from 'react-router-dom';
 import LoginPage from '../pages/Login/LoginPage';
 import DashAdmin from '../pages/Dashboard/Admin/DashboardAdministrador';
 import DashJefe from '../pages/Dashboard/Jefe/DashboardJefe';
+import SoliAuxTrans from '../pages/Solicitudes/AuxTransport';
+import Descuentos from '../pages/Solicitudes/Descuentos';
+import HorasExt from '../pages/Solicitudes/HorasExt';
+import OtroSiDef from '../pages/Solicitudes/OtroSiDef';
+import OtroSiTemp from '../pages/Solicitudes/OtroSiTemp';
+import Vacaciones from '../pages/Solicitudes/Vacaciones';
+import Otros from '../pages/Solicitudes/Otros';
 import DashNomina from '../pages/Dashboard/Nomina/DashboardNomina';
 import ProtectedRoute from './ProtectedRoute';
 // import Unauthorized from '../pages/Unauthorized'; // Puedes crear una simple página
@@ -20,7 +27,27 @@ const AppRoutes = () => {
       <Route element={<ProtectedRoute allowedRoles={['jefe']} />}>
         <Route path="/dashboard-jefe" element={<DashJefe />} />
       </Route>
-      {/* MÁS RUTAS */}
+      <Route element={<ProtectedRoute allowedRoles={['jefe']} />}>
+        <Route path="/solicitud-AuxTrans" element={<SoliAuxTrans />} />
+      </Route>
+      <Route element={<ProtectedRoute allowedRoles={['jefe']} />}>
+        <Route path="/solicitud-descuentos" element={<Descuentos />} />
+      </Route>
+      <Route element={<ProtectedRoute allowedRoles={['jefe']} />}>
+        <Route path="/solicitud-horaExt" element={<HorasExt />} />
+      </Route>
+      <Route element={<ProtectedRoute allowedRoles={['jefe']} />}>
+        <Route path="/solicitud-OtroSiDef" element={<OtroSiDef />} />
+      </Route>
+      <Route element={<ProtectedRoute allowedRoles={['jefe']} />}>
+        <Route path="/solicitud-OtroSiTemp" element={<OtroSiTemp />} />
+      </Route>
+      <Route element={<ProtectedRoute allowedRoles={['jefe']} />}>
+        <Route path="/solicitud-vacaciones" element={<Vacaciones />} />
+      </Route>
+      <Route element={<ProtectedRoute allowedRoles={['jefe']} />}>
+        <Route path="/solicitud-otros" element={<Otros />} />
+      </Route>
     </Routes>
   );
 };

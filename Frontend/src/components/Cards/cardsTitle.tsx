@@ -7,6 +7,7 @@ interface CardProps {
   iconPosition?: 'left' | 'top';
   color?: string;
   headerLabel?: string;
+  onClick?: () => void;
 }
 
 const CardsTitle: React.FC<CardProps> = ({
@@ -16,6 +17,7 @@ const CardsTitle: React.FC<CardProps> = ({
   iconPosition = 'left',
   color = 'bg-gray-400',
   headerLabel,
+  onClick,
 }) => {
   const baseShadow = 'shadow-[2px_8px_12px_rgba(0,0,0,0.8)]';
   const hoverEffects =
@@ -30,6 +32,7 @@ const CardsTitle: React.FC<CardProps> = ({
 
   return (
     <div
+      onClick={onClick}
       className={`bg-white rounded-md cursor-pointer transition-all duration-300 ease-in-out transform ${baseShadow} ${hoverEffects} ${className}`}
     >
       {/* Franja opcional arriba */}

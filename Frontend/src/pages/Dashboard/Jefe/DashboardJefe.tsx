@@ -13,9 +13,11 @@ import Footer from '../../../components/Footer/Footer';
 import CardsTitle from '../../../components/Cards/cardsTitle';
 import Franco from '../../../assets/images/Franco_Pensando_1-removebg-preview.png';
 import { useAuth } from '../../../context/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const DashboardJefe: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen w-screen flex flex-col bg-white">
@@ -53,6 +55,7 @@ const DashboardJefe: React.FC = () => {
                 headerLabel="SOLICITUD"
                 color="bg-[#2C3333]"
                 className="h-[110px] w-[260px] rounded-xl"
+                onClick={() => navigate('/solicitud-AuxTrans')}
               />
               <CardsTitle
                 title="Descuento"
@@ -60,6 +63,7 @@ const DashboardJefe: React.FC = () => {
                 headerLabel="SOLICITUD"
                 color="bg-[#2C3333]"
                 className="h-[110px] w-[260px] rounded-xl"
+                onClick={() => navigate('/solicitud-descuentos')}
               />
               <CardsTitle
                 title="Horas Extra"
@@ -67,6 +71,7 @@ const DashboardJefe: React.FC = () => {
                 headerLabel="SOLICITUD"
                 color="bg-[#2C3333]"
                 className="h-[110px] w-[260px] rounded-xl"
+                onClick={() => navigate('/solicitud-horaExt')}
               />
               <CardsTitle
                 title="Otro si Definitivo"
@@ -74,6 +79,7 @@ const DashboardJefe: React.FC = () => {
                 headerLabel="SOLICITUD"
                 color="bg-[#2C3333]"
                 className="h-[110px] w-[260px] rounded-xl"
+                onClick={() => navigate('/solicitud-OtroSiDef')}
               />
               <CardsTitle
                 title="Otro Si Temporal"
@@ -81,6 +87,7 @@ const DashboardJefe: React.FC = () => {
                 headerLabel="SOLICITUD"
                 color="bg-[#2C3333]"
                 className="h-[110px] w-[260px] rounded-xl"
+                onClick={() => navigate('/solicitud-OtroSiTemp')}
               />
               <CardsTitle
                 title="Vacaciones"
@@ -88,6 +95,7 @@ const DashboardJefe: React.FC = () => {
                 headerLabel="SOLICITUD"
                 color="bg-[#2C3333]"
                 className="h-[110px] w-[260px] rounded-xl"
+                onClick={() => navigate('/solicitud-vacaciones')}
               />
             </div>
 
@@ -101,6 +109,7 @@ const DashboardJefe: React.FC = () => {
                   headerLabel="SOLICITUD"
                   color="bg-[#2C3333]"
                   className="h-[110px] w-[260px] rounded-xl"
+                  onClick={() => navigate('/solicitud-otros')}
                 />
               </div>
 
