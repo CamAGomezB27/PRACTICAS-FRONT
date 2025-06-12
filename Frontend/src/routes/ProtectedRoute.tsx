@@ -7,7 +7,9 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+
+  if (loading) return null;
 
   if (!user) {
     return <Navigate to="/" replace />; //No login
@@ -16,9 +18,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
   console.log('user object:', user);
 
   let userRole = '';
-  if (user.esAdmin) userRole = 'admin';
-  else if (user.esNomina) userRole = 'nomina';
-  else if (user.esJefe) userRole = 'jefe';
+  if (user.rol === 'Administrador') userRole = 'admin';
+  else if (user.rol === 'Gestor de Nomina') userRole = 'nomina';
+  else if (user.rol === 'Jefe de Tienda') userRole = 'jefe';
 
   if (!allowedRoles.includes(userRole)) {
     console.log('user role:', userRole, 'allowed roles:', allowedRoles);

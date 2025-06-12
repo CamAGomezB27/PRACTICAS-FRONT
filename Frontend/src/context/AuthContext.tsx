@@ -2,9 +2,10 @@ import { createContext } from 'react';
 
 //Tipo Usuario
 export interface User {
+  nombre: string;
   correo: string;
   id_usuario: number;
-  nombre: string;
+  rol: string;
   esAdmin: boolean;
   esNomina: boolean;
   esJefe: boolean;
@@ -15,6 +16,7 @@ export interface AuthContextType {
   user: User | null;
   setUser: (user: User | null) => void;
   logout: () => void;
+  loading: boolean;
 }
 
 //  exportamos el contexto
