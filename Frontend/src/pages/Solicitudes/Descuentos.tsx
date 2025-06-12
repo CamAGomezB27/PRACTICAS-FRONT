@@ -1,6 +1,7 @@
 import React from 'react';
 import Footer from '../../components/Footer/Footer';
 import Navbar from '../../components/Navbar/Navbar';
+import FormSolicitudes from '../../components/Form_Solicitudes/Form';
 
 const Descuentos: React.FC = () => {
   return (
@@ -10,7 +11,9 @@ const Descuentos: React.FC = () => {
         userRoleTitle="Jefe Tienda"
       />
       <main className="flex-grow px-8 pt-8 pb-4">
-        <div className="flex justify-between mb-6"></div>
+        <div className="flex justify-between mb-6">
+          <FormSolicitudes />
+        </div>
       </main>
       <Footer />
     </div>

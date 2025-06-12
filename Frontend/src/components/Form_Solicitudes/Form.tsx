@@ -1,20 +1,55 @@
 import React, { useState } from 'react';
 import Individual from './FormIndivi';
 import Masivo from './FormMasivo';
-import { FaBus } from 'react-icons/fa';
-import { FaFileAlt } from 'react-icons/fa';
+import {
+  FaBus,
+  FaMoneyBillAlt,
+  FaClock,
+  FaFileSignature,
+  FaFileAlt,
+  FaUmbrellaBeach,
+  FaList,
+} from 'react-icons/fa';
+import { useLocation } from 'react-router-dom';
+
+// Mapeo de íconos
+const iconMap = {
+  FaBus: <FaBus size={20} />,
+  FaMoneyBillAlt: <FaMoneyBillAlt size={20} />,
+  FaFileAlt: <FaFileAlt size={20} />,
+  FaClock: <FaClock size={20} />,
+  FaFileSignature: <FaFileSignature size={20} />,
+  FaUmbrellaBeach: <FaUmbrellaBeach size={20} />,
+  FaList: <FaList size={20} />,
+};
+
+// ✅ Tipo seguro para las claves del iconMap
+type IconKey = keyof typeof iconMap;
 
 const FormSolicitudes: React.FC = () => {
+  const { state } = useLocation();
+
+  const titulo = state?.titulo || 'Título por defecto';
+  const iconName = state?.iconName;
+
+  // ✅ Validación segura del icono
+  const icon =
+    iconName && iconName in iconMap ? (
+      iconMap[iconName as IconKey]
+    ) : (
+      <FaFileAlt size={20} />
+    );
+
   const [modoMasivo, setMasivo] = useState(false);
 
   const handleToggle = () => setMasivo((prev) => !prev);
 
   return (
-    <section className="bg-white shadow-lg px-8  rounded-md w-full max-w-4xl mx-auto relative">
+    <section className="bg-white shadow-lg px-8 rounded-md w-full max-w-4xl mx-auto relative">
       {/* TITULO */}
       <div className="text-black flex items-center gap-2 mb-2 justify-center">
-        <FaBus size={20} />
-        <h2 className="font-bold text-lg"> Auxilio de Transporte </h2>
+        {icon}
+        <h2 className="font-bold text-lg"> {titulo} </h2>
       </div>
 
       {/* LINEA DIVISIÓN */}

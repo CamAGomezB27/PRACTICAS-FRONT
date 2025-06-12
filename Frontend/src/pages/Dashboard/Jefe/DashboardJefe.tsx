@@ -55,7 +55,14 @@ const DashboardJefe: React.FC = () => {
                 headerLabel="SOLICITUD"
                 color="bg-[#2C3333]"
                 className="h-[110px] w-[260px] rounded-xl"
-                onClick={() => navigate('/solicitud-AuxTrans')}
+                onClick={() =>
+                  navigate('/solicitud-AuxTrans', {
+                    state: {
+                      titulo: 'Auxilio de transporte',
+                      iconName: 'FaBus',
+                    },
+                  })
+                }
               />
               <CardsTitle
                 title="Descuento"
@@ -63,7 +70,14 @@ const DashboardJefe: React.FC = () => {
                 headerLabel="SOLICITUD"
                 color="bg-[#2C3333]"
                 className="h-[110px] w-[260px] rounded-xl"
-                onClick={() => navigate('/solicitud-descuentos')}
+                onClick={() =>
+                  navigate('/solicitud-descuentos', {
+                    state: {
+                      titulo: 'Descuento',
+                      iconName: 'FaMoneyBillAlt',
+                    },
+                  })
+                }
               />
               <CardsTitle
                 title="Horas Extra"
@@ -71,15 +85,29 @@ const DashboardJefe: React.FC = () => {
                 headerLabel="SOLICITUD"
                 color="bg-[#2C3333]"
                 className="h-[110px] w-[260px] rounded-xl"
-                onClick={() => navigate('/solicitud-horaExt')}
+                onClick={() =>
+                  navigate('/solicitud-horaExt', {
+                    state: {
+                      titulo: 'Horas Extra',
+                      iconName: 'FaClock',
+                    },
+                  })
+                }
               />
               <CardsTitle
-                title="Otro si Definitivo"
+                title="Otro Si Definitivo"
                 icon={<FaFileSignature size={40} />}
                 headerLabel="SOLICITUD"
                 color="bg-[#2C3333]"
                 className="h-[110px] w-[260px] rounded-xl"
-                onClick={() => navigate('/solicitud-OtroSiDef')}
+                onClick={() =>
+                  navigate('/solicitud-OtroSiDef', {
+                    state: {
+                      titulo: 'Otro Si Definitivo',
+                      iconName: 'FaFileSignature',
+                    },
+                  })
+                }
               />
               <CardsTitle
                 title="Otro Si Temporal"
@@ -87,7 +115,14 @@ const DashboardJefe: React.FC = () => {
                 headerLabel="SOLICITUD"
                 color="bg-[#2C3333]"
                 className="h-[110px] w-[260px] rounded-xl"
-                onClick={() => navigate('/solicitud-OtroSiTemp')}
+                onClick={() =>
+                  navigate('/solicitud-OtroSiTemp', {
+                    state: {
+                      titulo: 'Otro Si Temporal',
+                      iconName: 'FaFileAlt',
+                    },
+                  })
+                }
               />
               <CardsTitle
                 title="Vacaciones"
@@ -95,7 +130,14 @@ const DashboardJefe: React.FC = () => {
                 headerLabel="SOLICITUD"
                 color="bg-[#2C3333]"
                 className="h-[110px] w-[260px] rounded-xl"
-                onClick={() => navigate('/solicitud-vacaciones')}
+                onClick={() =>
+                  navigate('/solicitud-vacaciones', {
+                    state: {
+                      titulo: 'Vacaciones',
+                      iconName: 'FaUmbrellaBeach',
+                    },
+                  })
+                }
               />
             </div>
 
@@ -109,7 +151,14 @@ const DashboardJefe: React.FC = () => {
                   headerLabel="SOLICITUD"
                   color="bg-[#2C3333]"
                   className="h-[110px] w-[260px] rounded-xl"
-                  onClick={() => navigate('/solicitud-otros')}
+                  onClick={() =>
+                    navigate('/solicitud-otros', {
+                      state: {
+                        titulo: 'Otros',
+                        iconName: 'FaList',
+                      },
+                    })
+                  }
                 />
               </div>
 
@@ -170,7 +219,7 @@ const DashboardJefe: React.FC = () => {
             </div>
 
             {/* HISTÓRICO DE SOLICITUDES */}
-            <div className="w-[280px] mt-8 bg-[#4669AF] text-white shadow-xl rounded-xl p-5 hover:scale-[1.03] transition-transform duration-300 cursor-pointer group">
+            <div className="w-[400px] mt-8 bg-[#4669AF] text-white shadow-xl rounded-xl p-5 hover:scale-[1.03] transition-transform duration-300 cursor-pointer group">
               <div className="flex items-center gap-3 mb-3">
                 <FaFileAlt className="text-white" size={26} />
                 <h3 className="text-lg font-bold">Histórico de Solicitudes</h3>
@@ -185,10 +234,6 @@ const DashboardJefe: React.FC = () => {
                 <button className="flex items-center gap-1 text-xs bg-white text-[#4669AF] font-semibold px-3 py-1.5 rounded-md hover:bg-gray-100 transition-colors">
                   <FaList size={12} />
                   Consultar
-                </button>
-                <button className="flex items-center gap-1 text-xs bg-white text-[#4669AF] font-semibold px-3 py-1.5 rounded-md hover:bg-gray-100 transition-colors">
-                  <FaFileSignature size={12} />
-                  Exportar
                 </button>
               </div>
             </div>
