@@ -23,7 +23,7 @@ const iconMap = {
   FaList: <FaList size={20} />,
 };
 
-// ✅ Tipo seguro para las claves del iconMap
+// claves del iconMap
 type IconKey = keyof typeof iconMap;
 
 const FormSolicitudes: React.FC = () => {
@@ -31,8 +31,6 @@ const FormSolicitudes: React.FC = () => {
 
   const titulo = state?.titulo || 'Título por defecto';
   const iconName = state?.iconName;
-
-  // ✅ Validación segura del icono
   const icon =
     iconName && iconName in iconMap ? (
       iconMap[iconName as IconKey]
@@ -63,27 +61,34 @@ const FormSolicitudes: React.FC = () => {
       <div className="border-t border-black mb-4" />
 
       {/* DESCRIPCIÓN Y SWITCH */}
-      <div className="flex justify-between items-center mb-4">
-        <p className="text-black text-sm">
-          Gestionar las novedades de Auxilio de Transporte para tus empleados
-        </p>
-        <div className="text-black flex items-center gap-2 text-sm font-medium">
-          <span className={!modoMasivo ? 'font-bold' : ''}>Individual</span>
-          <label
-            className="relative inline-flex items-center cursor-pointer"
-            aria-label="Cambiar modo de formulario"
-          >
-            <input
-              type="checkbox"
-              className="sr-only peer"
-              checked={modoMasivo}
-              onChange={handleToggle}
-              title="Cambiar entre modo individual y masivo"
-            />
-            <div className="w-11 h-6 bg-red-600 rounded-full peer peer-checked:bg-blue-600 transition-all" />
-            <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-5" />
-          </label>
-          <span className={modoMasivo ? 'font-bold' : ''}>Masivo</span>
+      <div className="flex justify-between items-center">
+        <div>
+          <p className="text-black text-sm">
+            Gestionar las novedades de Auxilio de Transporte para tus empleados
+          </p>
+        </div>
+        <div className="text-black flex flex-col items-end gap-1 text-sm font-medium">
+          <p className="text-xs text-gray-700 mb-1 mr-1">
+            ¿De qué modo quieres subir tu novedad?
+          </p>
+          <div className="flex items-center gap-2 -mt-1">
+            <span className={!modoMasivo ? 'font-bold' : ''}>Individual</span>
+            <label
+              className="relative inline-flex items-center cursor-pointer"
+              aria-label="Cambiar modo de formulario"
+            >
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                checked={modoMasivo}
+                onChange={handleToggle}
+                title="Cambiar entre modo individual y masivo"
+              />
+              <div className="w-11 h-6 bg-red-600 rounded-full peer peer-checked:bg-blue-600 transition-all" />
+              <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-5" />
+            </label>
+            <span className={modoMasivo ? 'font-bold' : ''}>Masivo</span>
+          </div>
         </div>
       </div>
 
@@ -94,7 +99,7 @@ const FormSolicitudes: React.FC = () => {
       </div>
 
       {/* FORMULARIOS DINAMICOS */}
-      {modoMasivo ? <Masivo tipo={state.tipo} /> : <Individual />}
+      {modoMasivo ? <Masivo /> : <Individual />}
     </section>
   );
 };

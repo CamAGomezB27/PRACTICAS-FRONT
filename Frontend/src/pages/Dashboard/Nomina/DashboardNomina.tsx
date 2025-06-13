@@ -122,7 +122,7 @@ const DashboardNomina: React.FC = () => {
             </div>
 
             {/* Exportaciones Consolidadas */}
-            <div className="w-[270px] bg-[#4669AF] text-white rounded-xl shadow-[2px_8px_12px_rgba(0,0,0,0.5)] p-4 hover:scale-[1.04] transition-all cursor-pointer mt-6">
+            <div className="w-[400px] mt-8 bg-[#4669AF] text-white shadow-xl rounded-xl p-5 hover:scale-[1.03] transition-transform duration-300 cursor-pointer group">
               <h3 className="text-lg font-extrabold mb-1 flex items-center gap-2">
                 <FaChartPie size={18} />
                 Exportaciones Consolidadas

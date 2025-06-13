@@ -231,8 +231,8 @@ const DashboardJefe: React.FC = () => {
                 completo.
               </p>
 
-              <div className="flex justify-between mt-2">
-                <button className="flex items-center gap-1 text-xs bg-white text-[#4669AF] font-semibold px-3 py-1.5 rounded-md hover:bg-gray-100 transition-colors">
+              <div className="flex justify-center mt-2">
+                <button className="flex items-center gap-1 bg-white text-[#4669AF] text-xs font-semibold px-3 py-1.5 rounded-md hover:bg-gray-200 transition-colors">
                   <FaList size={12} />
                   Consultar
                 </button>
