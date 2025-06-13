@@ -1,8 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Masivo: React.FC = () => {
+interface MasivoProps {
+  tipo: string;
+}
+
+const Masivo: React.FC<MasivoProps> = ({ tipo }) => {
   const navigate = useNavigate();
+
+  console.log('Tipo de solicitud', tipo);
 
   const handleFileDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -24,7 +30,7 @@ const Masivo: React.FC = () => {
       {/* Pasos */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
         {/* Paso 1 */}
-        <div className="border rounded p-4 shadow">
+        <div className="border rounded p-4 shadow border-black">
           <div className="w-8 h-8 rounded-full bg-[#4669AF] mx-auto flex items-center justify-center font-bold text-sm">
             1
           </div>
@@ -32,25 +38,28 @@ const Masivo: React.FC = () => {
           <p className="text-sm text-gray-600 mt-1">
             Descarga la plantilla con el formato requerido por Nómina
           </p>
-          <button className="mt-2 bg-gray-800 text-white px-4 py-1 rounded hover:opacity-90">
+          <button
+            onClick={() => window.open(``)}
+            className="mt-2 bg-gray-800 text-white px-4 py-1 rounded hover:opacity-90"
+          >
             Descargar Plantilla
           </button>
         </div>
 
         {/* Paso 2 */}
-        <div className="border rounded p-4 shadow">
+        <div className="border rounded p-4 shadow border-black">
           <div className="w-8 h-8 rounded-full bg-[#4669AF] mx-auto flex items-center justify-center font-bold text-sm">
             2
           </div>
           <p className="font-semibold mt-2">Llenar información</p>
           <p className="text-sm text-gray-600 mt-1">
-            Completa la información requerida de siguiente el formato del
-            archivo
+            Completa la información requerida para <strong>{tipo}</strong> de
+            acuerdo al formato del archivo.
           </p>
         </div>
 
         {/* Paso 3 */}
-        <div className="border rounded p-4 shadow">
+        <div className="border rounded p-4 shadow border-black">
           <div className="w-8 h-8 rounded-full bg-[#4669AF] mx-auto flex items-center justify-center font-bold text-sm">
             3
           </div>
@@ -68,7 +77,7 @@ const Masivo: React.FC = () => {
       <div
         onDrop={handleFileDrop}
         onDragOver={handleDragOver}
-        className="border border-dashed border-gray-500 p-2 rounded text-center"
+        className="border border-dashed border-black p-2 rounded text-center"
       >
         <p className="font-semibold">Arrastra y suelta tu archivo aquí</p>
         <p className="text-sm text-gray-500">
