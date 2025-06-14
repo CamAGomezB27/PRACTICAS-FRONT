@@ -39,6 +39,32 @@ const Masivo: React.FC = () => {
 
   const titulo = state?.titulo || 'Título por defecto';
 
+  const descargarPlantilla = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/archivo-adjunto/descargar-plantilla?titulo=${encodeURIComponent(titulo)}`,
+        {
+          method: 'GET',
+          credentials: 'include', //IMPORTANTE
+        },
+      );
+
+      if (!response.ok) throw new Error('No se pudo descargar la plantilla');
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'plantilla_solicitud.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      console.error('Error al descargar la plantilla; ', err);
+      alert('Hubo un problema al descargar la plantilla');
+    }
+  };
+
   return (
     <div className="grid gap-6 max-w-4xl mx-auto">
       {/* Pasos */}
@@ -53,7 +79,7 @@ const Masivo: React.FC = () => {
             Descarga la plantilla con el formato requerido por Nómina
           </p>
           <button
-            onClick={() => window.open(``)}
+            onClick={descargarPlantilla}
             className="mt-2 bg-gray-800 text-white px-4 py-1 rounded hover:opacity-90"
           >
             Descargar Plantilla
