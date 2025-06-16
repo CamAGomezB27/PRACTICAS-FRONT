@@ -9,6 +9,8 @@ export interface User {
   esAdmin: boolean;
   esNomina: boolean;
   esJefe: boolean;
+  panelTitle: string;
+  userRoleTitle: string;
 }
 
 //Tipo Contexto

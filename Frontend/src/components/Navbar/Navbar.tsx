@@ -1,18 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { FaUserCircle, FaBars } from 'react-icons/fa';
-import { HiOutlineLogout, HiOutlineUpload } from 'react-icons/hi';
+import { HiOutlineLogout } from 'react-icons/hi';
 import { useAuth } from '../../context/useAuth';
 import { useNavigate } from 'react-router-dom';
 
-interface NavbarProps {
-  panelTitle?: string;
-  userRoleTitle?: string;
-}
-
-const Navbar: React.FC<NavbarProps> = ({
-  panelTitle = '',
-  userRoleTitle = '',
-}) => {
+const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -87,15 +79,17 @@ const Navbar: React.FC<NavbarProps> = ({
 
         {/* Título del panel */}
         <h1 className="absolute left-1/2 transform -translate-x-1/2 text-lg font-semibold tracking-wide uppercase">
-          {panelTitle}
+          {user?.panelTitle || 'No disponible'}
         </h1>
 
         {/* Info del usuario */}
         <div className="flex items-center gap-3">
           <div className="text-right text-sm hidden sm:block">
-            <div className="font-bold uppercase">{userRoleTitle}</div>
+            <div className="font-bold uppercase">
+              {user?.userRoleTitle || 'No disponible'}
+            </div>
             <div className="text-gray-200 text-xs">
-              {user?.correo || 'Correo no disponible'}
+              {user?.correo || 'No Disponible'}
             </div>
           </div>
           <FaUserCircle
@@ -129,16 +123,6 @@ const Navbar: React.FC<NavbarProps> = ({
             >
               <HiOutlineLogout className="text-xl" />
               Cerrar sesión
-            </button>
-
-            <button
-              onClick={() => {
-                alert('Subir caso');
-              }}
-              className="flex items-center gap-4 px-5 py-3 text-sm font-medium text-[#1e3a8a] bg-white rounded-md shadow-sm hover:bg-[#4669AF] hover:text-white transition-colors"
-            >
-              <HiOutlineUpload className="text-xl" />
-              Subir caso
             </button>
           </div>
         </div>

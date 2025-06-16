@@ -17,7 +17,7 @@ const DashboardNomina: React.FC = () => {
 
   return (
     <div className="min-h-screen w-screen flex flex-col bg-white">
-      <Navbar panelTitle="NÓMINA" userRoleTitle="Nómina" />
+      <Navbar />
 
       <main className="flex-grow px-8 pt-8 pb-4">
         {/* Bienvenida */}
