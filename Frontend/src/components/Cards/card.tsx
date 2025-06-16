@@ -5,6 +5,7 @@ interface CardProps {
   icon?: ReactNode;
   className?: string;
   iconPosition?: 'left' | 'top';
+  onClick?: () => void;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -12,6 +13,7 @@ const Card: React.FC<CardProps> = ({
   icon,
   className = '',
   iconPosition = 'left',
+  onClick,
 }) => {
   // Sombra base visible
   const baseShadow = 'shadow-[2px_8px_12px_rgba(0,0,0,0.8)]'; // gris
@@ -31,6 +33,7 @@ const Card: React.FC<CardProps> = ({
 
   return (
     <div
+      onClick={onClick}
       className={`bg-white rounded-md cursor-pointer transition-all duration-300 ease-in-out transform ${baseShadow} ${hoverEffects} ${layoutClasses} ${className}`}
     >
       {icon && <div className={iconSizeClass}>{icon}</div>}

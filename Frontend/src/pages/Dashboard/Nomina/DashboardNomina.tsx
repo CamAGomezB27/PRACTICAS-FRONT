@@ -11,9 +11,11 @@ import Footer from '../../../components/Footer/Footer';
 import Card from '../../../components/Cards/card';
 import Franco from '../../../assets/images/Franco_Pensando_1-removebg-preview.png';
 import { useAuth } from '../../../context/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const DashboardNomina: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen w-screen flex flex-col bg-white">
@@ -48,21 +50,25 @@ const DashboardNomina: React.FC = () => {
                 title="Solicitudes Pendientes"
                 icon={<FaClipboardList size={50} />}
                 className="h-[130px] w-[250px] rounded-2xl"
+                onClick={() => navigate('/solicitudes-pendientes')}
               />
               <Card
                 title="Todas las Solicitudes"
                 icon={<FaListAlt size={50} />}
                 className="h-[130px] w-[250px] rounded-2xl"
+                onClick={() => navigate('/todas-las-solicitudes')}
               />
               <Card
                 title="Solicitudes por Tiendas"
                 icon={<FaStore size={50} />}
                 className="h-[130px] w-[250px] rounded-2xl"
+                onClick={() => navigate('/solicitudes-por-tiendas')}
               />
               <Card
                 title="Solicitudes Rechazadas"
                 icon={<FaTimesCircle size={50} />}
                 className="h-[130px] w-[250px] rounded-2xl"
+                onClick={() => navigate('/solicitudes-rechazadas')}
               />
             </div>
           </div>

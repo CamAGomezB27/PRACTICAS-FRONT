@@ -6,10 +6,7 @@ import FormSolicitudes from '../../components/Form_Solicitudes/Form';
 const Descuentos: React.FC = () => {
   return (
     <div className="min-h-screen w-screen flex flex-col bg-white">
-      <Navbar
-        panelTitle="Solicitud para Descuentos"
-        userRoleTitle="Jefe Tienda"
-      />
+      <Navbar />
       <main className="flex-grow px-8 pt-8 pb-4">
         <div className="flex justify-between mb-6">
           <FormSolicitudes />

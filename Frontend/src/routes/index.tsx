@@ -10,7 +10,11 @@ import OtroSiTemp from '../pages/Solicitudes/OtroSiTemp';
 import Vacaciones from '../pages/Solicitudes/Vacaciones';
 import Otros from '../pages/Solicitudes/Otros';
 import DashNomina from '../pages/Dashboard/Nomina/DashboardNomina';
+import SoliPendientes from '../pages/Gestion/Pendientes';
+import TodasSolis from '../pages/Gestion/Todas';
+import SoliPorTiendas from '../pages/Gestion/PorTiendas';
 import ProtectedRoute from './ProtectedRoute';
+import SoliRechazdas from '../pages/Gestion/Rechazadaas';
 // import Unauthorized from '../pages/Unauthorized'; // Puedes crear una simple página
 
 const AppRoutes = () => {
@@ -23,6 +27,18 @@ const AppRoutes = () => {
       </Route>
       <Route element={<ProtectedRoute allowedRoles={['nomina']} />}>
         <Route path="/dashboard-nomina" element={<DashNomina />} />
+      </Route>
+      <Route element={<ProtectedRoute allowedRoles={['nomina']} />}>
+        <Route path="/solicitudes-pendientes" element={<SoliPendientes />} />
+      </Route>
+      <Route element={<ProtectedRoute allowedRoles={['nomina']} />}>
+        <Route path="/todas-las-solicitudes" element={<TodasSolis />} />
+      </Route>
+      <Route element={<ProtectedRoute allowedRoles={['nomina']} />}>
+        <Route path="/solicitudes-por-tiendas" element={<SoliPorTiendas />} />
+      </Route>
+      <Route element={<ProtectedRoute allowedRoles={['nomina']} />}>
+        <Route path="/solicitudes-rechazadas" element={<SoliRechazdas />} />
       </Route>
       <Route element={<ProtectedRoute allowedRoles={['jefe']} />}>
         <Route path="/dashboard-jefe" element={<DashJefe />} />
