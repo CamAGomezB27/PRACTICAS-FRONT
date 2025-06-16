@@ -1,12 +1,14 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import NumeroSolicitudesAlert from '../Alerts/NumeroSolicitudes';
 
 const Masivo: React.FC = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [mostrarAlerta, setMostrarAlerta] = useState(false);
 
   const triggerFileSelect = () => {
     fileInputRef.current?.click();
@@ -39,10 +41,15 @@ const Masivo: React.FC = () => {
 
   const titulo = state?.titulo || 'Título por defecto';
 
-  const descargarPlantilla = async () => {
+  const descargarPlantilla = () => {
+    setMostrarAlerta(true);
+  };
+
+  const ConfirmarCantidad = async (cantidad: number) => {
+    setMostrarAlerta(true);
     try {
       const response = await fetch(
-        `http://localhost:3000/archivo-adjunto/descargar-plantilla?titulo=${encodeURIComponent(titulo)}`,
+        `http://localhost:3000/archivo-adjunto/descargar-plantilla?titulo=${encodeURIComponent(titulo)}&cantidad=${cantidad}`,
         {
           method: 'GET',
           credentials: 'include', //IMPORTANTE
@@ -166,6 +173,13 @@ const Masivo: React.FC = () => {
           Regresar
         </button>
       </div>
+
+      {mostrarAlerta && (
+        <NumeroSolicitudesAlert
+          onSubmit={ConfirmarCantidad}
+          onClose={() => setMostrarAlerta(false)}
+        />
+      )}
     </div>
   );
 };
