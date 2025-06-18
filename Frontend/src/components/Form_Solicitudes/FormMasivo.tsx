@@ -73,6 +73,34 @@ const Masivo: React.FC = () => {
     }
   };
 
+  const subirArchivo = async () => {
+    const formData = new FormData();
+    formData.append('archivo', selectedFile!);
+
+    try {
+      const response = await fetch(
+        'http://localhost:3000/archivo-adjunto/subir-archivo',
+        {
+          method: 'POST',
+          credentials: 'include', //cookies
+          body: formData,
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok)
+        throw new Error(data?.message || 'Error al subir archivo');
+
+      alert('✅ Archivo subido correctamente');
+      console.log('Respuesta del servidor:', data);
+      setSelectedFile(null); // Resetea el archivo
+    } catch (error) {
+      console.error('❌ Error al subir archivo:', error);
+      alert('Hubo un problema al subir el archivo');
+    }
+  };
+
   return (
     <div className="grid gap-6 max-w-4xl mx-auto">
       {/* Pasos */}
@@ -122,6 +150,7 @@ const Masivo: React.FC = () => {
                 : 'bg-gray-400 cursor-not-allowed'
             }`}
             disabled={!selectedFile}
+            onClick={subirArchivo}
           >
             Subir Archivo
           </button>
