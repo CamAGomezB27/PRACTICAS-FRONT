@@ -44,8 +44,8 @@ const FormSolicitudes: React.FC = () => {
 
   // Sombra dinámica según el modo
   const hoverShadow = modoMasivo
-    ? 'hover:shadow-[4px_8px_15px_rgba(10,10,200,1.5)]' // Azul para masivo
-    : 'hover:shadow-[4px_8px_15px_rgba(200,10,10,1.5)]'; // Rojo para individual
+    ? 'hover:shadow-[4px_8px_15px_rgba(10,10,200,1.5)]' // masivo
+    : 'hover:shadow-[4px_8px_15px_rgba(200,10,10,1.5)]'; // individual
 
   return (
     <section
@@ -64,7 +64,7 @@ const FormSolicitudes: React.FC = () => {
       <div className="flex justify-between items-center">
         <div>
           <p className="text-black text-sm">
-            Gestionar las novedades de Auxilio de Transporte para tus empleados
+            Gestionar las novedades de {titulo} para tus empleados
           </p>
         </div>
         <div className="text-black flex flex-col items-end gap-1 text-sm font-medium">

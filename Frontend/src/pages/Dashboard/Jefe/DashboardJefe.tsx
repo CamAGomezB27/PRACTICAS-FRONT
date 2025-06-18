@@ -60,7 +60,6 @@ const DashboardJefe: React.FC = () => {
                     state: {
                       titulo: 'Auxilio de transporte',
                       iconName: 'FaBus',
-                      tipo: 'aux_trans',
                     },
                   })
                 }
