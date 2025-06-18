@@ -40,6 +40,7 @@ const Masivo: React.FC = () => {
   };
 
   const titulo = state?.titulo || 'Título por defecto';
+  console.log('Título que llega desde el estado:', titulo);
 
   const descargarPlantilla = () => {
     setMostrarAlerta(true);
