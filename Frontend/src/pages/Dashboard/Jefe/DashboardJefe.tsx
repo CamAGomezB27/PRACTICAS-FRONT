@@ -14,6 +14,7 @@ import CardsTitle from '../../../components/Cards/cardsTitle';
 import Franco from '../../../assets/images/Franco_Pensando_1-removebg-preview.png';
 import { useAuth } from '../../../context/useAuth';
 import { useNavigate } from 'react-router-dom';
+import NovedadesRecientes from '../../../components/Box_Novedades/novedades';
 
 const DashboardJefe: React.FC = () => {
   const { user } = useAuth();
@@ -176,47 +177,7 @@ const DashboardJefe: React.FC = () => {
           {/* Columna 3 - Novedades */}
           <div className="w-1/3 pl-5s flex flex-col items-center space-y-3">
             {/* Novedades Recientes */}
-            <div className="text-sm font-bold w-[450px] bg-gray-400 rounded-2xl shadow-inner flex flex-col space-y-3 p-3">
-              <div className="flex flex-col space-y-3 max-h-[200px] overflow-y-auto pr-1">
-                {[...Array(10)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="flex items-start bg-white rounded-xl shadow-sm p-3 relative cursor-pointer"
-                  >
-                    <div
-                      className={`w-1.5 h-full rounded-l-md absolute left-0 top-0 bottom-0 ${
-                        i % 3 === 0
-                          ? 'bg-green-500'
-                          : i % 3 === 1
-                            ? 'bg-yellow-500'
-                            : 'bg-red-500'
-                      }`}
-                    />
-                    <div className="pl-3 pr-1 flex-1">
-                      <p className="text-sm font-semibold text-gray-800">
-                        {`SOLICITUD #0${i + 1111} ${
-                          i % 3 === 0
-                            ? 'GESTIONADA'
-                            : i % 3 === 1
-                              ? 'EN PROCESO'
-                              : 'RECHAZADA'
-                        }`}
-                      </p>
-                      <p className="text-xs text-gray-400">
-                        {i % 3 === 0
-                          ? 'Solicitud del Empleado en tienda fue gestionada'
-                          : i % 3 === 1
-                            ? 'Solicitud del Empleado en tienda... En proceso'
-                            : 'Tu solicitud del Empleado fue rechazada'}
-                      </p>
-                    </div>
-                    <span className="text-[10px] text-gray-800 absolute top-2 right-3">
-                      9:41 AM
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <NovedadesRecientes />
 
             {/* HISTÓRICO DE SOLICITUDES */}
             <div className="w-[400px] mt-8 bg-[#4669AF] text-white shadow-xl rounded-xl p-5 hover:scale-[1.03] transition-transform duration-300 cursor-pointer group">
