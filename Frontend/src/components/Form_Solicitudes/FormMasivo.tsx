@@ -62,7 +62,7 @@ const Masivo: React.FC = () => {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', 'plantilla_solicitud.xlsx');
+      link.setAttribute('download', `Plantilla_${titulo}.xlsx`);
       document.body.appendChild(link);
       link.click();
       link.remove();
