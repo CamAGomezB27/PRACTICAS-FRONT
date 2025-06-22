@@ -7,10 +7,8 @@ const HorasExt: React.FC = () => {
   return (
     <div className="min-h-screen w-screen flex flex-col bg-white">
       <Navbar />
-      <main className="flex-grow px-8 pt-8 pb-4">
-        <div className="flex justify-between mb-6">
-          <FormSolicitudes />
-        </div>
+      <main className="flex-grow flex items-center justify-center px-4 py-6 transform -translate-y-8">
+        <FormSolicitudes />
       </main>
       <Footer />
     </div>

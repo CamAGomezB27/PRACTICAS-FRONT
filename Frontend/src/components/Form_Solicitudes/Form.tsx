@@ -49,7 +49,7 @@ const FormSolicitudes: React.FC = () => {
 
   return (
     <section
-      className={`bg-white py-2 px-8 rounded-lg w-full max-w-4xl mx-auto relative shadow-[2px_8px_12px_rgba(0,0,0,0.8)] ${hoverShadow} transform hover:scale-105 transition-all duration-300 ease-in-out hover:-translate-y-2`}
+      className={`bg-white px-8 rounded-lg w-full max-w-4xl mx-auto relative shadow-[2px_8px_12px_rgba(0,0,0,0.8)] ${hoverShadow} transform hover:scale-105 transition-all duration-300 ease-in-out hover:-translate-y-2`}
     >
       {/* TITULO */}
       <div className="text-black flex items-center gap-2 mb-2 justify-center">
