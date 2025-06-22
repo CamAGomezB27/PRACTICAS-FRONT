@@ -5,6 +5,7 @@ import FormularioOtroSiDef from './FromOtrSDef';
 import FormularioVacaciones from './FormVacaciones';
 import FormularioOtroSiTemporal from './FormOtroSiTemp';
 import FormularioHorasExtra from './FormHorasExt';
+import FormularioOtros from './FormOtros';
 
 const Individual: React.FC = () => {
   const { state } = useLocation();
@@ -22,6 +23,8 @@ const Individual: React.FC = () => {
         return <FormularioOtroSiTemporal />;
       case 'Horas Extra':
         return <FormularioHorasExtra />;
+      case 'Otros':
+        return <FormularioOtros />;
     }
   };
 
