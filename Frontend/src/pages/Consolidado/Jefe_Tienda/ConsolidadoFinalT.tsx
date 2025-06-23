@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Navbar from '../../../components/Navbar/Navbar';
 import Footer from '../../../components/Footer/Footer';
 import FiltroExportConsTienda from '../../../components/Form_Filtros/FiltrosExportConsTienda';
-import VistaArchConsTienda from '../../../components/Viata_ArchivosExport/ViataArchivoExportTienda';
+import VistaArchConsTienda from '../../../components/Vista_ArchivosExport/ViataArchivoExportTienda';
 
 interface FiltroExportacion {
   tipo: string;

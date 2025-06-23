@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import TablePrevMasiva from '../../Table_VistPrev/TableVPTienda'; // Ajusta la ruta si cambia
+import TablePrevMasiva from '../../Table_VistPrev/TableVPTienda';
 
 // Tipo original
 interface Solicitud {
@@ -109,7 +109,7 @@ const FormVistaPrevMasiva = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-4 bg-white">
-      <div className="bg-white border border-gray-300 rounded-lg shadow-sm">
+      <div className="bg-white p-2 rounded-lg border border-gray-300 shadow-[2px_8px_12px_rgba(0,0,0,0.8)] hover:shadow-[4px_10px_14px_rgba(0,0,0,1)] hover:scale-105 transition-all duration-300">
         {/* Encabezado */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center space-x-3">

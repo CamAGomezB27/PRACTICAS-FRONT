@@ -64,18 +64,19 @@ const TablaVistaPreviaMasiva = ({ datos }: { datos: filas[] }) => {
   ];
 
   return (
-    <div className="w-full">
+    <div className="w-full max-w-full">
       <div className="bg-[#4669AF] text-white text-center py-2 font-medium text-sm rounded-t-md">
         Vista Previa del Documento
       </div>
-      <div className="overflow-x-auto border border-gray-300 rounded-b-md">
-        <table className="min-w-full table-fixed border-collapse text-sm bg-white">
+
+      <div className="overflow-x-auto rounded-b-md border border-gray-300 scrollbar-thin scrollbar-thumb-[#4669AF] scrollbar-track-gray-200">
+        <table className="min-w-max table-fixed border-collapse text-sm bg-white">
           <thead className="bg-[#4669AF] text-white sticky top-0 z-10">
             <tr>
               {columnas.map((col, i) => (
                 <th
                   key={i}
-                  className="border-r border-gray-300 px-3 py-3 font-semibold text-xs text-left w-[160px] min-w-[160px] sticky top-0 bg-[#4669AF]"
+                  className="border-r border-gray-300 px-3 py-3 font-semibold text-xs text-left min-w-[160px] bg-[#4669AF]"
                 >
                   <div className="whitespace-normal break-words leading-tight">
                     {col}
@@ -88,7 +89,9 @@ const TablaVistaPreviaMasiva = ({ datos }: { datos: filas[] }) => {
             {datos.map((fila, rowIndex) => (
               <tr
                 key={fila.id}
-                className={`hover:bg-gray-50 ${rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
+                className={`hover:bg-gray-50 ${
+                  rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+                }`}
               >
                 {[
                   fila.id,
@@ -132,7 +135,7 @@ const TablaVistaPreviaMasiva = ({ datos }: { datos: filas[] }) => {
                 ].map((valor, idx) => (
                   <td
                     key={idx}
-                    className="border-r border-b border-gray-200 px-3 py-2 text-xs w-[160px] min-w-[160px] text-black"
+                    className="border-r border-b border-gray-200 px-3 py-2 text-xs min-w-[160px] text-black"
                   >
                     <div className="truncate" title={String(valor)}>
                       {valor}
