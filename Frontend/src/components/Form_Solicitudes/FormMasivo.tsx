@@ -76,6 +76,7 @@ const Masivo: React.FC = () => {
   const subirArchivo = async () => {
     const formData = new FormData();
     formData.append('archivo', selectedFile!);
+    formData.append('titulo', titulo);
 
     try {
       const response = await fetch(
