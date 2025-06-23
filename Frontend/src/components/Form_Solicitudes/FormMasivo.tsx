@@ -6,7 +6,12 @@ import ErroresArchivoAlert from '../Alerts/ErroresArchivoAlert';
 import ExitoArchivoAlert from '../Alerts/ExitoArchivoAlert';
 
 const Masivo: React.FC = () => {
-  const [archivoSubido, setArchivoSubido] = useState<string | null>(null);
+  const [archivoSubido, setArchivoSubido] = useState<{
+    nombreArchivo: string;
+    tituloNovedad: string;
+    idCaso: number;
+  } | null>(null);
+
   const [erroresArchivo, setErroresArchivo] = useState<string[] | null>(null);
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -105,8 +110,13 @@ const Masivo: React.FC = () => {
 
       //VALIDACIÓN EXITOSA
       console.log('Respuesta del servidor:', data);
-      setArchivoSubido(selectedFile.name);
-      setSelectedFile(null); // Resetea el input
+
+      setArchivoSubido({
+        nombreArchivo: selectedFile.name,
+        tituloNovedad: titulo,
+        idCaso: data.novedadId, // <- del backend
+      });
+      setSelectedFile(null);
     } catch (error) {
       console.error('❌ Error al subir archivo:', error);
       alert('Hubo un problema al subir el archivo');
@@ -232,7 +242,9 @@ const Masivo: React.FC = () => {
 
       {archivoSubido && (
         <ExitoArchivoAlert
-          nombreArchivo={archivoSubido}
+          nombreArchivo={archivoSubido.nombreArchivo}
+          tituloNovedad={archivoSubido.tituloNovedad}
+          idCaso={archivoSubido.idCaso}
           onClose={() => setArchivoSubido(null)}
         />
       )}

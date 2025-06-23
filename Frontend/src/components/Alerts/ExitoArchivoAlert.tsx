@@ -4,11 +4,15 @@ import { useNavigate } from 'react-router-dom';
 
 interface ExitoArchivoAlertProps {
   nombreArchivo: string;
+  tituloNovedad: string;
+  idCaso: number;
   onClose: () => void;
 }
 
 const ExitoArchivoAlert: React.FC<ExitoArchivoAlertProps> = ({
   nombreArchivo,
+  tituloNovedad,
+  idCaso,
   onClose,
 }) => {
   const [closing, setClosing] = useState(false);
@@ -56,8 +60,9 @@ const ExitoArchivoAlert: React.FC<ExitoArchivoAlertProps> = ({
 
         <div className="text-sm text-gray-700 text-center space-y-1">
           <p>
-            <strong>{nombreArchivo}</strong> fue recibido y será procesado por
-            el equipo de Nómina.
+            Su novedad de <strong>{tituloNovedad}</strong> fue creada con el
+            código <strong>CASO-{idCaso}</strong> usando el archivo{' '}
+            <strong>{nombreArchivo}</strong>.
           </p>
           <p className="text-gray-600 italic">
             No olvides estar pendiente del estado de esta solicitud en tu panel.
