@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import LoginPage from '../pages/Login/LoginPage';
 import DashAdmin from '../pages/Dashboard/Admin/DashboardAdministrador';
 import DashJefe from '../pages/Dashboard/Jefe/DashboardJefe';
+import VistaPrevisMasivaT from '../pages/VistaPrev/Tienda/VistPrevMas';
 import SoliAuxTrans from '../pages/Solicitudes/AuxTransport';
 import Descuentos from '../pages/Solicitudes/Descuentos';
 import HorasExt from '../pages/Solicitudes/HorasExt';
@@ -40,6 +41,12 @@ const AppRoutes = () => {
       </Route>
       <Route element={<ProtectedRoute allowedRoles={['nomina']} />}>
         <Route path="/solicitudes-rechazadas" element={<SoliRechazdas />} />
+      </Route>
+      <Route element={<ProtectedRoute allowedRoles={['jefe']} />}>
+        <Route
+          path="/vista-previa-masiva-tienda"
+          element={<VistaPrevisMasivaT />}
+        />
       </Route>
       <Route element={<ProtectedRoute allowedRoles={['jefe']} />}>
         <Route path="/dashboard-jefe" element={<DashJefe />} />

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 type Estado = 'CREADA' | 'GESTIONADA' | 'EN PROCESO' | 'RECHAZADA';
 
@@ -27,6 +28,8 @@ const getColor = (estado: Estado) => {
 };
 
 const NovedadesRecientes: React.FC = () => {
+  const navigate = useNavigate();
+
   const [novedades, setNovedades] = useState<Novedad[]>([]);
 
   const fetchNovedades = async () => {
@@ -50,12 +53,14 @@ const NovedadesRecientes: React.FC = () => {
   }, []);
 
   return (
-    <div className="text-sm font-bold w-[450px] bg-gray-400 rounded-2xl shadow-inner flex flex-col space-y-3 p-3">
+    <div className="text-sm font-bold w-[500px] bg-gray-400 rounded-2xl shadow-inner flex flex-col space-y-3 p-3">
       <div className="flex flex-col space-y-3 max-h-[200px] overflow-y-auto pr-1">
         {novedades.map((novedad) => (
           <div
             key={novedad.id_novedad}
-            className="flex items-start bg-white rounded-xl shadow-sm p-3 relative cursor-pointer"
+            className="flex items-start bg-white rounded-xl shadow-sm p-3 relative cursor-pointer 
+           transform transition-transform duration-150 hover:scale-[1.01]"
+            onClick={() => navigate('/vista-previa-masiva-tienda')}
           >
             <div
               className={`w-1.5 h-full rounded-l-md absolute left-0 top-0 bottom-0 ${getColor(
