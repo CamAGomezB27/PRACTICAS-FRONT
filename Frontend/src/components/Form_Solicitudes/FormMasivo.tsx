@@ -74,6 +74,8 @@ const Masivo: React.FC = () => {
   };
 
   const subirArchivo = async () => {
+    if (!selectedFile) return;
+
     const formData = new FormData();
     formData.append('archivo', selectedFile!);
     formData.append('titulo', titulo);
@@ -90,9 +92,14 @@ const Masivo: React.FC = () => {
 
       const data = await response.json();
 
-      if (!response.ok)
-        throw new Error(data?.message || 'Error al subir archivo');
+      //VALIDACIÓN FALLIDA DESDE EL BACKEND
+      if (!response.ok || data.errores) {
+        const errores = data.errores?.join('\n') || 'Error al subir archivo';
+        alert(`❌ Archivo no válido:\n${errores}`);
+        return;
+      }
 
+      //VALIDACIÓN EXITOSA
       alert('✅ Archivo subido correctamente');
       console.log('Respuesta del servidor:', data);
       setSelectedFile(null); // Resetea el archivo

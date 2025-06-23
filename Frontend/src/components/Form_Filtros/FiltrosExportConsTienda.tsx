@@ -116,8 +116,8 @@ const FiltroExportConsTienda = ({
           disabled={!filtros.tipo && !filtros.desde && !filtros.hasta}
           className={`flex-1 text-white text-sm font-medium rounded-md h-10 transition-colors flex items-center justify-center text-center ${
             filtros.tipo || filtros.desde || filtros.hasta
-              ? 'bg-gray-400 hover:bg-gray-500 cursor-pointer'
-              : 'bg-gray-300 cursor-not-allowed opacity-50'
+              ? 'bg-gray-700 hover:bg-gray-900 cursor-pointer'
+              : 'bg-gray-300 cursor-not-allowed opacity-50 text-black'
           }`}
         >
           Limpiar Filtros
