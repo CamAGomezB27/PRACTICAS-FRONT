@@ -2,8 +2,12 @@ import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import NumeroSolicitudesAlert from '../Alerts/NumeroSolicitudes';
+import ErroresArchivoAlert from '../Alerts/ErroresArchivoAlert';
+import ExitoArchivoAlert from '../Alerts/ExitoArchivoAlert';
 
 const Masivo: React.FC = () => {
+  const [archivoSubido, setArchivoSubido] = useState<string | null>(null);
+  const [erroresArchivo, setErroresArchivo] = useState<string[] | null>(null);
   const navigate = useNavigate();
   const { state } = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -94,15 +98,15 @@ const Masivo: React.FC = () => {
 
       //VALIDACIÓN FALLIDA DESDE EL BACKEND
       if (!response.ok || data.errores) {
-        const errores = data.errores?.join('\n') || 'Error al subir archivo';
-        alert(`❌ Archivo no válido:\n${errores}`);
+        const errores = data.errores || ['Error al subir archivo.'];
+        setErroresArchivo(errores);
         return;
       }
 
       //VALIDACIÓN EXITOSA
-      alert('✅ Archivo subido correctamente');
       console.log('Respuesta del servidor:', data);
-      setSelectedFile(null); // Resetea el archivo
+      setArchivoSubido(selectedFile.name);
+      setSelectedFile(null); // Resetea el input
     } catch (error) {
       console.error('❌ Error al subir archivo:', error);
       alert('Hubo un problema al subir el archivo');
@@ -216,6 +220,20 @@ const Masivo: React.FC = () => {
         <NumeroSolicitudesAlert
           onSubmit={ConfirmarCantidad}
           onClose={() => setMostrarAlerta(false)}
+        />
+      )}
+
+      {erroresArchivo && (
+        <ErroresArchivoAlert
+          errores={erroresArchivo}
+          onClose={() => setErroresArchivo(null)}
+        />
+      )}
+
+      {archivoSubido && (
+        <ExitoArchivoAlert
+          nombreArchivo={archivoSubido}
+          onClose={() => setArchivoSubido(null)}
         />
       )}
     </div>
