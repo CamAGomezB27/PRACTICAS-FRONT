@@ -1,5 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, forwardRef } from 'react';
 import { Search, ChevronDown } from 'lucide-react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { registerLocale } from 'react-datepicker';
+import { es } from 'date-fns/locale';
+registerLocale('es', es);
 
 interface FiltroExportacion {
   tipo: string;
@@ -18,6 +23,9 @@ const FiltroExportConsTienda = ({
     hasta: '',
   });
 
+  const [fechaDesde, setFechaDesde] = useState<Date | null>(null);
+  const [fechaHasta, setFechaHasta] = useState<Date | null>(null);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
@@ -26,11 +34,27 @@ const FiltroExportConsTienda = ({
 
   const limpiar = () => {
     setFiltros({ tipo: '', desde: '', hasta: '' });
+    setFechaDesde(null);
+    setFechaHasta(null);
   };
+
+  const CustomInput = forwardRef<
+    HTMLInputElement,
+    React.ComponentProps<'input'>
+  >(({ value, onClick }, ref) => (
+    <input
+      onClick={onClick}
+      ref={ref}
+      value={value}
+      placeholder="Selecciona una fecha"
+      readOnly
+      className="w-full border rounded px-3 py-2 bg-white border-gray-600 text-black"
+    />
+  ));
 
   return (
     <div className="bg-white p-8 rounded-lg border border-gray-300 shadow-[2px_8px_12px_rgba(0,0,0,0.8)] hover:shadow-[4px_10px_14px_rgba(0,0,0,1)] hover:scale-105 transition-all duration-300 w-[280px]">
-      {/* Header con ícono */}
+      {/* Header */}
       <div className="flex items-start mb-6">
         <div className="mr-3 mt-1">
           <div className="w-8 h-8 bg-[#4669AF] rounded-full flex items-center justify-center shadow">
@@ -78,28 +102,43 @@ const FiltroExportConsTienda = ({
         <label className="block text-sm text-gray-700 mb-1 font-medium">
           Fecha Desde
         </label>
-        <input
-          type="text"
-          name="desde"
-          value={filtros.desde}
-          onChange={handleChange}
-          placeholder="DD/MM/AAAA"
-          className="w-full h-10 px-3 border border-gray-300 rounded-md bg-white text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#4669AF]"
+        <DatePicker
+          selected={fechaDesde}
+          onChange={(date) => {
+            setFechaDesde(date);
+            setFiltros((prev) => ({
+              ...prev,
+              desde: date ? date.toISOString().split('T')[0] : '',
+            }));
+          }}
+          locale="es"
+          dateFormat="dd/MM/yyyy"
+          customInput={<CustomInput />}
+          placeholderText="Selecciona una fecha"
+          popperClassName="text-sm scale-90"
+          popperPlacement="right-start"
         />
       </div>
 
       {/* Fecha Hasta */}
-      <div className="mb-6">
+      <div className="mb-4">
         <label className="block text-sm text-gray-700 mb-1 font-medium">
           Fecha Hasta
         </label>
-        <input
-          type="text"
-          name="hasta"
-          value={filtros.hasta}
-          onChange={handleChange}
-          placeholder="DD/MM/AAAA"
-          className="w-full h-10 px-3 border border-gray-300 rounded-md bg-white text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#4669AF]"
+        <DatePicker
+          selected={fechaHasta}
+          onChange={(date) => {
+            setFechaHasta(date);
+            setFiltros((prev) => ({
+              ...prev,
+              hasta: date ? date.toISOString().split('T')[0] : '',
+            }));
+          }}
+          locale="es"
+          dateFormat="dd/MM/yyyy"
+          customInput={<CustomInput />}
+          placeholderText="Selecciona una fecha"
+          popperClassName="text-sm scale-90"
         />
       </div>
 
