@@ -9,6 +9,7 @@ import OtroSiDef from '../pages/Solicitudes/OtroSiDef';
 import OtroSiTemp from '../pages/Solicitudes/OtroSiTemp';
 import Vacaciones from '../pages/Solicitudes/Vacaciones';
 import Otros from '../pages/Solicitudes/Otros';
+import ExportConsTienda from '../pages/Consolidado/Jefe_Tienda/ConsolidadoFinalT';
 import DashNomina from '../pages/Dashboard/Nomina/DashboardNomina';
 import SoliPendientes from '../pages/Gestion/Pendientes';
 import TodasSolis from '../pages/Gestion/Todas';
@@ -63,6 +64,12 @@ const AppRoutes = () => {
       </Route>
       <Route element={<ProtectedRoute allowedRoles={['jefe']} />}>
         <Route path="/solicitud-otros" element={<Otros />} />
+      </Route>
+      <Route element={<ProtectedRoute allowedRoles={['jefe']} />}>
+        <Route
+          path="/exportacion-consolidados-tienda"
+          element={<ExportConsTienda />}
+        />
       </Route>
     </Routes>
   );
