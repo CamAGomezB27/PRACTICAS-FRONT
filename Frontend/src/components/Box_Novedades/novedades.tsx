@@ -28,6 +28,8 @@ interface Novedad {
       };
     }[];
   };
+  es_masiva?: boolean;
+  cantidad_solicitudes?: number;
 }
 
 const getColor = (estado: Estado) => {
@@ -56,6 +58,7 @@ const NovedadesRecientes: React.FC = () => {
         'http://localhost:3000/novedad',
         { withCredentials: true },
       );
+      console.log('🔎 Novedades recibidas:', response.data);
       setNovedades(response.data);
     } catch (error) {
       console.error('Error al obtener novedades: ', error);
@@ -103,10 +106,14 @@ const NovedadesRecientes: React.FC = () => {
                     novedad.tipo_novedad?.nombre_tipo ?? 'Sin tipo'
                   }`}
                 </p>
+
                 <p className="text-xs text-gray-400">{novedad.descripcion}</p>
-                <p className="text-[10px] text-gray-500 italic">
-                  Tienda: {tiendaNombre}
-                </p>
+                {novedad.es_masiva && (
+                  <p className="text-[10px] text-gray-500 italic">
+                    Tienda: {tiendaNombre} • Solicitudes:{' '}
+                    {novedad.cantidad_solicitudes ?? 'N/A'} • 📎 Archivo adjunto
+                  </p>
+                )}
               </div>
               <span className="text-[10px] text-gray-800 absolute top-2 right-3">
                 {new Date(novedad.fecha_creacion).toLocaleTimeString('es-CO', {
