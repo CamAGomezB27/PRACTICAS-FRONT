@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Download } from 'lucide-react';
 import TablaConsTienda from '../Consolidado_Export/TablaConsolidadoTienda';
 import axios from 'axios';
+import AlertFiltros from '../Alerts/AlertFiltros';
 
 interface FiltroExportacion {
   tipo: string;
@@ -78,7 +79,6 @@ interface PropsVistaArchConsTienda {
   filtros?: FiltroExportacion;
 }
 
-// ✅ Función robusta para formatear fechas tipo 'YYYY-MM-DD'
 const formatearFecha = (fecha: string | Date | null | undefined): string => {
   if (!fecha) return '';
   const dateObj = new Date(fecha);
@@ -91,11 +91,12 @@ const VistaArchConsTienda: React.FC<PropsVistaArchConsTienda> = ({
 }) => {
   const [datos, setDatos] = useState<filas[]>([]);
   const [loading, setLoading] = useState(false);
+  const [mostrarAlerta, setMostrarAlerta] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      setDatos([]); // 🧹 Limpiar datos anteriores al aplicar nuevos filtros
-      setLoading(true); // opcional
+      setLoading(true);
+      setDatos([]);
 
       try {
         const params = new URLSearchParams();
@@ -143,8 +144,10 @@ const VistaArchConsTienda: React.FC<PropsVistaArchConsTienda> = ({
         }));
 
         setDatos(datosFormateados);
+        setMostrarAlerta(datosFormateados.length === 0);
       } catch (error) {
         console.error('❌ Error al cargar el consolidado:', error);
+        setMostrarAlerta(true);
       } finally {
         setLoading(false);
       }
@@ -187,11 +190,7 @@ const VistaArchConsTienda: React.FC<PropsVistaArchConsTienda> = ({
             <div className="max-h-[250px] overflow-auto scrollbar-thin scrollbar-thumb-[#4669AF] scrollbar-track-gray-200">
               <TablaConsTienda datos={datos} />
             </div>
-          ) : (
-            <div className="p-4 text-center text-gray-600 text-sm italic">
-              No hay solicitudes para los filtros seleccionados.
-            </div>
-          )}
+          ) : null}
         </div>
 
         <div className="mt-4 text-sm text-gray-500">
@@ -201,6 +200,10 @@ const VistaArchConsTienda: React.FC<PropsVistaArchConsTienda> = ({
           </p>
         </div>
       </div>
+
+      {mostrarAlerta && (
+        <AlertFiltros onClose={() => setMostrarAlerta(false)} />
+      )}
     </div>
   );
 };
