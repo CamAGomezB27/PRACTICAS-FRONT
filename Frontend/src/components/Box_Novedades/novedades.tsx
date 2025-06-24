@@ -46,6 +46,20 @@ const getColor = (estado: Estado) => {
   }
 };
 
+function getIconNameByTipoNovedad(tipo: string = ''): string {
+  const tipoLower = tipo.toLowerCase();
+
+  if (tipoLower.includes('transporte')) return 'FaBus';
+  if (tipoLower.includes('descuento')) return 'FaMoneyBillAlt';
+  if (tipoLower.includes('hora') || tipoLower.includes('extra'))
+    return 'FaClock';
+  if (tipoLower.includes('definitivo')) return 'FaFileSignature';
+  if (tipoLower.includes('temporal')) return 'FaFileAlt';
+  if (tipoLower.includes('vacaciones')) return 'FaUmbrellaBeach';
+
+  return 'FaList'; // ← Fallback para "Otros" o desconocidos
+}
+
 const NovedadesRecientes: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -94,7 +108,20 @@ const NovedadesRecientes: React.FC = () => {
               className="flex items-start bg-white rounded-xl shadow-sm p-3 relative cursor-pointer 
               transform transition-transform duration-150 hover:scale-[1.01]"
               onClick={() =>
-                navigate(`/vista-previa-masiva-tienda/${novedad.id_novedad}`)
+                navigate(`/vista-previa-masiva-tienda/${novedad.id_novedad}`, {
+                  state: {
+                    id_novedad: novedad.id_novedad,
+                    descripcion: novedad.descripcion,
+                    tipo: novedad.tipo_novedad?.nombre_tipo ?? 'Sin tipo',
+                    estado: estadoVisual,
+                    tienda: tiendaNombre,
+                    fecha: novedad.fecha_creacion,
+                    cantidad: novedad.cantidad_solicitudes ?? 'N/A',
+                    iconName: getIconNameByTipoNovedad(
+                      novedad.tipo_novedad?.nombre_tipo,
+                    ),
+                  },
+                })
               }
             >
               <div

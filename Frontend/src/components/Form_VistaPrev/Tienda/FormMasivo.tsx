@@ -1,9 +1,19 @@
 import { useState, useEffect } from 'react';
-import TablePrevMasiva from '../../Table_VistPrev/TableVPTienda';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import TablePrevMasiva from '../../Table_VistPrev/TableVPTienda';
+import {
+  FaBus,
+  FaMoneyBillAlt,
+  FaClock,
+  FaFileSignature,
+  FaFileAlt,
+  FaUmbrellaBeach,
+  FaList,
+} from 'react-icons/fa';
+import { ReactElement } from 'react';
 
-// Tipo original
+// Tipos de datos
 interface Solicitud {
   fecha: string;
   cedula: string;
@@ -14,7 +24,6 @@ interface Solicitud {
   detalle: string;
 }
 
-// Tipo que espera la tabla
 interface filas {
   id: number;
   numero: number;
@@ -70,11 +79,9 @@ interface SolicitudConIdDetalle extends Solicitud {
   categoria_inconsistencia: string;
 }
 
-// Función para mapear los datos
-const mapSolicitudesToFilas = (
-  solicitudes: SolicitudConIdDetalle[],
-): filas[] => {
-  return solicitudes.map((s) => ({
+// Mapeo
+const mapSolicitudesToFilas = (solicitudes: SolicitudConIdDetalle[]): filas[] =>
+  solicitudes.map((s) => ({
     id: s.id_novedad,
     numero: s.n ?? 0,
     fechaReporte: s.fecha ?? '',
@@ -104,13 +111,27 @@ const mapSolicitudesToFilas = (
     AreaRespon: s.area_responsable ?? '',
     CategInconsitencia: s.categoria_inconsistencia ?? '',
   }));
+
+// Mapeo del nombre al componente del ícono
+const iconMap: Record<string, ReactElement> = {
+  FaBus: <FaBus className="text-white text-2xl" />,
+  FaMoneyBillAlt: <FaMoneyBillAlt className="text-white text-2xl" />,
+  FaClock: <FaClock className="text-white text-2xl" />,
+  FaFileSignature: <FaFileSignature className="text-white text-2xl" />,
+  FaFileAlt: <FaFileAlt className="text-white text-2xl" />,
+  FaUmbrellaBeach: <FaUmbrellaBeach className="text-white text-2xl" />,
+  FaList: <FaList className="text-white text-2xl" />,
 };
 
+// Componente principal
 const FormVistaPrevMasiva = () => {
-  const { id } = useParams(); // ← id_novedad desde la URL
+  const { id } = useParams();
+  const location = useLocation();
+  const { id_novedad, descripcion, tipo, estado, tienda, fecha, cantidad } =
+    location.state || {};
+
   const [solicitudes, setSolicitudes] = useState<SolicitudConIdDetalle[]>([]);
 
-  // Cargar datos al iniciar
   useEffect(() => {
     const fetchDatos = async () => {
       try {
@@ -118,9 +139,7 @@ const FormVistaPrevMasiva = () => {
           `http://localhost:3000/novedad/${id}/masiva`,
           { withCredentials: true },
         );
-        console.log('🎯 Datos recibidos:', response.data);
-        const datos: SolicitudConIdDetalle[] = response.data;
-        setSolicitudes(datos);
+        setSolicitudes(response.data);
       } catch (error) {
         console.error('❌ Error al cargar datos de novedad masiva:', error);
       }
@@ -129,34 +148,49 @@ const FormVistaPrevMasiva = () => {
     if (id) fetchDatos();
   }, [id]);
 
+  if (!location.state) {
+    return (
+      <div className="text-center text-red-600 p-4">
+        ⚠️ No se encontró información de la solicitud. Por favor, vuelve al
+        panel principal.
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto p-4 bg-white">
       <div className="bg-white p-2 rounded-lg border border-gray-300 shadow-[2px_8px_12px_rgba(0,0,0,0.8)] hover:shadow-[4px_10px_14px_rgba(0,0,0,1)] hover:scale-105 transition-all duration-300">
         {/* Encabezado */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-[#4669AF] rounded-full flex items-center justify-center">
-              <span className="text-white text-sm font-bold">H</span>
+            <div className="w-12 h-12 bg-[#4669AF] rounded-full flex items-center justify-center">
+              {iconMap[location.state?.iconName] ?? (
+                <FaList className="text-white text-sm" />
+              )}
             </div>
             <div>
               <h1 className="text-lg font-semibold text-gray-900">
-                Horas Extra
+                {tipo ?? 'Tipo de novedad'}
               </h1>
               <p className="text-sm text-gray-600">
-                Solicitud de Horas extra para varios empleados
+                {descripcion ?? 'Descripción no disponible'}
               </p>
             </div>
           </div>
           <div className="flex items-center space-x-4">
             <div className="text-right">
               <p className="text-sm font-medium text-gray-900">
-                Información de Solicitud - Solicitud #00025 Tienda Barranquilla
-                / 10 Jun 2025
+                Solicitud #{id_novedad} • {tienda}{' '}
+                {fecha &&
+                  `/ ${new Date(fecha).toLocaleDateString('es-CO', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                  })}`}
               </p>
             </div>
-            {/* Burbuja de estado */}
             <span className="bg-[#4669AF] text-white text-xs font-semibold px-3 py-1 rounded-full">
-              Creada
+              {estado ?? 'Sin estado'}
             </span>
           </div>
         </div>
@@ -167,16 +201,16 @@ const FormVistaPrevMasiva = () => {
             <span className="font-medium">
               Total solicitudes en esta novedad:
             </span>{' '}
-            {solicitudes.length} Solicitudes
+            {cantidad} Solicitudes
           </p>
         </div>
 
-        {/* Tabla de solicitudes */}
+        {/* Tabla */}
         <div className="bg-[#4669AF] text-white text-center py-2 font-medium text-sm rounded-t-md">
           Vista Previa del Documento
         </div>
         <div className="border border-gray-200 rounded-lg shadow-sm">
-          <div className="max-h-[250px] overflow-auto ">
+          <div className="max-h-[250px] overflow-auto">
             <TablePrevMasiva datos={mapSolicitudesToFilas(solicitudes)} />
           </div>
         </div>
