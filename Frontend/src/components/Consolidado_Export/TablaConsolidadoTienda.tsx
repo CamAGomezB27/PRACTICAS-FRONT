@@ -83,7 +83,7 @@ const TablaConsTienda = ({ datos }: { datos: filas[] }) => {
         <tbody className="bg-white">
           {datos.map((fila, rowIndex) => (
             <tr
-              key={fila.id}
+              key={`fila-${rowIndex}`}
               className={`hover:bg-gray-50 ${rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
             >
               {[
@@ -100,22 +100,24 @@ const TablaConsTienda = ({ datos }: { datos: filas[] }) => {
                 fila.jornadaOtrSiTem,
                 fila.fechainicio,
                 fila.fechafin,
-                typeof fila.salarioActual === 'number'
+                typeof fila.salarioActual === 'number' &&
+                !isNaN(fila.salarioActual)
                   ? fila.salarioActual.toLocaleString('es-CO', {
                       style: 'currency',
                       currency: 'COP',
                     })
-                  : fila.salarioActual,
-                typeof fila.salarioOtroSiTemp === 'number'
+                  : '',
+                typeof fila.salarioOtroSiTemp === 'number' &&
+                !isNaN(fila.salarioOtroSiTemp)
                   ? fila.salarioOtroSiTemp.toLocaleString('es-CO', {
                       style: 'currency',
                       currency: 'COP',
                     })
-                  : fila.salarioOtroSiTemp,
+                  : '',
                 fila.consForms,
                 fila.concepto,
-                fila.codigo,
-                fila.unidades,
+                isNaN(fila.codigo) ? '' : fila.codigo,
+                isNaN(fila.unidades) ? '' : fila.unidades,
                 fila.fechaNove,
                 fila.fechInicioDisfrute,
                 fila.fechaFinDisfrute,
@@ -125,13 +127,13 @@ const TablaConsTienda = ({ datos }: { datos: filas[] }) => {
                 fila.Fechapago,
                 fila.AreaRespon,
                 fila.CategInconsitencia,
-              ].map((valor, idx) => (
+              ].map((valor: string | number, idx: number) => (
                 <td
                   key={idx}
                   className="border-r border-b border-gray-200 px-3 py-2 text-xs w-[160px] min-w-[160px] text-black"
                 >
                   <div className="truncate" title={String(valor)}>
-                    {valor}
+                    {typeof valor === 'number' && isNaN(valor) ? '' : valor}
                   </div>
                 </td>
               ))}

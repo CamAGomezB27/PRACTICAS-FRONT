@@ -20,6 +20,30 @@ interface Solicitud {
   detalle: string;
 }
 
+interface SolicitudConIdDetalle extends Solicitud {
+  id_novedad: number;
+  n: number;
+  jornada_empleado: string;
+  jornada_otro_si: string;
+  fecha_inicio: string;
+  fecha_fin: string;
+  salario_actual: number;
+  salario_otro_si: number;
+  consecutivo_forms: string;
+  concepto: string;
+  codigo_concepto: string;
+  unidades: number;
+  fecha_novedad: string;
+  fecha_inicio_disfrute: string;
+  fecha_fin_disfrute: string;
+  responsable_validacion: string;
+  respuesta_validacion: string;
+  ajuste: string;
+  fecha_pago: string;
+  area_responsable: string;
+  categoria_inconsistencia: string;
+}
+
 interface filas {
   id: number;
   numero: number;
@@ -51,30 +75,6 @@ interface filas {
   CategInconsitencia: string;
 }
 
-interface SolicitudConIdDetalle extends Solicitud {
-  id_novedad: number;
-  n: number;
-  jornada_empleado: string;
-  jornada_otro_si: string;
-  fecha_inicio: string;
-  fecha_fin: string;
-  salario_actual: number;
-  salario_otro_si: number;
-  consecutivo_forms: string;
-  concepto: string;
-  codigo_concepto: string;
-  unidades: number;
-  fecha_novedad: string;
-  fecha_inicio_disfrute: string;
-  fecha_fin_disfrute: string;
-  responsable_validacion: string;
-  respuesta_validacion: string;
-  ajuste: string;
-  fecha_pago: string;
-  area_responsable: string;
-  categoria_inconsistencia: string;
-}
-
 interface PropsVistaArchConsTienda {
   filtros?: FiltroExportacion;
 }
@@ -90,6 +90,9 @@ const VistaArchConsTienda: React.FC<PropsVistaArchConsTienda> = ({
   filtros,
 }) => {
   const [datos, setDatos] = useState<filas[]>([]);
+  const [datosOriginales, setDatosOriginales] = useState<
+    SolicitudConIdDetalle[]
+  >([]);
   const [loading, setLoading] = useState(false);
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
 
@@ -97,6 +100,7 @@ const VistaArchConsTienda: React.FC<PropsVistaArchConsTienda> = ({
     const fetchData = async () => {
       setLoading(true);
       setDatos([]);
+      setDatosOriginales([]);
 
       try {
         const params = new URLSearchParams();
@@ -144,6 +148,7 @@ const VistaArchConsTienda: React.FC<PropsVistaArchConsTienda> = ({
         }));
 
         setDatos(datosFormateados);
+        setDatosOriginales(response.data);
         setMostrarAlerta(datosFormateados.length === 0);
       } catch (error) {
         console.error('❌ Error al cargar el consolidado:', error);
@@ -156,13 +161,38 @@ const VistaArchConsTienda: React.FC<PropsVistaArchConsTienda> = ({
     fetchData();
   }, [filtros?.tipo, filtros?.desde, filtros?.hasta]);
 
-  const handleDescargar = () => {
-    console.log('Descargando archivo... (pendiente implementar)');
+  const handleDescargar = async () => {
+    if (!datosOriginales.length) {
+      alert('No hay datos válidos para exportar.');
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/archivo-adjunto/exportar-consolidado',
+        datosOriginales,
+        {
+          responseType: 'blob',
+          withCredentials: true,
+        },
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'Consolidado_Post_Nomina.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error('❌ Error al descargar el archivo:', error);
+      alert('Ocurrió un error al descargar el consolidado.');
+    }
   };
 
   return (
     <div className="p-6 min-h-screen">
-      <div className="bg-white p-8 rounded-lg border border-gray-300 shadow-md hover:shadow-lg transition-all duration-300">
+      <div className="bg-white p-8 rounded-lg border border-gray-300 shadow-[2px_8px_12px_rgba(0,0,0,0.8)] hover:shadow-[4px_10px_14px_rgba(0,0,0,1)] hover:scale-105 transition-all duration-300">
         <div className="flex justify-between items-start mb-6">
           <div>
             <h2 className="text-2xl font-bold text-gray-800 mb-2">
@@ -174,7 +204,7 @@ const VistaArchConsTienda: React.FC<PropsVistaArchConsTienda> = ({
           </div>
           <button
             onClick={handleDescargar}
-            className="bg-[#4669AF] hover:bg-[#3a5a9b] text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 shadow-md"
+            className="bg-[#4669AF] hover:bg-[#3a5a9b] text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 shadow-md hover:scale-105"
           >
             <Download className="w-4 h-4" />
             Descargar
