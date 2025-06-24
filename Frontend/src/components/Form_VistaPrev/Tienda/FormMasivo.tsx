@@ -79,12 +79,22 @@ interface SolicitudConIdDetalle extends Solicitud {
   categoria_inconsistencia: string;
 }
 
+const formatearFecha = (fecha: string | Date | null | undefined): string => {
+  if (!fecha) return '';
+  const dateObj = typeof fecha === 'string' ? new Date(fecha) : fecha;
+  if (isNaN(dateObj.getTime())) return '';
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const year = dateObj.getFullYear();
+  return `${day}/${month}/${year}`;
+};
+
 // Mapeo
 const mapSolicitudesToFilas = (solicitudes: SolicitudConIdDetalle[]): filas[] =>
   solicitudes.map((s) => ({
     id: s.id_novedad,
     numero: s.n ?? 0,
-    fechaReporte: s.fecha ?? '',
+    fechaReporte: formatearFecha(s.fecha),
     cedula: s.cedula ?? '',
     nombre: s.nombre ?? '',
     categoria: s.categoria ?? '',
@@ -93,21 +103,21 @@ const mapSolicitudesToFilas = (solicitudes: SolicitudConIdDetalle[]): filas[] =>
     detalle: s.detalle ?? '',
     jornadaEmAc: s.jornada_empleado ?? '',
     jornadaOtrSiTem: s.jornada_otro_si ?? '',
-    fechainicio: s.fecha_inicio ?? '',
-    fechafin: s.fecha_fin ?? '',
+    fechainicio: formatearFecha(s.fecha_inicio),
+    fechafin: formatearFecha(s.fecha_fin),
     salarioActual: s.salario_actual ?? 0,
     salarioOtroSiTemp: s.salario_otro_si ?? 0,
     consForms: s.consecutivo_forms ?? '',
     concepto: s.concepto ?? '',
     codigo: Number(s.codigo_concepto) || 0,
     unidades: s.unidades ?? 0,
-    fechaNove: s.fecha_novedad ?? '',
-    fechInicioDisfrute: s.fecha_inicio_disfrute ?? '',
-    fechaFinDisfrute: s.fecha_fin_disfrute ?? '',
+    fechaNove: formatearFecha(s.fecha_novedad),
+    fechInicioDisfrute: formatearFecha(s.fecha_inicio_disfrute),
+    fechaFinDisfrute: formatearFecha(s.fecha_fin_disfrute),
     ResponsableValidacion: s.responsable_validacion ?? '',
     RespuestaValidacion: s.respuesta_validacion ?? '',
     ajuste: s.ajuste ?? '',
-    Fechapago: s.fecha_pago ?? '',
+    Fechapago: formatearFecha(s.fecha_pago),
     AreaRespon: s.area_responsable ?? '',
     CategInconsitencia: s.categoria_inconsistencia ?? '',
   }));
