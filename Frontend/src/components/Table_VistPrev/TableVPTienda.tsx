@@ -64,13 +64,9 @@ const TablaVistaPreviaMasiva = ({ datos }: { datos: filas[] }) => {
   ];
 
   return (
-    <div className="w-full max-w-full">
-      <div className="bg-[#4669AF] text-white text-center py-2 font-medium text-sm rounded-t-md">
-        Vista Previa del Documento
-      </div>
-
-      <div className="overflow-x-auto rounded-b-md border border-gray-300 scrollbar-thin scrollbar-thumb-[#4669AF] scrollbar-track-gray-200">
-        <table className="min-w-max table-fixed border-collapse text-sm bg-white">
+    <div className="w-full">
+      <div className="w-full rounded-b-md border border-gray-300">
+        <table className="min-w-full table-fixed border-collapse text-sm bg-white">
           <thead className="bg-[#4669AF] text-white sticky top-0 z-10">
             <tr>
               {columnas.map((col, i) => (

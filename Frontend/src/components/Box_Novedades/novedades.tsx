@@ -93,7 +93,9 @@ const NovedadesRecientes: React.FC = () => {
               key={novedad.id_novedad}
               className="flex items-start bg-white rounded-xl shadow-sm p-3 relative cursor-pointer 
               transform transition-transform duration-150 hover:scale-[1.01]"
-              onClick={() => navigate('/vista-previa-masiva-tienda')}
+              onClick={() =>
+                navigate(`/vista-previa-masiva-tienda/${novedad.id_novedad}`)
+              }
             >
               <div
                 className={`w-1.5 h-full rounded-l-md absolute left-0 top-0 bottom-0 ${getColor(

@@ -44,7 +44,7 @@ const AppRoutes = () => {
       </Route>
       <Route element={<ProtectedRoute allowedRoles={['jefe']} />}>
         <Route
-          path="/vista-previa-masiva-tienda"
+          path="/vista-previa-masiva-tienda/:id"
           element={<VistaPrevisMasivaT />}
         />
       </Route>
