@@ -4,6 +4,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { registerLocale } from 'react-datepicker';
 import { es } from 'date-fns/locale';
+
 registerLocale('es', es);
 
 interface FiltroExportacion {
@@ -51,6 +52,22 @@ const FiltroExportConsTienda = ({
       className="w-full border rounded px-3 py-2 bg-white border-gray-600 text-black"
     />
   ));
+
+  // Para el inicio del día (00:00 Bogota)
+  const formatDesde = (date: Date) => {
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}T00:00:00-05:00`;
+  };
+
+  // Para el final del día (23:59:59.999 Bogota)
+  const formatHasta = (date: Date) => {
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}T23:59:59.999-05:00`;
+  };
 
   return (
     <div className="bg-white p-8 rounded-lg border border-gray-300 shadow-[2px_8px_12px_rgba(0,0,0,0.8)] hover:shadow-[4px_10px_14px_rgba(0,0,0,1)] hover:scale-105 transition-all duration-300 w-[280px]">
@@ -108,7 +125,7 @@ const FiltroExportConsTienda = ({
             setFechaDesde(date);
             setFiltros((prev) => ({
               ...prev,
-              desde: date ? date.toISOString().split('T')[0] : '',
+              desde: date ? formatDesde(date) : '',
             }));
           }}
           locale="es"
@@ -131,7 +148,7 @@ const FiltroExportConsTienda = ({
             setFechaHasta(date);
             setFiltros((prev) => ({
               ...prev,
-              hasta: date ? date.toISOString().split('T')[0] : '',
+              hasta: date ? formatHasta(date) : '',
             }));
           }}
           locale="es"

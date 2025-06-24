@@ -3,6 +3,12 @@ import { Download } from 'lucide-react';
 import TablaConsTienda from '../Consolidado_Export/TablaConsolidadoTienda';
 import axios from 'axios';
 
+interface FiltroExportacion {
+  tipo: string;
+  desde: string;
+  hasta: string;
+}
+
 interface Solicitud {
   fecha: string;
   cedula: string;
@@ -44,7 +50,6 @@ interface filas {
   CategInconsitencia: string;
 }
 
-// Tipado como el que recibe TablaConsTienda
 interface SolicitudConIdDetalle extends Solicitud {
   id_novedad: number;
   n: number;
@@ -69,28 +74,43 @@ interface SolicitudConIdDetalle extends Solicitud {
   categoria_inconsistencia: string;
 }
 
-// Para formatear fechas al estilo colombiano
+interface PropsVistaArchConsTienda {
+  filtros?: FiltroExportacion;
+}
+
+// ✅ Función robusta para formatear fechas tipo 'YYYY-MM-DD'
 const formatearFecha = (fecha: string | Date | null | undefined): string => {
   if (!fecha) return '';
-  const dateObj = typeof fecha === 'string' ? new Date(fecha) : fecha;
+  const dateObj = new Date(fecha);
   if (isNaN(dateObj.getTime())) return '';
-  const day = String(dateObj.getDate()).padStart(2, '0');
-  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-  const year = dateObj.getFullYear();
-  return `${day}/${month}/${year}`;
+  return dateObj.toLocaleDateString('es-CO');
 };
 
-const VistaArchConsTienda = () => {
+const VistaArchConsTienda: React.FC<PropsVistaArchConsTienda> = ({
+  filtros,
+}) => {
   const [datos, setDatos] = useState<filas[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      setDatos([]); // 🧹 Limpiar datos anteriores al aplicar nuevos filtros
+      setLoading(true); // opcional
+
       try {
+        const params = new URLSearchParams();
+        if (filtros?.tipo) params.append('tipo', filtros.tipo);
+        if (filtros?.desde) params.append('desde', filtros.desde);
+        if (filtros?.hasta) params.append('hasta', filtros.hasta);
+
         const response = await axios.get<SolicitudConIdDetalle[]>(
           'http://localhost:3000/novedad/masiva/tienda',
-          { withCredentials: true },
+          {
+            params: Object.fromEntries(params.entries()),
+            withCredentials: true,
+          },
         );
-        // Formatear fechas
+
         const datosFormateados: filas[] = response.data.map((s) => ({
           id: s.id_novedad,
           numero: s.n ?? 0,
@@ -125,11 +145,13 @@ const VistaArchConsTienda = () => {
         setDatos(datosFormateados);
       } catch (error) {
         console.error('❌ Error al cargar el consolidado:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [filtros?.tipo, filtros?.desde, filtros?.hasta]);
 
   const handleDescargar = () => {
     console.log('Descargando archivo... (pendiente implementar)');
@@ -157,15 +179,25 @@ const VistaArchConsTienda = () => {
         </div>
 
         <div className="border border-gray-200 rounded-lg shadow-sm">
-          <div className="max-h-[250px] overflow-auto scrollbar-thin scrollbar-thumb-[#4669AF] scrollbar-track-gray-200">
-            <TablaConsTienda datos={datos} />
-          </div>
+          {loading ? (
+            <div className="p-4 text-center text-gray-600 text-sm italic">
+              Cargando datos...
+            </div>
+          ) : datos.length > 0 ? (
+            <div className="max-h-[250px] overflow-auto scrollbar-thin scrollbar-thumb-[#4669AF] scrollbar-track-gray-200">
+              <TablaConsTienda datos={datos} />
+            </div>
+          ) : (
+            <div className="p-4 text-center text-gray-600 text-sm italic">
+              No hay solicitudes para los filtros seleccionados.
+            </div>
+          )}
         </div>
 
         <div className="mt-4 text-sm text-gray-500">
           <p>Total de registros: {datos.length}</p>
           <p>
-            Use el scroll horizontal y vertical para navegar por todos los datos
+            Usa el scroll horizontal y vertical para navegar por todos los datos
           </p>
         </div>
       </div>
