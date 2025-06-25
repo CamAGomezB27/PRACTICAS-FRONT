@@ -1,11 +1,19 @@
-import React, { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
-import NumeroSolicitudesAlert from '../Alerts/NumeroSolicitudes';
+import React, { useContext, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 import ErroresArchivoAlert from '../Alerts/ErroresArchivoAlert';
 import ExitoArchivoAlert from '../Alerts/ExitoArchivoAlert';
+import NumeroSolicitudesAlert from '../Alerts/NumeroSolicitudes';
 
 const Masivo: React.FC = () => {
+  const authContext = useContext(AuthContext);
+
+  if (!authContext) {
+    throw new Error('AuthContext debe estar dentro de un AuthProvider');
+  }
+
+  const { user } = authContext;
+
   const [archivoSubido, setArchivoSubido] = useState<{
     nombreArchivo: string;
     tituloNovedad: string;
@@ -86,9 +94,14 @@ const Masivo: React.FC = () => {
     if (!selectedFile) return;
 
     const formData = new FormData();
-    formData.append('archivo', selectedFile!);
+    formData.append('file', selectedFile!);
     formData.append('titulo', titulo); //Para Backend
     formData.append('tipo', titulo); //Para Microservicio
+
+    if (user) {
+      formData.append('nombreUsuario', user.nombre);
+      formData.append('nombreTienda', user.nombreTienda);
+    }
 
     try {
       const response = await fetch(

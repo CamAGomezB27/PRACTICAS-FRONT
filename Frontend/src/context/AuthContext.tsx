@@ -11,6 +11,7 @@ export interface User {
   esJefe: boolean;
   panelTitle: string;
   userRoleTitle: string;
+  nombreTienda: string;
 }
 
 //Tipo Contexto
