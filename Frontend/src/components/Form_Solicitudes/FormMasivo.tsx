@@ -87,7 +87,8 @@ const Masivo: React.FC = () => {
 
     const formData = new FormData();
     formData.append('archivo', selectedFile!);
-    formData.append('titulo', titulo);
+    formData.append('titulo', titulo); //Para Backend
+    formData.append('tipo', titulo); //Para Microservicio
 
     try {
       const response = await fetch(
