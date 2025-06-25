@@ -81,9 +81,16 @@ interface PropsVistaArchConsTienda {
 
 const formatearFecha = (fecha: string | Date | null | undefined): string => {
   if (!fecha) return '';
-  const dateObj = new Date(fecha);
-  if (isNaN(dateObj.getTime())) return '';
-  return dateObj.toLocaleDateString('es-CO');
+  const date = new Date(fecha);
+  if (isNaN(date.getTime())) return '';
+
+  // Corrige para zona horaria UTC y formato exacto
+  return date.toLocaleDateString('es-CO', {
+    timeZone: 'UTC',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
 };
 
 const VistaArchConsTienda: React.FC<PropsVistaArchConsTienda> = ({
@@ -168,6 +175,11 @@ const VistaArchConsTienda: React.FC<PropsVistaArchConsTienda> = ({
     }
 
     try {
+      console.log(
+        '🔵 Enviando al backend:',
+        datosOriginales.map((d) => ({ id: d.id_novedad, fecha: d.fecha })),
+      );
+
       const response = await axios.post(
         'http://localhost:3000/archivo-adjunto/exportar-consolidado',
         datosOriginales,
@@ -180,7 +192,10 @@ const VistaArchConsTienda: React.FC<PropsVistaArchConsTienda> = ({
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', 'Consolidado_Post_Nomina.xlsx');
+      const contentDisposition = response.headers['content-disposition'];
+      const match = contentDisposition?.match(/filename="(.+)"/);
+      const filename = match?.[1] ?? 'Consolidado_Post_Nomina.xlsx';
+      link.setAttribute('download', filename);
       document.body.appendChild(link);
       link.click();
       link.remove();
