@@ -1,18 +1,18 @@
+import { Download } from 'lucide-react';
 import React from 'react';
 import {
+  FaChartPie,
   FaClipboardList,
   FaListAlt,
   FaStore,
-  FaTimesCircle,
-  FaChartPie,
 } from 'react-icons/fa';
-import Navbar from '../../../components/Navbar/Navbar';
-import Footer from '../../../components/Footer/Footer';
-import Card from '../../../components/Cards/card';
+import { useNavigate } from 'react-router-dom';
 import Franco from '../../../assets/images/Franco_Pensando_1-removebg-preview.png';
 import NovedadesRecientes from '../../../components/Box_Novedades/novedades';
+import Card from '../../../components/Cards/card';
+import Footer from '../../../components/Footer/Footer';
+import Navbar from '../../../components/Navbar/Navbar';
 import { useAuth } from '../../../context/useAuth';
-import { useNavigate } from 'react-router-dom';
 
 const DashboardNomina: React.FC = () => {
   const { user } = useAuth();
@@ -66,8 +66,8 @@ const DashboardNomina: React.FC = () => {
                 onClick={() => navigate('/solicitudes-por-tiendas')}
               />
               <Card
-                title="Solicitudes Rechazadas"
-                icon={<FaTimesCircle size={50} />}
+                title="Respuesta Masiva"
+                icon={<Download size={50} />}
                 className="h-[130px] w-[250px] rounded-2xl"
                 onClick={() => navigate('/solicitudes-rechazadas')}
               />
