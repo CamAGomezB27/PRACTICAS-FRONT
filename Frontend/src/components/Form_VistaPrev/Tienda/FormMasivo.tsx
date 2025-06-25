@@ -81,12 +81,16 @@ interface SolicitudConIdDetalle extends Solicitud {
 
 const formatearFecha = (fecha: string | Date | null | undefined): string => {
   if (!fecha) return '';
-  const dateObj = typeof fecha === 'string' ? new Date(fecha) : fecha;
-  if (isNaN(dateObj.getTime())) return '';
-  const day = String(dateObj.getDate()).padStart(2, '0');
-  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-  const year = dateObj.getFullYear();
-  return `${day}/${month}/${year}`;
+  const date = new Date(fecha);
+  if (isNaN(date.getTime())) return '';
+
+  // Corrige para zona horaria UTC y formato exacto
+  return date.toLocaleDateString('es-CO', {
+    timeZone: 'UTC',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
 };
 
 // Mapeo
