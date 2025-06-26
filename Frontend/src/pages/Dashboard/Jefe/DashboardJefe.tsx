@@ -1,20 +1,21 @@
 import React from 'react';
 import {
   FaBus,
-  FaMoneyBillAlt,
   FaClock,
-  FaFileSignature,
   FaFileAlt,
-  FaUmbrellaBeach,
+  FaFileSignature,
   FaList,
+  FaMoneyBillAlt,
+  FaUmbrellaBeach,
 } from 'react-icons/fa';
-import Navbar from '../../../components/Navbar/Navbar';
-import Footer from '../../../components/Footer/Footer';
-import CardsTitle from '../../../components/Cards/cardsTitle';
-import Franco from '../../../assets/images/Franco_Pensando_1-removebg-preview.png';
-import { useAuth } from '../../../context/useAuth';
 import { useNavigate } from 'react-router-dom';
+import Franco from '../../../assets/images/Franco_Pensando_1-removebg-preview.png';
 import NovedadesRecientes from '../../../components/Box_Novedades/novedades';
+import CardsTitle from '../../../components/Cards/cardsTitle';
+import ExportacionesConsolidadas from '../../../components/Consolidado/AccesoConsExport';
+import Footer from '../../../components/Footer/Footer';
+import Navbar from '../../../components/Navbar/Navbar';
+import { useAuth } from '../../../context/useAuth';
 
 const DashboardJefe: React.FC = () => {
   const { user } = useAuth();
@@ -178,29 +179,8 @@ const DashboardJefe: React.FC = () => {
           <div className="w-1/3 pl-5s flex flex-col items-center space-y-3">
             {/* Novedades Recientes */}
             <NovedadesRecientes />
-
             {/* HISTÓRICO DE SOLICITUDES */}
-            <div className="w-[400px] mt-8 bg-[#4669AF] text-white shadow-xl rounded-xl p-5 hover:scale-[1.03] transition-transform duration-300 cursor-pointer group">
-              <div className="flex items-center gap-3 mb-3">
-                <FaFileAlt className="text-white" size={26} />
-                <h3 className="text-lg font-bold">Histórico de Solicitudes</h3>
-              </div>
-
-              <p className="text-sm text-white/90 mb-3">
-                Consulta novedades anteriores o descarga el consolidado
-                completo.
-              </p>
-
-              <div className="flex justify-center mt-2">
-                <button
-                  className="flex items-center gap-1 bg-white text-[#4669AF] text-xs font-semibold px-3 py-1.5 rounded-md hover:bg-gray-200 transition-colors"
-                  onClick={() => navigate('/exportacion-consolidados-tienda')}
-                >
-                  <FaList size={12} />
-                  Consultar
-                </button>
-              </div>
-            </div>
+            <ExportacionesConsolidadas />
           </div>
         </div>
       </main>
