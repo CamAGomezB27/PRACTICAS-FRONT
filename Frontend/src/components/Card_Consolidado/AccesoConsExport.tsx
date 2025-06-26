@@ -1,12 +1,21 @@
 import React from 'react';
 import { FaFileAlt, FaList } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/useAuth';
 
 const ExportacionesConsolidadas: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleConsultar = () => {
-    navigate('/exportacion-consolidados-tienda');
+    if (user?.esJefe) {
+      navigate('/exportacion-consolidados-tienda');
+    } else if (user?.esNomina) {
+      navigate('/exportacion-consolidados-nomina');
+    } else {
+      // Fallback en caso de que no tenga ninguno de los roles esperados
+      console.warn('Usuario sin rol válido para esta acción');
+    }
   };
 
   return (

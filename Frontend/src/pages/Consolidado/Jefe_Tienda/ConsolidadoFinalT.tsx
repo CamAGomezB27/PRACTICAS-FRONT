@@ -1,8 +1,7 @@
-import React from 'react';
-import { useState } from 'react';
-import Navbar from '../../../components/Navbar/Navbar';
+import React, { useState } from 'react';
 import Footer from '../../../components/Footer/Footer';
 import FiltroExportConsTienda from '../../../components/Form_Filtros/FiltrosExportConsTienda';
+import Navbar from '../../../components/Navbar/Navbar';
 import VistaArchConsTienda from '../../../components/Vista_ArchivosExport/VistaArchivoExportTienda';
 
 interface FiltroExportacion {
@@ -25,9 +24,11 @@ const ExportConsTienda: React.FC = () => {
       <Navbar />
       <main className="flex-grow py-6">
         <div className="flex flex-col lg:flex-row h-full">
+          {/* FILTROS */}
           <div className="lg:w-1/4 px-4 lg:pl-10 lg:pr-0 translate-y-7">
             <FiltroExportConsTienda onApply={aplicarFiltros} />
           </div>
+          {/* TABLA */}
           <div className="lg:w-3/4 px-4 lg:pl-0 lg:pr-10">
             <VistaArchConsTienda filtros={filtros} />
           </div>

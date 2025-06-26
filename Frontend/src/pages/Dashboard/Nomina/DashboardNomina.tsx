@@ -4,8 +4,8 @@ import { FaClipboardList, FaListAlt, FaStore } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Franco from '../../../assets/images/Franco_Pensando_1-removebg-preview.png';
 import NovedadesRecientes from '../../../components/Box_Novedades/novedades';
+import ExportacionesConsolidadas from '../../../components/Card_Consolidado/AccesoConsExport';
 import Card from '../../../components/Cards/card';
-import ExportacionesConsolidadas from '../../../components/Consolidado/AccesoConsExport';
 import Footer from '../../../components/Footer/Footer';
 import Navbar from '../../../components/Navbar/Navbar';
 import { useAuth } from '../../../context/useAuth';
@@ -65,7 +65,7 @@ const DashboardNomina: React.FC = () => {
                 title="Respuesta Masiva"
                 icon={<Download size={50} />}
                 className="h-[130px] w-[250px] rounded-2xl"
-                onClick={() => navigate('/solicitudes-rechazadas')}
+                onClick={() => navigate('/respuesta-masiva')}
               />
             </div>
           </div>
