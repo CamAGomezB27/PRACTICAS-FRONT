@@ -45,11 +45,11 @@ const getColor = (estado: Estado) => {
   switch (estado) {
     case 'CREADA':
     case 'PENDIENTE':
-      return 'bg-blue-500';
+      return 'bg-blue-600';
     case 'GESTIONADA':
       return 'bg-green-500';
     case 'EN GESTIÓN':
-      return 'bg-yellow-500';
+      return 'bg-yellow-400';
     case 'RECHAZADA':
       return 'bg-red-500';
   }
@@ -57,7 +57,6 @@ const getColor = (estado: Estado) => {
 
 function getIconNameByTipoNovedad(tipo: string = ''): string {
   const tipoLower = tipo.toLowerCase();
-
   if (tipoLower.includes('transporte')) return 'FaBus';
   if (tipoLower.includes('descuento')) return 'FaMoneyBillAlt';
   if (tipoLower.includes('hora') || tipoLower.includes('extra'))
@@ -65,7 +64,6 @@ function getIconNameByTipoNovedad(tipo: string = ''): string {
   if (tipoLower.includes('definitivo')) return 'FaFileSignature';
   if (tipoLower.includes('temporal')) return 'FaFileAlt';
   if (tipoLower.includes('vacaciones')) return 'FaUmbrellaBeach';
-
   return 'FaList';
 }
 
@@ -80,7 +78,7 @@ const NovedadesNomTodas: React.FC<Props> = ({ filtros, onCantidadChange }) => {
         'http://localhost:3000/novedad',
         {
           withCredentials: true,
-          params: filtros, // si filtros es undefined, axios lo ignora
+          params: filtros,
         },
       );
 
@@ -102,21 +100,28 @@ const NovedadesNomTodas: React.FC<Props> = ({ filtros, onCantidadChange }) => {
   };
 
   return (
-    <div className="text-sm font-bold w-[500px] bg-gray-400 rounded-2xl shadow-inner flex flex-col space-y-3 p-3">
-      <div className="flex flex-col space-y-3 max-h-[200px] overflow-y-auto pr-1">
-        {novedades.map((novedad) => {
-          const tiendaNombre =
-            novedad.usuario?.usuario_tienda?.[0]?.tienda?.nombre_tienda ??
-            'Sin tienda asociada';
+    <div className="text-sm font-bold w-full bg-white rounded-2xl shadow-md flex flex-col space-y-4 p-2 overflow-y-auto max-h-[500px]">
+      {novedades.map((novedad) => {
+        const tiendaNombre =
+          novedad.usuario?.usuario_tienda?.[0]?.tienda?.nombre_tienda ??
+          'Sin tienda asociada';
+        const estadoVisual = mostrarEstado(
+          novedad.estado_novedad.nombre_estado,
+        );
 
-          const estadoVisual = mostrarEstado(
-            novedad.estado_novedad.nombre_estado,
-          );
-
-          return (
+        return (
+          <div
+            key={novedad.id_novedad}
+            className="flex flex-col bg-white rounded-xl shadow border border-gray-200 hover:shadow-lg transition-all duration-150 transform hover:scale-[1.01]"
+          >
+            {/* Línea lateral por estado */}
             <div
-              key={novedad.id_novedad}
-              className="flex items-start bg-white rounded-xl shadow-sm p-3 relative cursor-pointer transform transition-transform duration-150 hover:scale-[1.01]"
+              className={`w-full h-3 rounded-t-md ${getColor(estadoVisual)}`}
+            />
+
+            {/* Contenido */}
+            <div
+              className="p-4 flex flex-col cursor-pointer"
               onClick={() =>
                 navigate(`/vista-previa-masiva-tienda/${novedad.id_novedad}`, {
                   state: {
@@ -134,35 +139,74 @@ const NovedadesNomTodas: React.FC<Props> = ({ filtros, onCantidadChange }) => {
                 })
               }
             >
-              <div
-                className={`w-1.5 h-full rounded-l-md absolute left-0 top-0 bottom-0 ${getColor(
-                  estadoVisual,
-                )}`}
-              />
-              <div className="pl-3 pr-1 flex-1">
-                <p className="text-sm font-semibold text-gray-800">
-                  {`SOLICITUD #0${novedad.id_novedad} ${estadoVisual} - ${
-                    novedad.tipo_novedad?.nombre_tipo ?? 'Sin tipo'
-                  }`}
+              <div className="flex justify-between items-start">
+                <p className="text-gray-800">
+                  {`Solicitud ${novedad.es_masiva ? 'Masiva' : 'Individual'} ${novedad.tipo_novedad?.nombre_tipo ? `- ${novedad.tipo_novedad.nombre_tipo}` : ''}`}
                 </p>
-                <p className="text-xs text-gray-400">{novedad.descripcion}</p>
-                {novedad.es_masiva && (
-                  <p className="text-[10px] text-gray-500 italic">
-                    Tienda: {tiendaNombre} • Solicitudes:{' '}
-                    {novedad.cantidad_solicitudes ?? 'N/A'} • 📎 Archivo adjunto
-                  </p>
-                )}
+
+                <span
+                  className={`text-xs font-semibold text-white px-2 py-1 rounded-full ${getColor(
+                    estadoVisual,
+                  )}`}
+                >
+                  {estadoVisual}
+                </span>
               </div>
-              <span className="text-[10px] text-gray-800 absolute top-2 right-3">
-                {new Date(novedad.fecha_creacion).toLocaleTimeString('es-CO', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
-              </span>
+
+              <div className="text-xs text-gray-500 mt-1">
+                {novedad.descripcion}
+              </div>
+
+              <div className="flex items-center justify-between mt-2 text-xs text-black">
+                <div className="flex flex-col">
+                  <span>{tiendaNombre}</span>
+                  <span className="text-gray-500">
+                    {new Date(novedad.fecha_creacion).toLocaleDateString(
+                      'es-CO',
+                      {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                      },
+                    )}
+                  </span>
+                  {novedad.es_masiva && (
+                    <span className="italic text-[11px] mt-1 text-gray-500">
+                      Con archivo adjunto •{' '}
+                      <span className="text-yellow-400 font-semibold">
+                        {novedad.cantidad_solicitudes ?? 'N/A'} Solicitudes
+                      </span>
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex gap-4 items-center mt-4">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      console.log('Gestionar', novedad.id_novedad);
+                    }}
+                    className="bg-[#4669AF] hover:bg-[#3a5a9b] text-white text-xs px-6 py-1.5 rounded-md focus:outline-none"
+                  >
+                    Gestionar
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(
+                        `/vista-previa-masiva-tienda/${novedad.id_novedad}`,
+                      );
+                    }}
+                    className="bg-gray-500 hover:bg-gray-600 text-white text-xs px-6 py-1.5 rounded-md focus:outline-none"
+                  >
+                    Ver
+                  </button>
+                </div>
+              </div>
             </div>
-          );
-        })}
-      </div>
+          </div>
+        );
+      })}
     </div>
   );
 };
