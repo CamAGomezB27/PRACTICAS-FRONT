@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Footer from '../../../components/Footer/Footer';
-import FiltroExportConsTienda from '../../../components/Form_Filtros/FiltrosExportConsTienda';
+import FiltroExportConsTienda from '../../../components/Form_Filtros/Filtro_Tiendas/FiltrosExportConsTienda';
 import Navbar from '../../../components/Navbar/Navbar';
 import VistaArchConsTienda from '../../../components/Vista_ArchivosExport/VistaArchivoExportTienda';
 

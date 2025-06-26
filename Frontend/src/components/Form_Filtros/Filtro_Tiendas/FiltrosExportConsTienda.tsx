@@ -1,9 +1,8 @@
-import React, { useState, forwardRef } from 'react';
-import { Search, ChevronDown } from 'lucide-react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { registerLocale } from 'react-datepicker';
 import { es } from 'date-fns/locale';
+import { ChevronDown, Search } from 'lucide-react';
+import React, { forwardRef, useState } from 'react';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 registerLocale('es', es);
 
