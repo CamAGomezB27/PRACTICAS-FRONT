@@ -1,8 +1,9 @@
 import { Download } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 import { FaClipboardList, FaListAlt, FaStore } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Franco from '../../../assets/images/Franco_Pensando_1-removebg-preview.png';
+import FormElegirTienda from '../../../components/Alerts/AlertFormTiendas';
 import NovedadesRecientes from '../../../components/Box_Novedades/novedades';
 import ExportacionesConsolidadas from '../../../components/Card_Consolidado/AccesoConsExport';
 import Card from '../../../components/Cards/card';
@@ -13,6 +14,13 @@ import { useAuth } from '../../../context/useAuth';
 const DashboardNomina: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  const [mostrarFormTienda, setMostrarFormTienda] = useState(false);
+
+  const handleElegirTienda = (tienda: string) => {
+    setMostrarFormTienda(false);
+    navigate('/solicitudes-por-tiendas', { state: { tienda } });
+  };
 
   return (
     <div className="min-h-screen w-screen flex flex-col bg-white">
@@ -59,7 +67,7 @@ const DashboardNomina: React.FC = () => {
                 title="Solicitudes por Tiendas"
                 icon={<FaStore size={50} />}
                 className="h-[130px] w-[250px] rounded-2xl"
-                onClick={() => navigate('/solicitudes-por-tiendas')}
+                onClick={() => setMostrarFormTienda(true)}
               />
               <Card
                 title="Respuesta Masiva"
@@ -90,6 +98,13 @@ const DashboardNomina: React.FC = () => {
       </main>
 
       <Footer />
+
+      {mostrarFormTienda && (
+        <FormElegirTienda
+          onClose={() => setMostrarFormTienda(false)}
+          onSelect={handleElegirTienda}
+        />
+      )}
     </div>
   );
 };
