@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Download } from 'lucide-react';
-import TablaConsTienda from '../Consolidado_Export/TablaConsolidadoTienda';
 import axios from 'axios';
+import { Download } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import AlertFiltros from '../Alerts/AlertFiltros';
+import TablaConsTienda from '../Consolidado_Export/TablaConsolidadoTienda';
 
 interface FiltroExportacion {
   tipo: string;
@@ -232,7 +232,7 @@ const VistaArchConsTienda: React.FC<PropsVistaArchConsTienda> = ({
               Cargando datos...
             </div>
           ) : datos.length > 0 ? (
-            <div className="max-h-[250px] overflow-auto scrollbar-thin scrollbar-thumb-[#4669AF] scrollbar-track-gray-200">
+            <div className="max-h-[280px] overflow-auto scrollbar-thin scrollbar-thumb-[#4669AF] scrollbar-track-gray-200">
               <TablaConsTienda datos={datos} />
             </div>
           ) : null}

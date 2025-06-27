@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface filas {
   id: number;
   numero: number;

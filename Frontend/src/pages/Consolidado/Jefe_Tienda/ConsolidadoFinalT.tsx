@@ -29,7 +29,7 @@ const ExportConsTienda: React.FC = () => {
             <FiltroExportConsTienda onApply={aplicarFiltros} />
           </div>
           {/* TABLA */}
-          <div className="lg:w-3/4 px-4 lg:pl-0 lg:pr-10">
+          <div className="lg:w-3/4 px-4 lg:pl-0 lg:pr-6">
             <VistaArchConsTienda filtros={filtros} />
           </div>
         </div>
