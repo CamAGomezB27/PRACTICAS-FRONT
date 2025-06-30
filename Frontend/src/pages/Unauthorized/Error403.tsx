@@ -1,11 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FiX } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import AlertSeguridad from '../../components/Alerts/AlertSeguridad';
 import SoportTI from '../../components/Alerts/AlertSoportTI';
+import { useAuth } from '../../context/useAuth';
 
 const Error403FORBBIDEN: React.FC = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  useEffect(() => {
+    const handlePopState = () => {
+      navigate('/unauthorized', { replace: true });
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [navigate]);
 
   return (
     <div className="w-screen h-screen flex items-center justify-center relative bg-white">
@@ -32,7 +46,10 @@ const Error403FORBBIDEN: React.FC = () => {
         {/* Botones */}
         <div className="flex gap-4 mt-6">
           <button
-            onClick={() => navigate('/')}
+            onClick={() => {
+              logout(); // <-- elimina la cookie o token
+              navigate('/', { replace: true }); // <-- redirige y reemplaza el historial
+            }}
             className="bg-gray-300 hover:bg-gray-400 text-black font-semibold py-2 px-4 rounded-md shadow-sm border border-transparent hover:border-black focus:outline-none focus:ring-0"
           >
             Iniciar Sesión
@@ -51,7 +68,6 @@ const Error403FORBBIDEN: React.FC = () => {
         </div>
       </div>
 
-      {/* Panel soporte flotante */}
       {/* Panel soporte flotante */}
       <div className="absolute right-[100px] top-[100px] bg-[#4669AF] text-white text-sm rounded-xl px-6 py-4 w-80 shadow-[4px_6px_10px_rgba(0,0,0,0.4)]">
         <SoportTI />
