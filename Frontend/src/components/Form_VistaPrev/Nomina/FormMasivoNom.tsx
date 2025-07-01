@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Download } from 'lucide-react';
 import { ReactElement, useEffect, useState } from 'react';
 import {
   FaBus,
@@ -9,7 +10,7 @@ import {
   FaMoneyBillAlt,
   FaUmbrellaBeach,
 } from 'react-icons/fa';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import TablePrevMasiva from '../../Table_VistPrev/TableVPTienda';
 
 // Tipos de datos
@@ -138,6 +139,7 @@ const iconMap: Record<string, ReactElement> = {
 
 // Componente principal
 const FormVistaPrevMasivaNom = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const location = useLocation();
   const { id_novedad, descripcion, tipo, estado, tienda, fecha, cantidad } =
@@ -169,6 +171,46 @@ const FormVistaPrevMasivaNom = () => {
       </div>
     );
   }
+
+  const handleDescargar = async () => {
+    if (!solicitudes.length) {
+      alert('No hay datos válidos para exportar.');
+      return;
+    }
+
+    try {
+      console.log(
+        '🔵 Enviando al backend:',
+        solicitudes.map((d) => ({ id: d.id_novedad })),
+      );
+
+      const response = await axios.post(
+        'http://localhost:3000/archivo-adjunto/exportar-consolidado',
+        solicitudes.map((d) => ({ id: d.id_novedad })), // Enviar solo los IDs
+        {
+          responseType: 'blob',
+          withCredentials: true,
+        },
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+
+      const contentDisposition = response.headers['content-disposition'];
+      const match = contentDisposition?.match(/filename="(.+)"/);
+      const filename =
+        match?.[1] ?? `Archivo_Para_respuesta_${id_novedad}.xlsx`;
+
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error('❌ Error al descargar el archivo:', error);
+      alert('Ocurrió un error al descargar el consolidado.');
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto p-6 bg-white">
@@ -235,7 +277,11 @@ const FormVistaPrevMasivaNom = () => {
           {/* BOTONES */}
           <div className="w-[15%] flex flex-col justify-between items-center h-full py-4 gap-28">
             {/* Botón Descargar (arriba) */}
-            <button className="bg-yellow-300 hover:bg-yellow-400 text-black px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full">
+            <button
+              onClick={handleDescargar}
+              className="bg-yellow-300 hover:bg-yellow-400 text-black px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full flex items-center justify-center gap-2"
+            >
+              <Download size={18} />
               Descargar
             </button>
 
@@ -244,7 +290,10 @@ const FormVistaPrevMasivaNom = () => {
               <button className="bg-[#4669AF] hover:bg-[#3a5a9b] text-white px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full">
                 Gestionar
               </button>
-              <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full">
+              <button
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full"
+                onClick={() => navigate('/dashboard-nomina')}
+              >
                 Cancelar
               </button>
             </div>
