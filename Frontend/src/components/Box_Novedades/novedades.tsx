@@ -91,6 +91,34 @@ const NovedadesRecientes: React.FC = () => {
     return estadoReal;
   };
 
+  const getMensajePorEstado = (estado: Estado, esNomina?: boolean): string => {
+    if (esNomina) {
+      switch (estado) {
+        case 'CREADA':
+        case 'PENDIENTE':
+          return '📤 Solicitud recibida. Aún no ha sido gestionada.';
+        case 'EN GESTIÓN':
+          return '🛠️ Se está gestionando esta novedad.';
+        case 'GESTIONADA':
+          return '✅ Validación completada. Esta novedad ya fue gestionada.';
+        default:
+          return '';
+      }
+    } else {
+      switch (estado) {
+        case 'CREADA':
+        case 'PENDIENTE':
+          return '✅ Archivo subido correctamente. Tu solicitud está lista para ser validada por el equipo de Nómina.';
+        case 'EN GESTIÓN':
+          return '🔄 El equipo de Nómina se encuentra validando tus solicitudes de esta novedad.';
+        case 'GESTIONADA':
+          return '📋 El equipo de Nómina ya validó tu novedad. Verifica si hay anotaciones o comentarios.';
+        default:
+          return '';
+      }
+    }
+  };
+
   return (
     <div className="text-sm font-bold w-[500px] bg-gray-400 rounded-2xl shadow-inner flex flex-col space-y-3 p-3">
       <div className="flex flex-col space-y-3 max-h-[200px] overflow-y-auto pr-1">
@@ -100,6 +128,7 @@ const NovedadesRecientes: React.FC = () => {
             'Sin tienda asociada';
 
           const estadoVisual = mostrarEstado(novedad);
+          const mensaje = getMensajePorEstado(estadoVisual, user?.esNomina);
 
           return (
             <div
@@ -140,7 +169,8 @@ const NovedadesRecientes: React.FC = () => {
                   }`}
                 </p>
 
-                <p className="text-xs text-gray-400">{novedad.descripcion}</p>
+                {mensaje && <p className="text-xs text-gray-400">{mensaje}</p>}
+
                 {novedad.es_masiva && (
                   <p className="text-[10px] text-gray-500 italic">
                     Tienda: {tiendaNombre} • Solicitudes:{' '}
