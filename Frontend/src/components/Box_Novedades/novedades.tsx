@@ -107,20 +107,25 @@ const NovedadesRecientes: React.FC = () => {
               className="flex items-start bg-white rounded-xl shadow-sm p-3 relative cursor-pointer 
               transform transition-transform duration-150 hover:scale-[1.01]"
               onClick={() =>
-                navigate(`/vista-previa-masiva-tienda/${novedad.id_novedad}`, {
-                  state: {
-                    id_novedad: novedad.id_novedad,
-                    descripcion: novedad.descripcion,
-                    tipo: novedad.tipo_novedad?.nombre_tipo ?? 'Sin tipo',
-                    estado: estadoVisual,
-                    tienda: tiendaNombre,
-                    fecha: novedad.fecha_creacion,
-                    cantidad: novedad.cantidad_solicitudes ?? 'N/A',
-                    iconName: getIconNameByTipoNovedad(
-                      novedad.tipo_novedad?.nombre_tipo,
-                    ),
+                navigate(
+                  user?.esNomina
+                    ? `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`
+                    : `/vista-previa-masiva-tienda/${novedad.id_novedad}`,
+                  {
+                    state: {
+                      id_novedad: novedad.id_novedad,
+                      descripcion: novedad.descripcion,
+                      tipo: novedad.tipo_novedad?.nombre_tipo ?? 'Sin tipo',
+                      estado: estadoVisual,
+                      tienda: tiendaNombre,
+                      fecha: novedad.fecha_creacion,
+                      cantidad: novedad.cantidad_solicitudes ?? 'N/A',
+                      iconName: getIconNameByTipoNovedad(
+                        novedad.tipo_novedad?.nombre_tipo,
+                      ),
+                    },
                   },
-                })
+                )
               }
             >
               <div

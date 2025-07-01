@@ -17,6 +17,7 @@ import OtroSiDef from '../pages/Solicitudes/OtroSiDef';
 import OtroSiTemp from '../pages/Solicitudes/OtroSiTemp';
 import Vacaciones from '../pages/Solicitudes/Vacaciones';
 import Error403FORBBIDEN from '../pages/Unauthorized/Error403';
+import VistaPrevisMasivaNom from '../pages/VistaPrev/Nomina/VistaPrevMasiNom';
 import VistaPrevisMasivaT from '../pages/VistaPrev/Tienda/VistPrevMas';
 import ProtectedRoute from './ProtectedRoute';
 
@@ -33,6 +34,10 @@ const AppRoutes = () => {
 
       <Route element={<ProtectedRoute allowedRoles={['nomina']} />}>
         <Route path="/dashboard-nomina" element={<DashNomina />} />
+        <Route
+          path="/vista-previa-masiva-novedad-nomina/:id"
+          element={<VistaPrevisMasivaNom />}
+        />
         <Route path="/solicitudes-pendientes" element={<SoliPendientes />} />
         <Route path="/todas-las-solicitudes" element={<TodasSolis />} />
         <Route path="/solicitudes-por-tiendas" element={<SoliPorTiendas />} />
