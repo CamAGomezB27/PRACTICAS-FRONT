@@ -123,13 +123,27 @@ const VistaArchConsNom: React.FC<PropsVistaArchConsNom> = ({
         if (filtros?.desde) params.append('desde', filtros.desde);
         if (filtros?.hasta) params.append('hasta', filtros.hasta);
 
-        const response = await axios.get<SolicitudConIdDetalle[]>(
-          'http://localhost:3000/novedad/masiva/tienda',
-          {
-            params: Object.fromEntries(params.entries()),
-            withCredentials: true,
-          },
-        );
+        let response;
+
+        if (modoRespuesta) {
+          response = await axios.post<SolicitudConIdDetalle[]>(
+            'http://localhost:3000/archivo-adjunto/exportar-consolidado',
+            {
+              params: Object.fromEntries(params.entries()),
+            },
+            {
+              withCredentials: true,
+            },
+          );
+        } else {
+          response = await axios.get<SolicitudConIdDetalle[]>(
+            'http://localhost:3000/novedad/consolidado-nomina',
+            {
+              params: Object.fromEntries(params.entries()),
+              withCredentials: true,
+            },
+          );
+        }
 
         const datosFormateados: filas[] = response.data.map((s) => ({
           id: s.id_novedad,
@@ -174,7 +188,13 @@ const VistaArchConsNom: React.FC<PropsVistaArchConsNom> = ({
     };
 
     fetchData();
-  }, [filtros?.tipo, filtros?.desde, filtros?.hasta]);
+  }, [
+    filtros?.tienda,
+    filtros?.tipo,
+    filtros?.desde,
+    filtros?.hasta,
+    modoRespuesta,
+  ]);
 
   const handleDescargar = async () => {
     if (!datosOriginales.length) {
