@@ -94,7 +94,15 @@ const formatearFecha = (fecha: string | Date | null | undefined): string => {
   });
 };
 
-const VistaArchConsNom: React.FC<PropsVistaArchConsNom> = ({ filtros }) => {
+interface PropsVistaArchConsNom {
+  filtros?: FiltroParaNom;
+  modoRespuesta?: boolean;
+}
+
+const VistaArchConsNom: React.FC<PropsVistaArchConsNom> = ({
+  filtros,
+  modoRespuesta,
+}) => {
   const [datos, setDatos] = useState<filas[]>([]);
   const [datosOriginales, setDatosOriginales] = useState<
     SolicitudConIdDetalle[]
@@ -210,10 +218,14 @@ const VistaArchConsNom: React.FC<PropsVistaArchConsNom> = ({ filtros }) => {
         <div className="flex justify-between items-start mb-6">
           <div>
             <h2 className="text-2xl font-bold text-gray-800 mb-2">
-              Vista Previa de Archivo Consolidado
+              {modoRespuesta
+                ? 'Vista previa de archivo para dar respuesta'
+                : 'Vista Previa de Archivo Consolidado'}
             </h2>
             <p className="text-gray-600">
-              Archivo consolidado de Histórico de solicitudes de tu tienda
+              {modoRespuesta
+                ? 'Acá podrás organizar tu archivo descargable de respuesta para las solicitudes post-nómina que te correspondan'
+                : 'Archivo consolidado de Histórico de solicitudes de tu tienda'}
             </p>
           </div>
           <button

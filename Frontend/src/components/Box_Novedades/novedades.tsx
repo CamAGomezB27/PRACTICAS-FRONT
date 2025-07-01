@@ -1,6 +1,5 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
 import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
 
@@ -57,7 +56,7 @@ function getIconNameByTipoNovedad(tipo: string = ''): string {
   if (tipoLower.includes('temporal')) return 'FaFileAlt';
   if (tipoLower.includes('vacaciones')) return 'FaUmbrellaBeach';
 
-  return 'FaList'; // ← Fallback para "Otros" o desconocidos
+  return 'FaList';
 }
 
 const NovedadesRecientes: React.FC = () => {

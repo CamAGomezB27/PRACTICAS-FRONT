@@ -1,6 +1,7 @@
+import axios from 'axios';
 import { es } from 'date-fns/locale';
 import { ChevronDown, Search } from 'lucide-react';
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -11,6 +12,11 @@ interface FiltroParaNom {
   tipo: string;
   desde: string;
   hasta: string;
+}
+
+interface Tienda {
+  id_tienda: number;
+  nombre_tienda: string;
 }
 
 const FiltrosNom = ({
@@ -24,6 +30,23 @@ const FiltrosNom = ({
     desde: '',
     hasta: '',
   });
+
+  const [tiendas, setTiendas] = useState<Tienda[]>([]);
+
+  useEffect(() => {
+    const fetchTiendas = async () => {
+      try {
+        const res = await axios.get<Tienda[]>('http://localhost:3000/tiendas', {
+          withCredentials: true,
+        });
+        setTiendas(res.data);
+      } catch (error) {
+        console.error('❌ Error cargando tiendas:', error);
+      }
+    };
+
+    fetchTiendas();
+  }, []);
 
   const [fechaDesde, setFechaDesde] = useState<Date | null>(null);
   const [fechaHasta, setFechaHasta] = useState<Date | null>(null);
@@ -94,14 +117,19 @@ const FiltrosNom = ({
         <div className="relative group">
           <select
             title="Tienda"
-            name="tipo"
+            name="tienda"
             value={filtros.tienda}
             onChange={handleChange}
             className="w-full h-10 px-3 border border-gray-300 rounded-md bg-white text-sm text-gray-700 appearance-none focus:outline-none focus:ring-1 focus:ring-[#4669AF] cursor-pointer"
           >
             <option value="">Todas las Tiendas</option>
-            {/* INTEGRAR BACKEND */}
+            {tiendas.map((tienda) => (
+              <option key={tienda.id_tienda} value={tienda.nombre_tienda}>
+                {tienda.nombre_tienda}
+              </option>
+            ))}
           </select>
+
           <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
             <ChevronDown className="w-4 h-4 text-gray-400" />
           </div>
@@ -153,8 +181,8 @@ const FiltrosNom = ({
           dateFormat="dd/MM/yyyy"
           customInput={<CustomInput />}
           placeholderText="Selecciona una fecha"
-          popperClassName="text-sm scale-90"
-          popperPlacement="right-start"
+          popperClassName="!z-[9999]"
+          popperPlacement="top"
         />
       </div>
 
@@ -176,7 +204,8 @@ const FiltrosNom = ({
           dateFormat="dd/MM/yyyy"
           customInput={<CustomInput />}
           placeholderText="Selecciona una fecha"
-          popperClassName="text-sm scale-90"
+          popperClassName="text-sm scale-90 z-[9999]"
+          popperPlacement="top"
         />
       </div>
 
@@ -190,9 +219,11 @@ const FiltrosNom = ({
         </button>
         <button
           onClick={limpiar}
-          disabled={!filtros.tipo && !filtros.desde && !filtros.hasta}
+          disabled={
+            !filtros.tipo && !filtros.desde && !filtros.hasta && !filtros.tienda
+          }
           className={`flex-1 text-white text-sm font-medium rounded-md h-10 transition-colors flex items-center justify-center text-center ${
-            filtros.tipo || filtros.desde || filtros.hasta
+            filtros.tipo || filtros.desde || filtros.hasta || filtros.tienda
               ? 'bg-gray-700 hover:bg-gray-900 cursor-pointer'
               : 'bg-gray-300 cursor-not-allowed opacity-50 text-black'
           }`}

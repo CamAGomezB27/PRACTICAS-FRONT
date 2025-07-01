@@ -75,11 +75,8 @@ const NovedadesNomTodas: React.FC<Props> = ({ filtros, onCantidadChange }) => {
   const fetchNovedades = useCallback(async () => {
     try {
       const response = await axios.get<Novedad[]>(
-        'http://localhost:3000/novedad',
-        {
-          withCredentials: true,
-          params: filtros,
-        },
+        'http://localhost:3000/novedad/todas',
+        { params: filtros, withCredentials: true },
       );
 
       setNovedades(response.data);
