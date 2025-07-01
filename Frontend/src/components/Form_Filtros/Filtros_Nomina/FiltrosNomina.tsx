@@ -19,13 +19,14 @@ interface Tienda {
   nombre_tienda: string;
 }
 
-const FiltrosNom = ({
-  onApply,
-}: {
+interface Props {
   onApply: (filtros: FiltroParaNom) => void;
-}) => {
+  tiendaInicial?: string;
+}
+
+const FiltrosNom: React.FC<Props> = ({ onApply, tiendaInicial }) => {
   const [filtros, setFiltros] = useState<FiltroParaNom>({
-    tienda: '',
+    tienda: tiendaInicial || '',
     tipo: '',
     desde: '',
     hasta: '',
@@ -58,7 +59,12 @@ const FiltrosNom = ({
   };
 
   const limpiar = () => {
-    setFiltros({ tienda: '', tipo: '', desde: '', hasta: '' });
+    setFiltros({
+      tienda: tiendaInicial ? tiendaInicial : '', // <- solo borra tienda si NO hay tiendaInicial
+      tipo: '',
+      desde: '',
+      hasta: '',
+    });
     setFechaDesde(null);
     setFechaHasta(null);
   };
@@ -120,6 +126,7 @@ const FiltrosNom = ({
             name="tienda"
             value={filtros.tienda}
             onChange={handleChange}
+            disabled={!!tiendaInicial}
             className="w-full h-10 px-3 border border-gray-300 rounded-md bg-white text-sm text-gray-700 appearance-none focus:outline-none focus:ring-1 focus:ring-[#4669AF] cursor-pointer"
           >
             <option value="">Todas las Tiendas</option>
@@ -220,10 +227,16 @@ const FiltrosNom = ({
         <button
           onClick={limpiar}
           disabled={
-            !filtros.tipo && !filtros.desde && !filtros.hasta && !filtros.tienda
+            !filtros.tipo &&
+            !filtros.desde &&
+            !filtros.hasta &&
+            (!!tiendaInicial || !filtros.tienda) // <- ¡corregido aquí!
           }
           className={`flex-1 text-white text-sm font-medium rounded-md h-10 transition-colors flex items-center justify-center text-center ${
-            filtros.tipo || filtros.desde || filtros.hasta || filtros.tienda
+            filtros.tipo ||
+            filtros.desde ||
+            filtros.hasta ||
+            (!tiendaInicial && filtros.tienda)
               ? 'bg-gray-700 hover:bg-gray-900 cursor-pointer'
               : 'bg-gray-300 cursor-not-allowed opacity-50 text-black'
           }`}

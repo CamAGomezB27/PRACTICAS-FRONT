@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import BarraInformativa from '../../components/BarraInfo';
 import NovedadesNomTodas from '../../components/Box_Novedades/Novedades_Nomina/NovedadesNom';
 import Footer from '../../components/Footer/Footer';
@@ -13,12 +14,29 @@ interface FiltroParaNom {
 }
 
 const SoliPorTiendas: React.FC = () => {
-  const [filtros, setFiltros] = useState<FiltroParaNom | undefined>(undefined);
   const [cantidadSolicitudes, setCantidadSolicitudes] = useState(0);
+  const location = useLocation();
+  const tiendaDesdeModal = location.state?.tiendaSeleccionada || '';
+
+  const [filtros, setFiltros] = useState<FiltroParaNom>({
+    tienda: tiendaDesdeModal,
+    tipo: '',
+    desde: '',
+    hasta: '',
+  });
 
   const aplicarFiltros = async (filtros: FiltroParaNom) => {
     setFiltros(filtros);
   };
+
+  useEffect(() => {
+    if (tiendaDesdeModal) {
+      setFiltros((prev) => ({
+        ...prev,
+        tienda: tiendaDesdeModal,
+      }));
+    }
+  }, [tiendaDesdeModal]);
 
   return (
     <div className="min-h-screen w-screen flex flex-col bg-white">
@@ -27,7 +45,10 @@ const SoliPorTiendas: React.FC = () => {
         <div className="flex justify-between mb-6">
           {/* FILTROS */}
           <div className="lg:w-1/4 px-4 lg:pl-10 lg:pr-0 translate-y-7">
-            <FiltrosNom onApply={aplicarFiltros} />
+            <FiltrosNom
+              onApply={aplicarFiltros}
+              tiendaInicial={tiendaDesdeModal}
+            />
           </div>
 
           {/* NOVEDADES */}
