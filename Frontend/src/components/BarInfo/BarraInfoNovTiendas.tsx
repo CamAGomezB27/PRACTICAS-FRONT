@@ -28,7 +28,7 @@ const BarraInformativaTiendas: React.FC<Props> = ({
       >
         <option value="TODAS">Todas</option>
         <option value="PENDIENTE">Pendiente</option>
-        <option value="EN GESTIÓN">En gestión</option>
+        <option value="EN GESTIÓN">En Gestión</option>
         <option value="GESTIONADA">Gestionada</option>
       </select>
     </div>
