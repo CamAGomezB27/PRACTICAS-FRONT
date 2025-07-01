@@ -118,6 +118,7 @@ const VistaArchConsNom: React.FC<PropsVistaArchConsNom> = ({
 
       try {
         const params = new URLSearchParams();
+        if (filtros?.tienda) params.append('tienda', filtros.tienda);
         if (filtros?.tipo) params.append('tipo', filtros.tipo);
         if (filtros?.desde) params.append('desde', filtros.desde);
         if (filtros?.hasta) params.append('hasta', filtros.hasta);

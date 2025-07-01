@@ -57,7 +57,7 @@ const FiltroExportConsTienda = ({
     const yyyy = date.getFullYear();
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}T00:00:00-05:00`;
+    return `${yyyy}-${mm}-${dd}T00:00:00`;
   };
 
   // Para el final del día (23:59:59.999 Bogota)
@@ -65,7 +65,7 @@ const FiltroExportConsTienda = ({
     const yyyy = date.getFullYear();
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}T23:59:59.999-05:00`;
+    return `${yyyy}-${mm}-${dd}T23:59:59.999`;
   };
 
   return (
