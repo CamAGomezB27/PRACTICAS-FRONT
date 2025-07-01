@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Footer from '../../components/Footer/Footer';
 import FiltrosNom from '../../components/Form_Filtros/Filtros_Nomina/FiltrosNomina';
 import Navbar from '../../components/Navbar/Navbar';
-import VistaArchConsNom from '../../components/Vista_ArchivosExport/VistaArchivoExportNomina';
+import VistaArchRespMasiv from '../../components/ResMasiv/VistaArchivoExportNomina';
 
 interface FiltroParaNom {
   tienda: string;
@@ -15,9 +15,10 @@ interface FiltroParaNom {
 const RespuestaMasiva: React.FC = () => {
   const [filtros, setFiltros] = useState<FiltroParaNom | undefined>(undefined);
 
-  const aplicarFiltros = async (filtros: FiltroParaNom) => {
+  const aplicarFiltros = (filtros: FiltroParaNom) => {
     setFiltros(filtros);
   };
+
   return (
     <div className="min-h-screen w-screen flex flex-col bg-white">
       <Navbar />
@@ -29,7 +30,7 @@ const RespuestaMasiva: React.FC = () => {
           </div>
           {/* TABLA */}
           <div className="lg:w-3/4 px-4 lg:pl-0 lg:pr-6">
-            <VistaArchConsNom filtros={filtros} modoRespuesta />
+            <VistaArchRespMasiv filtros={filtros} />
           </div>
         </div>
       </main>
