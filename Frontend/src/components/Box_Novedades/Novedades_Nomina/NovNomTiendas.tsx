@@ -67,7 +67,10 @@ function getIconNameByTipoNovedad(tipo: string = ''): string {
   return 'FaList';
 }
 
-const NovedadesNomTodas: React.FC<Props> = ({ filtros, onCantidadChange }) => {
+const NovedadesNomTiendas: React.FC<Props> = ({
+  filtros,
+  onCantidadChange,
+}) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [novedades, setNovedades] = useState<Novedad[]>([]);
@@ -75,7 +78,7 @@ const NovedadesNomTodas: React.FC<Props> = ({ filtros, onCantidadChange }) => {
   const fetchNovedades = useCallback(async () => {
     try {
       const response = await axios.get<Novedad[]>(
-        'http://localhost:3000/novedad/todas',
+        'http://localhost:3000/novedad/todas-las-novedades',
         { params: filtros, withCredentials: true },
       );
 
@@ -244,4 +247,4 @@ const NovedadesNomTodas: React.FC<Props> = ({ filtros, onCantidadChange }) => {
   );
 };
 
-export default NovedadesNomTodas;
+export default NovedadesNomTiendas;
