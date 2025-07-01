@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import BarraInformativa from '../../components/BarraInfo';
-import NovedadesNomTodas from '../../components/Box_Novedades/Novedades_Nomina/NovedadesNom';
+import NovedadesNomPendientes from '../../components/Box_Novedades/Novedades_Nomina/NovNomPendientes';
 import Footer from '../../components/Footer/Footer';
 import FiltrosNom from '../../components/Form_Filtros/Filtros_Nomina/FiltrosNomina';
 import Navbar from '../../components/Navbar/Navbar';
@@ -33,7 +33,7 @@ const SoliPendientes: React.FC = () => {
           {/* NOVEDADES */}
           <div className="lg:w-3/4 px-4 lg:pl-0 lg:pr-10">
             <BarraInformativa cantidad={cantidadSolicitudes} />
-            <NovedadesNomTodas
+            <NovedadesNomPendientes
               filtros={filtros}
               onCantidadChange={setCantidadSolicitudes}
             />

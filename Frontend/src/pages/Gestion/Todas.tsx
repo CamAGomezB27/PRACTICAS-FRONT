@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import BarraInformativa from '../../components/BarraInfo';
-import NovedadesNomTodas from '../../components/Box_Novedades/Novedades_Nomina/NovedadesNom';
+import NovedadesNomTodas from '../../components/Box_Novedades/Novedades_Nomina/NovNomTodas';
 import Footer from '../../components/Footer/Footer';
 import FiltrosNom from '../../components/Form_Filtros/Filtros_Nomina/FiltrosNomina';
 import Navbar from '../../components/Navbar/Navbar';
