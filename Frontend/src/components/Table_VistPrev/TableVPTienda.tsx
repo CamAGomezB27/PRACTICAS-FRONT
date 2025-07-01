@@ -1,9 +1,7 @@
-import React from 'react';
-
 interface filas {
   id: number;
   numero: number;
-  fechaReporte: string;
+  fecha: string;
   cedula: string;
   nombre: string;
   categoria: string;
@@ -92,7 +90,7 @@ const TablaVistaPreviaMasiva = ({ datos }: { datos: filas[] }) => {
                 {[
                   fila.id,
                   fila.numero,
-                  fila.fechaReporte,
+                  fila.fecha,
                   fila.cedula,
                   fila.nombre,
                   fila.categoria,

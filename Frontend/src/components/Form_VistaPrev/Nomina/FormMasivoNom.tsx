@@ -27,7 +27,7 @@ interface Solicitud {
 interface filas {
   id: number;
   numero: number;
-  fechaReporte: string;
+  fecha: string;
   cedula: string;
   nombre: string;
   categoria: string;
@@ -58,6 +58,7 @@ interface filas {
 interface SolicitudConIdDetalle extends Solicitud {
   id_novedad: number;
   n: number;
+  fecha: string;
   jornada_empleado: string;
   jornada_otro_si: string;
   fecha_inicio: string;
@@ -98,7 +99,7 @@ const mapSolicitudesToFilas = (solicitudes: SolicitudConIdDetalle[]): filas[] =>
   solicitudes.map((s) => ({
     id: s.id_novedad,
     numero: s.n ?? 0,
-    fechaReporte: formatearFecha(s.fecha),
+    fecha: formatearFecha(s.fecha),
     cedula: s.cedula ?? '',
     nombre: s.nombre ?? '',
     categoria: s.categoria ?? '',
@@ -173,20 +174,12 @@ const FormVistaPrevMasivaNom = () => {
   }
 
   const handleDescargar = async () => {
-    if (!solicitudes.length) {
-      alert('No hay datos válidos para exportar.');
-      return;
-    }
+    const filasParaEnviar = mapSolicitudesToFilas(solicitudes);
 
     try {
-      console.log(
-        '🔵 Enviando al backend:',
-        solicitudes.map((d) => ({ id: d.id_novedad })),
-      );
-
       const response = await axios.post(
-        'http://localhost:3000/archivo-adjunto/exportar-consolidado',
-        solicitudes.map((d) => ({ id: d.id_novedad })), // Enviar solo los IDs
+        'http://localhost:3000/archivo-adjunto/exportar-archivo-respuesta',
+        filasParaEnviar,
         {
           responseType: 'blob',
           withCredentials: true,
@@ -199,8 +192,7 @@ const FormVistaPrevMasivaNom = () => {
 
       const contentDisposition = response.headers['content-disposition'];
       const match = contentDisposition?.match(/filename="(.+)"/);
-      const filename =
-        match?.[1] ?? `Archivo_Para_respuesta_${id_novedad}.xlsx`;
+      const filename = match?.[1] ?? 'VistaPrevia.xlsx';
 
       link.setAttribute('download', filename);
       document.body.appendChild(link);
@@ -208,7 +200,7 @@ const FormVistaPrevMasivaNom = () => {
       link.remove();
     } catch (error) {
       console.error('❌ Error al descargar el archivo:', error);
-      alert('Ocurrió un error al descargar el consolidado.');
+      alert('Error al exportar la tabla');
     }
   };
 
