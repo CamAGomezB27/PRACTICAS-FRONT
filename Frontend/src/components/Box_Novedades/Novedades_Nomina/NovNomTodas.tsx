@@ -38,6 +38,7 @@ interface Props {
     desde: string;
     hasta: string;
   };
+  estado?: string;
   onCantidadChange?: (cantidad: number) => void;
 }
 
@@ -67,10 +68,21 @@ function getIconNameByTipoNovedad(tipo: string = ''): string {
   return 'FaList';
 }
 
-const NovedadesNomTodas: React.FC<Props> = ({ filtros, onCantidadChange }) => {
+const NovedadesNomTodas: React.FC<Props> = ({
+  filtros,
+  estado,
+  onCantidadChange,
+}) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [novedades, setNovedades] = useState<Novedad[]>([]);
+
+  const mostrarEstado = useCallback(
+    (estado: Estado): Estado => {
+      return user?.esNomina && estado === 'CREADA' ? 'PENDIENTE' : estado;
+    },
+    [user?.esNomina],
+  );
 
   const fetchNovedades = useCallback(async () => {
     try {
@@ -79,22 +91,27 @@ const NovedadesNomTodas: React.FC<Props> = ({ filtros, onCantidadChange }) => {
         { params: filtros, withCredentials: true },
       );
 
-      setNovedades(response.data);
-      onCantidadChange?.(response.data.length);
+      let data = response.data;
+
+      if (estado && estado !== 'TODAS') {
+        data = data.filter((n) => {
+          const nombreEstado = mostrarEstado(n.estado_novedad.nombre_estado);
+          return nombreEstado === estado;
+        });
+      }
+
+      setNovedades(data);
+      onCantidadChange?.(data.length);
     } catch (error) {
       console.error('Error al obtener novedades: ', error);
     }
-  }, [filtros, onCantidadChange]);
+  }, [filtros, estado, onCantidadChange, mostrarEstado]);
 
   useEffect(() => {
     fetchNovedades();
     const interval = setInterval(fetchNovedades, 10000);
     return () => clearInterval(interval);
   }, [fetchNovedades]);
-
-  const mostrarEstado = (estado: Estado): Estado => {
-    return user?.esNomina && estado === 'CREADA' ? 'PENDIENTE' : estado;
-  };
 
   const gestionarNovedad = async (id_novedad: number) => {
     try {

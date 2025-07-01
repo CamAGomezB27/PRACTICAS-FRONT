@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import BarraInformativa from '../../components/BarraInfo';
+import BarraInformativaNovPendientes from '../../components/BarInfo/BarraInfoNovPendientes';
 import NovedadesNomPendientes from '../../components/Box_Novedades/Novedades_Nomina/NovNomPendientes';
 import Footer from '../../components/Footer/Footer';
 import FiltrosNom from '../../components/Form_Filtros/Filtros_Nomina/FiltrosNomina';
@@ -32,7 +32,7 @@ const SoliPendientes: React.FC = () => {
 
           {/* NOVEDADES */}
           <div className="lg:w-3/4 px-4 lg:pl-0 lg:pr-10">
-            <BarraInformativa cantidad={cantidadSolicitudes} />
+            <BarraInformativaNovPendientes cantidad={cantidadSolicitudes} />
             <NovedadesNomPendientes
               filtros={filtros}
               onCantidadChange={setCantidadSolicitudes}

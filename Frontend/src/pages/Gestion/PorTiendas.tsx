@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import BarraInformativa from '../../components/BarraInfo';
+import BarraInformativa from '../../components/BarInfo/BarraInfoNovPendientes';
 import NovedadesNomTiendas from '../../components/Box_Novedades/Novedades_Nomina/NovNomTiendas';
 import Footer from '../../components/Footer/Footer';
 import FiltrosNom from '../../components/Form_Filtros/Filtros_Nomina/FiltrosNomina';

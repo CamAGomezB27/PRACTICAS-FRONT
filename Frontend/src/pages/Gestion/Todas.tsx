@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import BarraInformativa from '../../components/BarraInfo';
+import BarraInformativaTodas from '../../components/BarInfo/BarraInfoNovTodas';
 import NovedadesNomTodas from '../../components/Box_Novedades/Novedades_Nomina/NovNomTodas';
 import Footer from '../../components/Footer/Footer';
 import FiltrosNom from '../../components/Form_Filtros/Filtros_Nomina/FiltrosNomina';
@@ -20,6 +20,8 @@ const TodasSolis: React.FC = () => {
     setFiltros(filtros);
   };
 
+  const [estadoSeleccionado, setEstadoSeleccionado] = useState('TODAS');
+
   return (
     <div className="min-h-screen w-screen flex flex-col bg-white">
       <Navbar />
@@ -32,9 +34,14 @@ const TodasSolis: React.FC = () => {
 
           {/* NOVEDADES */}
           <div className="lg:w-3/4 px-4 lg:pl-0 lg:pr-10">
-            <BarraInformativa cantidad={cantidadSolicitudes} />
+            <BarraInformativaTodas
+              cantidad={cantidadSolicitudes}
+              estadoSeleccionado={estadoSeleccionado}
+              onEstadoChange={setEstadoSeleccionado}
+            />
             <NovedadesNomTodas
               filtros={filtros}
+              estado={estadoSeleccionado}
               onCantidadChange={setCantidadSolicitudes}
             />
           </div>
