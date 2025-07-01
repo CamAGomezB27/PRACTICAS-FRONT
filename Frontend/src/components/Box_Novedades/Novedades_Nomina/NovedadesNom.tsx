@@ -96,6 +96,21 @@ const NovedadesNomTodas: React.FC<Props> = ({ filtros, onCantidadChange }) => {
     return user?.esNomina && estado === 'CREADA' ? 'PENDIENTE' : estado;
   };
 
+  const gestionarNovedad = async (id_novedad: number) => {
+    try {
+      await axios.put(
+        `http://localhost:3000/novedad/${id_novedad}/cambiar-estado`,
+        { nuevoEstadoId: 2 }, //2 = EN GESTIÓN
+        { withCredentials: true },
+      );
+
+      fetchNovedades();
+    } catch (error) {
+      console.error('❌ Error al cambiar el estado:', error);
+      alert('No se pudo actualizar la novedad.');
+    }
+  };
+
   return (
     <div className="text-sm font-bold w-full bg-white rounded-2xl shadow-md flex flex-col space-y-4 p-2 overflow-y-auto max-h-[500px]">
       {novedades.map((novedad) => {
@@ -105,6 +120,17 @@ const NovedadesNomTodas: React.FC<Props> = ({ filtros, onCantidadChange }) => {
         const estadoVisual = mostrarEstado(
           novedad.estado_novedad.nombre_estado,
         );
+
+        const stateVista = {
+          id_novedad: novedad.id_novedad,
+          descripcion: novedad.descripcion,
+          tipo: novedad.tipo_novedad?.nombre_tipo ?? 'Sin tipo',
+          estado: estadoVisual,
+          tienda: tiendaNombre,
+          fecha: novedad.fecha_creacion,
+          cantidad: novedad.cantidad_solicitudes ?? 'N/A',
+          iconName: getIconNameByTipoNovedad(novedad.tipo_novedad?.nombre_tipo),
+        };
 
         return (
           <div
@@ -181,6 +207,13 @@ const NovedadesNomTodas: React.FC<Props> = ({ filtros, onCantidadChange }) => {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
+                      gestionarNovedad(novedad.id_novedad);
+                      navigate(
+                        `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`,
+                        {
+                          state: stateVista,
+                        },
+                      );
                       console.log('Gestionar', novedad.id_novedad);
                     }}
                     className="bg-[#4669AF] hover:bg-[#3a5a9b] text-white text-xs px-6 py-1.5 rounded-md focus:outline-none"
@@ -191,7 +224,10 @@ const NovedadesNomTodas: React.FC<Props> = ({ filtros, onCantidadChange }) => {
                     onClick={(e) => {
                       e.stopPropagation();
                       navigate(
-                        `/vista-previa-masiva-tienda/${novedad.id_novedad}`,
+                        `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`,
+                        {
+                          state: stateVista,
+                        },
                       );
                     }}
                     className="bg-gray-500 hover:bg-gray-600 text-white text-xs px-6 py-1.5 rounded-md focus:outline-none"

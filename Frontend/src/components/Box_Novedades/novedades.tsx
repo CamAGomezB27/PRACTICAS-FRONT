@@ -71,7 +71,6 @@ const NovedadesRecientes: React.FC = () => {
         'http://localhost:3000/novedad',
         { withCredentials: true },
       );
-      console.log('🔎 Novedades recibidas:', response.data);
       setNovedades(response.data);
     } catch (error) {
       console.error('Error al obtener novedades: ', error);
@@ -84,9 +83,12 @@ const NovedadesRecientes: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Reemplaza "CREADA" por "PENDIENTE" si el usuario es de Nómina
-  const mostrarEstado = (estado: Estado): Estado => {
-    return user?.esNomina && estado === 'CREADA' ? 'PENDIENTE' : estado;
+  const mostrarEstado = (novedad: Novedad): Estado => {
+    const estadoReal = novedad.estado_novedad.nombre_estado;
+
+    // Solo usuarios de nómina pueden ver "CREADA" como "PENDIENTE"
+    if (user?.esNomina && estadoReal === 'CREADA') return 'PENDIENTE';
+    return estadoReal;
   };
 
   return (
@@ -97,9 +99,7 @@ const NovedadesRecientes: React.FC = () => {
             novedad.usuario?.usuario_tienda?.[0]?.tienda?.nombre_tienda ??
             'Sin tienda asociada';
 
-          const estadoVisual = mostrarEstado(
-            novedad.estado_novedad.nombre_estado,
-          );
+          const estadoVisual = mostrarEstado(novedad);
 
           return (
             <div

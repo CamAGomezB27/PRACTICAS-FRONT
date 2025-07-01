@@ -13,7 +13,7 @@ import {
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import TablePrevMasiva from '../../Table_VistPrev/TableVPTienda';
 
-// Tipos de datos
+// Tipos
 interface Solicitud {
   fecha: string;
   cedula: string;
@@ -84,8 +84,6 @@ const formatearFecha = (fecha: string | Date | null | undefined): string => {
   if (!fecha) return '';
   const date = new Date(fecha);
   if (isNaN(date.getTime())) return '';
-
-  // Corrige para zona horaria UTC y formato exacto
   return date.toLocaleDateString('es-CO', {
     timeZone: 'UTC',
     day: '2-digit',
@@ -94,7 +92,6 @@ const formatearFecha = (fecha: string | Date | null | undefined): string => {
   });
 };
 
-// Mapeo
 const mapSolicitudesToFilas = (solicitudes: SolicitudConIdDetalle[]): filas[] =>
   solicitudes.map((s) => ({
     id: s.id_novedad,
@@ -127,7 +124,6 @@ const mapSolicitudesToFilas = (solicitudes: SolicitudConIdDetalle[]): filas[] =>
     CategInconsitencia: s.categoria_inconsistencia ?? '',
   }));
 
-// Mapeo del nombre al componente del ícono
 const iconMap: Record<string, ReactElement> = {
   FaBus: <FaBus className="text-white text-2xl" />,
   FaMoneyBillAlt: <FaMoneyBillAlt className="text-white text-2xl" />,
@@ -138,14 +134,24 @@ const iconMap: Record<string, ReactElement> = {
   FaList: <FaList className="text-white text-2xl" />,
 };
 
-// Componente principal
 const FormVistaPrevMasivaNom = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const location = useLocation();
-  const { id_novedad, descripcion, tipo, estado, tienda, fecha, cantidad } =
-    location.state || {};
 
+  const {
+    id_novedad,
+    descripcion,
+    tipo,
+    estado,
+    tienda,
+    fecha,
+    cantidad,
+    iconName,
+  } = location.state || {};
+
+  const [estadoLocal, setEstadoLocal] = useState<string>(estado ?? 'PENDIENTE');
+  const [modoGestion, setModoGestion] = useState(false);
   const [solicitudes, setSolicitudes] = useState<SolicitudConIdDetalle[]>([]);
 
   useEffect(() => {
@@ -204,16 +210,30 @@ const FormVistaPrevMasivaNom = () => {
     }
   };
 
+  const handleGestionar = async () => {
+    try {
+      await axios.put(
+        `http://localhost:3000/novedad/${id}/cambiar-estado`,
+        { nuevoEstadoId: 2 }, // Estado 2 = EN GESTIÓN
+        { withCredentials: true },
+      );
+
+      // Actualizamos el estado visual local
+      setEstadoLocal('EN GESTIÓN');
+      setModoGestion(true);
+    } catch (error) {
+      console.error('❌ Error al gestionar la novedad:', error);
+      alert('No se pudo actualizar el estado de la novedad.');
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto p-6 bg-white">
       <div className="bg-white p-4 rounded-lg border border-gray-300 shadow-[2px_8px_12px_rgba(0,0,0,0.8)] hover:shadow-[4px_10px_14px_rgba(0,0,0,1)] hover:scale-[1.02] transition-all duration-300">
-        {/* Encabezado */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center space-x-3">
             <div className="w-14 h-14 bg-[#4669AF] rounded-full flex items-center justify-center">
-              {iconMap[location.state?.iconName] ?? (
-                <FaList className="text-white text-sm" />
-              )}
+              {iconMap[iconName] ?? <FaList className="text-white text-sm" />}
             </div>
             <div>
               <h1 className="text-xl font-semibold text-gray-900">
@@ -236,13 +256,20 @@ const FormVistaPrevMasivaNom = () => {
                   })}`}
               </p>
             </div>
-            <span className="bg-[#4669AF] text-white text-xs font-semibold px-3 py-1 rounded-full">
-              {estado ?? 'Sin estado'}
+            <span
+              className={`${
+                estadoLocal === 'PENDIENTE'
+                  ? 'bg-blue-500'
+                  : estadoLocal === 'EN GESTIÓN'
+                    ? 'bg-yellow-500'
+                    : 'bg-gray-400'
+              } text-white text-xs font-semibold px-3 py-1 rounded-full`}
+            >
+              {estadoLocal}
             </span>
           </div>
         </div>
 
-        {/* INFORMACIÓN */}
         <div className="p-4 bg-gray-50 border-b border-gray-200">
           <p className="text-sm text-gray-700">
             <span className="font-medium">
@@ -252,9 +279,7 @@ const FormVistaPrevMasivaNom = () => {
           </p>
         </div>
 
-        {/* Tabla + Botones */}
         <div className="flex flex-row gap-6 pt-4">
-          {/* Tabla */}
           <div className="w-[85%] flex flex-col">
             <div className="bg-[#4669AF] text-white text-center py-2 font-medium text-sm rounded-t-md">
               Vista Previa del Documento
@@ -266,29 +291,35 @@ const FormVistaPrevMasivaNom = () => {
             </div>
           </div>
 
-          {/* BOTONES */}
           <div className="w-[15%] flex flex-col justify-between items-center h-full py-4 gap-28">
-            {/* Botón Descargar (arriba) */}
             <button
               onClick={handleDescargar}
               className="bg-yellow-300 hover:bg-yellow-400 text-black px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full flex items-center justify-center gap-2"
             >
               <Download size={18} />
-              Descargar
+              {modoGestion ? 'Cargar' : 'Descargar'}
             </button>
 
-            {/* Botones Gestionar y Cancelar (abajo, juntos) */}
-            <div className="flex flex-col w-full gap-2">
+            {!modoGestion ? (
+              <div className="flex flex-col w-full gap-2">
+                <button
+                  className="bg-[#4669AF] hover:bg-[#3a5a9b] text-white px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full"
+                  onClick={handleGestionar}
+                >
+                  Gestionar
+                </button>
+                <button
+                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full"
+                  onClick={() => navigate('/dashboard-nomina')}
+                >
+                  Cancelar
+                </button>
+              </div>
+            ) : (
               <button className="bg-[#4669AF] hover:bg-[#3a5a9b] text-white px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full">
                 Gestionar
               </button>
-              <button
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full"
-                onClick={() => navigate('/dashboard-nomina')}
-              >
-                Cancelar
-              </button>
-            </div>
+            )}
           </div>
         </div>
       </div>
