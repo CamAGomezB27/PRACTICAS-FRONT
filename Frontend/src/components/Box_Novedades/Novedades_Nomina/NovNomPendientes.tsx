@@ -241,7 +241,10 @@ const NovedadesNomPendientes: React.FC<Props> = ({
                       navigate(
                         `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`,
                         {
-                          state: stateVista,
+                          state: {
+                            ...stateVista,
+                            modoGestionInicial: true,
+                          },
                         },
                       );
                       console.log('Gestionar', novedad.id_novedad);
@@ -256,7 +259,10 @@ const NovedadesNomPendientes: React.FC<Props> = ({
                       navigate(
                         `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`,
                         {
-                          state: stateVista,
+                          state: {
+                            ...stateVista,
+                            modoGestionInicial: false,
+                          },
                         },
                       );
                     }}

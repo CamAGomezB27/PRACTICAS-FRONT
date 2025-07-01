@@ -255,7 +255,10 @@ const NovedadesNomTodas: React.FC<Props> = ({
                       navigate(
                         `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`,
                         {
-                          state: stateVista,
+                          state: {
+                            ...stateVista,
+                            modoGestionInicial: true,
+                          },
                         },
                       );
                       console.log('Gestionar', novedad.id_novedad);
@@ -264,20 +267,27 @@ const NovedadesNomTodas: React.FC<Props> = ({
                   >
                     Gestionar
                   </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigate(
-                        `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`,
-                        {
-                          state: stateVista,
-                        },
-                      );
-                    }}
-                    className="bg-gray-500 hover:bg-gray-600 text-white text-xs px-6 py-1.5 rounded-md focus:outline-none"
-                  >
-                    Ver
-                  </button>
+
+                  {/* Solo mostrar el botón VER si NO está en EN GESTIÓN */}
+                  {estadoVisual !== 'EN GESTIÓN' && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(
+                          `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`,
+                          {
+                            state: {
+                              ...stateVista,
+                              modoGestionInicial: false,
+                            },
+                          },
+                        );
+                      }}
+                      className="bg-gray-500 hover:bg-gray-600 text-white text-xs px-6 py-1.5 rounded-md focus:outline-none"
+                    >
+                      Ver
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

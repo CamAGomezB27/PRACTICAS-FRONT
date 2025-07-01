@@ -148,10 +148,13 @@ const FormVistaPrevMasivaNom = () => {
     fecha,
     cantidad,
     iconName,
+    modoGestionInicial,
   } = location.state || {};
 
-  const [estadoLocal, setEstadoLocal] = useState<string>(estado ?? 'PENDIENTE');
-  const [modoGestion, setModoGestion] = useState(false);
+  const [estadoLocal, setEstadoLocal] = useState<string>(
+    modoGestionInicial ? 'EN GESTIÓN' : (estado ?? 'PENDIENTE'),
+  );
+  const [modoGestion, setModoGestion] = useState<boolean>(!!modoGestionInicial);
   const [solicitudes, setSolicitudes] = useState<SolicitudConIdDetalle[]>([]);
 
   useEffect(() => {
