@@ -10,6 +10,7 @@ import {
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Franco from '../../../assets/images/Franco_Pensando_1-removebg-preview.png';
+import AlertDiasNovedades from '../../../components/Alerts/AlertDiasNovedades';
 import NovedadesRecientes from '../../../components/Box_Novedades/novedades';
 import ExportacionesConsolidadas from '../../../components/Card_Consolidado/AccesoConsExport';
 import CardsTitle from '../../../components/Cards/cardsTitle';
@@ -25,10 +26,11 @@ const DashboardJefe: React.FC = () => {
     <div className="min-h-screen w-screen flex flex-col bg-white">
       <Navbar />
 
-      <main className="flex-grow px-8 pt-8 pb-4">
-        {/* Bienvenida */}
-        <div className="flex justify-between mb-6">
-          <div>
+      <main className="flex-grow px-8 pt-4 pb-4">
+        {/* ENCABEZADO */}
+        <div className="flex items-center justify-between mb-6">
+          {/* Bienvenida */}
+          <div className="flex flex-col justify-center">
             <h2 className="text-xl font-bold text-black">
               ¡Bienvenido, {user?.nombre || 'Nombre No disponible'}!
             </h2>
@@ -38,7 +40,13 @@ const DashboardJefe: React.FC = () => {
             </p>
           </div>
 
-          <div className="w-1/3 flex justify-center mt-2">
+          {/* Alerta */}
+          <div className="flex-shrink-0">
+            <AlertDiasNovedades />
+          </div>
+
+          {/* Novedades recientes */}
+          <div className="w-1/3 flex justify-center">
             <h2 className="text-xl font-bold text-black">
               Novedades Recientes
             </h2>
@@ -46,7 +54,7 @@ const DashboardJefe: React.FC = () => {
         </div>
 
         {/* Contenedor Principal en 3 Columnas */}
-        <div className="flex justify-between pl-6">
+        <div className="flex justify-between pl-6 pt-2">
           {/* Contenedor de Cards + Franco + Novedades */}
           <div className="flex">
             {/* Contenedor de Cards (3x2) */}

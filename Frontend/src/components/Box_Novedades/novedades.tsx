@@ -1,7 +1,19 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, type ReactNode } from 'react';
+import {
+  FiCheckCircle,
+  FiRefreshCw,
+  FiTool,
+  FiUploadCloud,
+} from 'react-icons/fi';
+import { HiOutlineDocumentCheck } from 'react-icons/hi2';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
+
+interface MensajeEstado {
+  icono: ReactNode;
+  texto: string;
+}
 
 type Estado =
   | 'CREADA'
@@ -85,36 +97,62 @@ const NovedadesRecientes: React.FC = () => {
 
   const mostrarEstado = (novedad: Novedad): Estado => {
     const estadoReal = novedad.estado_novedad.nombre_estado;
-
-    // Solo usuarios de nómina pueden ver "CREADA" como "PENDIENTE"
     if (user?.esNomina && estadoReal === 'CREADA') return 'PENDIENTE';
     return estadoReal;
   };
 
-  const getMensajePorEstado = (estado: Estado, esNomina?: boolean): string => {
+  const getMensajePorEstado = (
+    estado: Estado,
+    esNomina?: boolean,
+  ): MensajeEstado => {
     if (esNomina) {
       switch (estado) {
         case 'CREADA':
         case 'PENDIENTE':
-          return '📤 Solicitud recibida. Aún no ha sido gestionada.';
+          return {
+            icono: <FiUploadCloud className="text-xl text-blue-600" />,
+            texto: 'Solicitud recibida. Aún no ha sido gestionada.',
+          };
         case 'EN GESTIÓN':
-          return '🛠️ Se está gestionando esta novedad.';
+          return {
+            icono: <FiTool className="text-xl text-yellow-600" />,
+            texto: 'Se está gestionando esta novedad.',
+          };
         case 'GESTIONADA':
-          return '✅ Validación completada. Esta novedad ya fue gestionada.';
+          return {
+            icono: <FiCheckCircle className="text-xl text-green-600" />,
+            texto: 'Validación completada. Esta novedad ya fue gestionada.',
+          };
         default:
-          return '';
+          return { icono: <></>, texto: '' };
       }
     } else {
       switch (estado) {
         case 'CREADA':
         case 'PENDIENTE':
-          return '✅ Archivo subido correctamente. Tu solicitud está lista para ser validada por el equipo de Nómina.';
+          return {
+            icono: <FiUploadCloud className="text-xl text-blue-600" />,
+            texto:
+              'Archivo subido correctamente. Tu solicitud está lista para ser validada por el equipo de Nómina.',
+          };
         case 'EN GESTIÓN':
-          return '🔄 El equipo de Nómina se encuentra validando tus solicitudes de esta novedad.';
+          return {
+            icono: (
+              <FiRefreshCw className="text-xl text-yellow-600 animate-spin-slow" />
+            ),
+            texto:
+              'El equipo de Nómina se encuentra validando tus solicitudes de esta novedad.',
+          };
         case 'GESTIONADA':
-          return '📋 El equipo de Nómina ya validó tu novedad. Verifica si hay anotaciones o comentarios.';
+          return {
+            icono: (
+              <HiOutlineDocumentCheck className="text-xl text-green-600" />
+            ),
+            texto:
+              'El equipo de Nómina ya validó tu novedad. Verifica si hay anotaciones o comentarios.',
+          };
         default:
-          return '';
+          return { icono: <></>, texto: '' };
       }
     }
   };
@@ -133,8 +171,7 @@ const NovedadesRecientes: React.FC = () => {
           return (
             <div
               key={novedad.id_novedad}
-              className="flex items-start bg-white rounded-xl shadow-sm p-3 relative cursor-pointer 
-              transform transition-transform duration-150 hover:scale-[1.01]"
+              className="flex items-start bg-white rounded-xl shadow-sm p-3 relative cursor-pointer transform transition-transform duration-150 hover:scale-[1.01]"
               onClick={() =>
                 navigate(
                   user?.esNomina
@@ -169,7 +206,12 @@ const NovedadesRecientes: React.FC = () => {
                   }`}
                 </p>
 
-                {mensaje && <p className="text-xs text-gray-400">{mensaje}</p>}
+                {mensaje && (
+                  <div className="flex items-center gap-1 text-xs text-gray-500">
+                    <span>{mensaje.icono}</span>
+                    <span>{mensaje.texto}</span>
+                  </div>
+                )}
 
                 {novedad.es_masiva && (
                   <p className="text-[10px] text-gray-500 italic">

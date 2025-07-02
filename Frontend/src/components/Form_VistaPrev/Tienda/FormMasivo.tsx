@@ -1,17 +1,16 @@
-import { useState, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import TablePrevMasiva from '../../Table_VistPrev/TableVPTienda';
+import { ReactElement, useEffect, useState } from 'react';
 import {
   FaBus,
-  FaMoneyBillAlt,
   FaClock,
-  FaFileSignature,
   FaFileAlt,
-  FaUmbrellaBeach,
+  FaFileSignature,
   FaList,
+  FaMoneyBillAlt,
+  FaUmbrellaBeach,
 } from 'react-icons/fa';
-import { ReactElement } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
+import TablePrevMasiva from '../../Table_VistPrev/TableVPTienda';
 
 // Tipos de datos
 interface Solicitud {
@@ -27,7 +26,7 @@ interface Solicitud {
 interface filas {
   id: number;
   numero: number;
-  fechaReporte: string;
+  fecha: string;
   cedula: string;
   nombre: string;
   categoria: string;
@@ -98,7 +97,7 @@ const mapSolicitudesToFilas = (solicitudes: SolicitudConIdDetalle[]): filas[] =>
   solicitudes.map((s) => ({
     id: s.id_novedad,
     numero: s.n ?? 0,
-    fechaReporte: formatearFecha(s.fecha),
+    fecha: formatearFecha(s.fecha),
     cedula: s.cedula ?? '',
     nombre: s.nombre ?? '',
     categoria: s.categoria ?? '',
@@ -135,6 +134,22 @@ const iconMap: Record<string, ReactElement> = {
   FaFileAlt: <FaFileAlt className="text-white text-2xl" />,
   FaUmbrellaBeach: <FaUmbrellaBeach className="text-white text-2xl" />,
   FaList: <FaList className="text-white text-2xl" />,
+};
+
+const getColorPorEstado = (estado: string) => {
+  switch (estado) {
+    case 'CREADA':
+    case 'PENDIENTE':
+      return 'bg-blue-600';
+    case 'GESTIONADA':
+      return 'bg-green-500';
+    case 'EN GESTIÓN':
+      return 'bg-yellow-400';
+    case 'RECHAZADA':
+      return 'bg-red-500';
+    default:
+      return 'bg-gray-500';
+  }
 };
 
 // Componente principal
@@ -203,7 +218,9 @@ const FormVistaPrevMasiva = () => {
                   })}`}
               </p>
             </div>
-            <span className="bg-[#4669AF] text-white text-xs font-semibold px-3 py-1 rounded-full">
+            <span
+              className={`text-white text-xs font-semibold px-3 py-1 rounded-full ${getColorPorEstado(estado)}`}
+            >
               {estado ?? 'Sin estado'}
             </span>
           </div>
