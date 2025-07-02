@@ -1,19 +1,8 @@
 import axios from 'axios';
-import React, { useEffect, useState, type ReactNode } from 'react';
-import {
-  FiCheckCircle,
-  FiRefreshCw,
-  FiTool,
-  FiUploadCloud,
-} from 'react-icons/fi';
-import { HiOutlineDocumentCheck } from 'react-icons/hi2';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
-
-interface MensajeEstado {
-  icono: ReactNode;
-  texto: string;
-}
+import { getIconoPorEstado } from '../../utils/iconosPorEstado';
 
 type Estado =
   | 'CREADA'
@@ -51,9 +40,37 @@ const getColor = (estado: Estado) => {
     case 'GESTIONADA':
       return 'bg-green-500';
     case 'EN GESTIÓN':
-      return 'bg-yellow-500';
+      return 'bg-yellow-600';
     case 'RECHAZADA':
       return 'bg-red-500';
+  }
+};
+
+const getIconNamePorEstado = (estado: Estado, esNomina?: boolean): string => {
+  if (esNomina) {
+    switch (estado) {
+      case 'CREADA':
+      case 'PENDIENTE':
+        return 'upload';
+      case 'EN GESTIÓN':
+        return 'tool';
+      case 'GESTIONADA':
+        return 'check';
+      default:
+        return '';
+    }
+  } else {
+    switch (estado) {
+      case 'CREADA':
+      case 'PENDIENTE':
+        return 'upload';
+      case 'EN GESTIÓN':
+        return 'refresh';
+      case 'GESTIONADA':
+        return 'document';
+      default:
+        return '';
+    }
   }
 };
 
@@ -101,62 +118,6 @@ const NovedadesRecientes: React.FC = () => {
     return estadoReal;
   };
 
-  const getMensajePorEstado = (
-    estado: Estado,
-    esNomina?: boolean,
-  ): MensajeEstado => {
-    if (esNomina) {
-      switch (estado) {
-        case 'CREADA':
-        case 'PENDIENTE':
-          return {
-            icono: <FiUploadCloud className="text-xl text-blue-600" />,
-            texto: 'Solicitud recibida. Aún no ha sido gestionada.',
-          };
-        case 'EN GESTIÓN':
-          return {
-            icono: <FiTool className="text-xl text-yellow-600" />,
-            texto: 'Se está gestionando esta novedad.',
-          };
-        case 'GESTIONADA':
-          return {
-            icono: <FiCheckCircle className="text-xl text-green-600" />,
-            texto: 'Validación completada. Esta novedad ya fue gestionada.',
-          };
-        default:
-          return { icono: <></>, texto: '' };
-      }
-    } else {
-      switch (estado) {
-        case 'CREADA':
-        case 'PENDIENTE':
-          return {
-            icono: <FiUploadCloud className="text-xl text-blue-600" />,
-            texto:
-              'Archivo subido correctamente. Tu solicitud está lista para ser validada por el equipo de Nómina.',
-          };
-        case 'EN GESTIÓN':
-          return {
-            icono: (
-              <FiRefreshCw className="text-xl text-yellow-600 animate-spin-slow" />
-            ),
-            texto:
-              'El equipo de Nómina se encuentra validando tus solicitudes de esta novedad.',
-          };
-        case 'GESTIONADA':
-          return {
-            icono: (
-              <HiOutlineDocumentCheck className="text-xl text-green-600" />
-            ),
-            texto:
-              'El equipo de Nómina ya validó tu novedad. Verifica si hay anotaciones o comentarios.',
-          };
-        default:
-          return { icono: <></>, texto: '' };
-      }
-    }
-  };
-
   return (
     <div className="text-sm font-bold w-[500px] bg-gray-400 rounded-2xl shadow-inner flex flex-col space-y-3 p-3">
       <div className="flex flex-col space-y-3 max-h-[200px] overflow-y-auto pr-1">
@@ -166,7 +127,8 @@ const NovedadesRecientes: React.FC = () => {
             'Sin tienda asociada';
 
           const estadoVisual = mostrarEstado(novedad);
-          const mensaje = getMensajePorEstado(estadoVisual, user?.esNomina);
+          const icono = getIconoPorEstado(estadoVisual, user?.esNomina);
+          const mensajeTexto = novedad.descripcion;
 
           return (
             <div
@@ -189,6 +151,11 @@ const NovedadesRecientes: React.FC = () => {
                       iconName: getIconNameByTipoNovedad(
                         novedad.tipo_novedad?.nombre_tipo,
                       ),
+                      iconoEstado: getIconNamePorEstado(
+                        estadoVisual,
+                        user?.esNomina,
+                      ),
+                      mensajeTexto: mensajeTexto,
                     },
                   },
                 )
@@ -206,10 +173,10 @@ const NovedadesRecientes: React.FC = () => {
                   }`}
                 </p>
 
-                {mensaje && (
+                {mensajeTexto && (
                   <div className="flex items-center gap-1 text-xs text-gray-500">
-                    <span>{mensaje.icono}</span>
-                    <span>{mensaje.texto}</span>
+                    <span>{icono}</span>
+                    <span>{mensajeTexto}</span>
                   </div>
                 )}
 

@@ -10,6 +10,8 @@ import {
   FaUmbrellaBeach,
 } from 'react-icons/fa';
 import { useLocation, useParams } from 'react-router-dom';
+import { useAuth } from '../../../context/useAuth';
+import { Estado, getIconoPorEstado } from '../../../utils/iconosPorEstado';
 import TablePrevMasiva from '../../Table_VistPrev/TableVPTienda';
 
 // Tipos de datos
@@ -144,7 +146,7 @@ const getColorPorEstado = (estado: string) => {
     case 'GESTIONADA':
       return 'bg-green-500';
     case 'EN GESTIÓN':
-      return 'bg-yellow-400';
+      return 'bg-yellow-600';
     case 'RECHAZADA':
       return 'bg-red-500';
     default:
@@ -154,10 +156,20 @@ const getColorPorEstado = (estado: string) => {
 
 // Componente principal
 const FormVistaPrevMasiva = () => {
+  const { user } = useAuth();
+  const esNomina = user?.esNomina;
   const { id } = useParams();
   const location = useLocation();
-  const { id_novedad, descripcion, tipo, estado, tienda, fecha, cantidad } =
-    location.state || {};
+  const {
+    id_novedad,
+    tipo,
+    estado,
+    tienda,
+    fecha,
+    cantidad,
+    mensajeTexto,
+    iconName,
+  } = location.state || {};
 
   const [solicitudes, setSolicitudes] = useState<SolicitudConIdDetalle[]>([]);
 
@@ -192,18 +204,24 @@ const FormVistaPrevMasiva = () => {
         {/* Encabezado */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-[#4669AF] rounded-full flex items-center justify-center">
-              {iconMap[location.state?.iconName] ?? (
-                <FaList className="text-white text-sm" />
-              )}
+            <div
+              className={`w-12 h-12 rounded-full flex items-center justify-center ${getColorPorEstado(estado)}`}
+            >
+              {iconMap[iconName] ?? <FaList className="text-white text-sm" />}
             </div>
             <div>
               <h1 className="text-lg font-semibold text-gray-900">
                 {tipo ?? 'Tipo de novedad'}
               </h1>
-              <p className="text-sm text-gray-600">
-                {descripcion ?? 'Descripción no disponible'}
-              </p>
+              {/* Mensaje e ícono del estado */}
+              {estado && (
+                <div className="flex items-center gap-2 mt-1 ">
+                  {getIconoPorEstado(estado as Estado, esNomina)}
+                  <span className="text-xs font-semibold text-gray-500">
+                    {mensajeTexto}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
           <div className="flex items-center space-x-4">

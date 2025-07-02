@@ -7,6 +7,7 @@ module.exports = {
         poppins: ['Poppins', 'sans-serif'],
       },
       animation: {
+        'spin-slow': 'spin 3s linear infinite',
         slideDown: 'slideDown 0.4s ease-out',
         'ping-slow': 'ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite',
         slideUp: 'slideUp 0.5s ease-out',

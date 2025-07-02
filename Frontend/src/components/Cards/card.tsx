@@ -20,7 +20,7 @@ const Card: React.FC<CardProps> = ({
 
   // Hover: sombra azul fuerte + efecto de crecimiento
   const hoverEffects =
-    'hover:shadow-[4px_8px_15px_rgba(10,10,200,1.5)] hover:scale-[1.05]';
+    'hover:shadow-[4px_8px_15px_rgba(100,125,200,8)] hover:scale-[1.05]';
 
   // Layout según posición icono
   const layoutClasses =
@@ -28,16 +28,18 @@ const Card: React.FC<CardProps> = ({
       ? 'flex flex-col items-center justify-center p-4 space-y-2 text-blue-600'
       : 'flex items-center gap-4 p-5 text-blue-600';
 
-  // Clase para el tamaño del ícono
-  const iconSizeClass = 'text-3xl';
+  const iconColorClass = 'text-[#4669AF]';
+  const textColorClass = 'text-[#4669AF]';
 
   return (
     <div
       onClick={onClick}
       className={`bg-white rounded-md cursor-pointer transition-all duration-300 ease-in-out transform ${baseShadow} ${hoverEffects} ${layoutClasses} ${className}`}
     >
-      {icon && <div className={iconSizeClass}>{icon}</div>}
-      <span className="text-md font-bold">{title}</span>
+      {icon && <div className={`text-3xl ${iconColorClass}`}>{icon}</div>}
+      <span className={`text-md font-bold text-center ${textColorClass}`}>
+        {title}
+      </span>
     </div>
   );
 };

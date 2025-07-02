@@ -5,7 +5,7 @@ interface CardProps {
   icon?: ReactNode;
   className?: string;
   iconPosition?: 'left' | 'top';
-  color?: string;
+  color?: string; // color de la franja
   headerLabel?: string;
   onClick?: () => void;
 }
@@ -21,21 +21,22 @@ const CardsTitle: React.FC<CardProps> = ({
 }) => {
   const baseShadow = 'shadow-[2px_8px_12px_rgba(0,0,0,0.8)]';
   const hoverEffects =
-    'hover:shadow-[4px_8px_15px_rgba(10,10,200,1.5)] hover:scale-[1.05]';
+    'hover:shadow-[4px_8px_15px_rgba(100,125,200,8)] hover:scale-[1.05]';
 
   const layoutClasses =
     iconPosition === 'top'
-      ? 'flex flex-col items-center justify-center p-4 space-y-2 text-blue-600'
-      : 'flex items-center gap-4 p-5 text-blue-600';
+      ? 'flex flex-col items-center justify-center p-4 space-y-2'
+      : 'flex items-center gap-4 p-5';
 
-  const iconSizeClass = 'text-3xl';
+  const iconColorClass = 'text-[#4669AF]';
+  const textColorClass = 'text-[#4669AF]';
 
   return (
     <div
       onClick={onClick}
       className={`bg-white rounded-md cursor-pointer transition-all duration-300 ease-in-out transform ${baseShadow} ${hoverEffects} ${className}`}
     >
-      {/* Franja opcional arriba */}
+      {/* Franja superior */}
       {headerLabel && (
         <div
           className={`w-full text-white text-xs font-semibold py-1 px-2 rounded-t-md ${color}`}
@@ -44,9 +45,12 @@ const CardsTitle: React.FC<CardProps> = ({
         </div>
       )}
 
+      {/* Contenido principal */}
       <div className={layoutClasses}>
-        {icon && <div className={iconSizeClass}>{icon}</div>}
-        <span className="text-md font-bold text-center">{title}</span>
+        {icon && <div className={`text-3xl ${iconColorClass}`}>{icon}</div>}
+        <span className={`text-md font-bold text-center ${textColorClass}`}>
+          {title}
+        </span>
       </div>
     </div>
   );
