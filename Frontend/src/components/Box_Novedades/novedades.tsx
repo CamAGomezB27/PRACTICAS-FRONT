@@ -2,7 +2,11 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/useAuth';
-import { getIconoPorEstado } from '../../utils/iconosPorEstado';
+import {
+  getColorPorEstado,
+  getIconNamePorEstado,
+  getIconoPorEstado,
+} from '../../utils/iconosPorEstado';
 
 type Estado =
   | 'CREADA'
@@ -31,48 +35,6 @@ interface Novedad {
   es_masiva?: boolean;
   cantidad_solicitudes?: number;
 }
-
-const getColor = (estado: Estado) => {
-  switch (estado) {
-    case 'CREADA':
-    case 'PENDIENTE':
-      return 'bg-blue-500';
-    case 'GESTIONADA':
-      return 'bg-green-500';
-    case 'EN GESTIÓN':
-      return 'bg-yellow-600';
-    case 'RECHAZADA':
-      return 'bg-red-500';
-  }
-};
-
-const getIconNamePorEstado = (estado: Estado, esNomina?: boolean): string => {
-  if (esNomina) {
-    switch (estado) {
-      case 'CREADA':
-      case 'PENDIENTE':
-        return 'upload';
-      case 'EN GESTIÓN':
-        return 'tool';
-      case 'GESTIONADA':
-        return 'check';
-      default:
-        return '';
-    }
-  } else {
-    switch (estado) {
-      case 'CREADA':
-      case 'PENDIENTE':
-        return 'upload';
-      case 'EN GESTIÓN':
-        return 'refresh';
-      case 'GESTIONADA':
-        return 'document';
-      default:
-        return '';
-    }
-  }
-};
 
 function getIconNameByTipoNovedad(tipo: string = ''): string {
   const tipoLower = tipo.toLowerCase();
@@ -162,9 +124,7 @@ const NovedadesRecientes: React.FC = () => {
               }
             >
               <div
-                className={`w-1.5 h-full rounded-l-md absolute left-0 top-0 bottom-0 ${getColor(
-                  estadoVisual,
-                )}`}
+                className={`w-1.5 h-full rounded-l-md absolute left-0 top-0 bottom-0 ${getColorPorEstado(estadoVisual)}`}
               />
               <div className="pl-3 pr-1 flex-1">
                 <p className="text-sm font-semibold text-gray-800">

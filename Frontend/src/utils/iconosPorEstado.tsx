@@ -16,6 +16,7 @@ export type Estado =
   | 'RECHAZADA'
   | 'PENDIENTE';
 
+// Ícono visual (ReactNode)
 export const getIconoPorEstado = (
   estado: Estado,
   esNomina?: boolean,
@@ -46,5 +47,54 @@ export const getIconoPorEstado = (
       default:
         return null;
     }
+  }
+};
+
+// Nombre del ícono
+export const getIconNamePorEstado = (
+  estado: Estado,
+  esNomina?: boolean,
+): string => {
+  if (esNomina) {
+    switch (estado) {
+      case 'CREADA':
+      case 'PENDIENTE':
+        return 'upload';
+      case 'EN GESTIÓN':
+        return 'tool';
+      case 'GESTIONADA':
+        return 'check';
+      default:
+        return '';
+    }
+  } else {
+    switch (estado) {
+      case 'CREADA':
+      case 'PENDIENTE':
+        return 'upload';
+      case 'EN GESTIÓN':
+        return 'refresh';
+      case 'GESTIONADA':
+        return 'document';
+      default:
+        return '';
+    }
+  }
+};
+
+// Color de fondo para etiquetas visuales
+export const getColorPorEstado = (estado: Estado): string => {
+  switch (estado) {
+    case 'CREADA':
+    case 'PENDIENTE':
+      return 'bg-blue-500';
+    case 'GESTIONADA':
+      return 'bg-green-500';
+    case 'EN GESTIÓN':
+      return 'bg-yellow-600';
+    case 'RECHAZADA':
+      return 'bg-red-500';
+    default:
+      return 'bg-gray-400';
   }
 };

@@ -11,7 +11,11 @@ import {
 } from 'react-icons/fa';
 import { useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../../../context/useAuth';
-import { Estado, getIconoPorEstado } from '../../../utils/iconosPorEstado';
+import {
+  Estado,
+  getColorPorEstado,
+  getIconoPorEstado,
+} from '../../../utils/iconosPorEstado';
 import TablePrevMasiva from '../../Table_VistPrev/TableVPTienda';
 
 // Tipos de datos
@@ -136,22 +140,6 @@ const iconMap: Record<string, ReactElement> = {
   FaFileAlt: <FaFileAlt className="text-white text-2xl" />,
   FaUmbrellaBeach: <FaUmbrellaBeach className="text-white text-2xl" />,
   FaList: <FaList className="text-white text-2xl" />,
-};
-
-const getColorPorEstado = (estado: string) => {
-  switch (estado) {
-    case 'CREADA':
-    case 'PENDIENTE':
-      return 'bg-blue-600';
-    case 'GESTIONADA':
-      return 'bg-green-500';
-    case 'EN GESTIÓN':
-      return 'bg-yellow-600';
-    case 'RECHAZADA':
-      return 'bg-red-500';
-    default:
-      return 'bg-gray-500';
-  }
 };
 
 // Componente principal
