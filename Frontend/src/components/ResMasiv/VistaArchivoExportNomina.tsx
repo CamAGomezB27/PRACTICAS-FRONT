@@ -270,11 +270,12 @@ const VistaArchRespMasiv: React.FC<{ filtros?: FiltroParaNom }> = ({
             </button>
           ) : (
             <button
-              className="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded-lg font-medium transition-colors duration-200 shadow-md hover:scale-105"
+              className="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 shadow-md hover:scale-105"
               onClick={() =>
                 alert('Este botón puede redirigir o confirmar carga.')
               }
             >
+              <Download className="w-4 h-4" />
               Cargar
             </button>
           )}
