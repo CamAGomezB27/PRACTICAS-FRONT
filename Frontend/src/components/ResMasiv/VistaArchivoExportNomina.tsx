@@ -166,6 +166,8 @@ const VistaArchRespMasiv: React.FC<{ filtros?: FiltroParaNom }> = ({
     fetchData();
   }, [filtros?.tienda, filtros?.tipo, filtros?.desde, filtros?.hasta]);
 
+  const [descargado, setDescargado] = useState(false);
+
   const handleDescargar = async () => {
     if (!datosOriginales.length) {
       alert('No hay datos válidos para exportar.');
@@ -173,15 +175,48 @@ const VistaArchRespMasiv: React.FC<{ filtros?: FiltroParaNom }> = ({
     }
 
     try {
+      // Mapear los datos al formato que espera el backend
+      const payload = datosOriginales.map((d) => ({
+        id: d.id_novedad,
+        numero: d.n ?? 0,
+        fecha: d.fecha,
+        cedula: d.cedula,
+        nombre: d.nombre,
+        categoria: d.categoria,
+        tienda: d.tienda,
+        jefe: d.jefe,
+        detalle: d.detalle,
+        jornadaEmAc: d.jornada_empleado,
+        jornadaOtrSiTem: d.jornada_otro_si,
+        fechainicio: d.fecha_inicio,
+        fechafin: d.fecha_fin,
+        salarioActual: d.salario_actual,
+        salarioOtroSiTemp: d.salario_otro_si,
+        consForms: d.consecutivo_forms,
+        concepto: d.concepto,
+        codigo: Number(d.codigo_concepto),
+        unidades: d.unidades,
+        fechaNove: d.fecha_novedad,
+        fechInicioDisfrute: d.fecha_inicio_disfrute,
+        fechaFinDisfrute: d.fecha_fin_disfrute,
+        ResponsableValidacion: d.responsable_validacion,
+        RespuestaValidacion: d.respuesta_validacion,
+        ajuste: d.ajuste,
+        Fechapago: d.fecha_pago,
+        AreaRespon: d.area_responsable,
+        CategInconsitencia: d.categoria_inconsistencia,
+      }));
+
       const response = await axios.post(
         'http://localhost:3000/archivo-adjunto/exportar-archivo-respuesta-masiva',
-        datosOriginales,
+        payload,
         {
           responseType: 'blob',
           withCredentials: true,
         },
       );
 
+      //DESCARGAR ARCHIVO
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -192,6 +227,19 @@ const VistaArchRespMasiv: React.FC<{ filtros?: FiltroParaNom }> = ({
       document.body.appendChild(link);
       link.click();
       link.remove();
+
+      //CAMBIAR ESTADOS A "EN GESTIÓN"
+      const ids = datosOriginales.map((d) => d.id_novedad);
+      await axios.put(
+        `http://localhost:3000/novedad/cambiar-estados-respuesta-masiva`,
+        {
+          idsNovedades: ids,
+          nuevoEstadoId: 2, // ESTADO EN GESTIÓN
+        },
+        { withCredentials: true },
+      );
+
+      setDescargado(true);
     } catch (error) {
       console.error('❌ Error al descargar el archivo:', error);
       alert('Ocurrió un error al descargar la respuesta masiva.');
@@ -211,13 +259,25 @@ const VistaArchRespMasiv: React.FC<{ filtros?: FiltroParaNom }> = ({
               pendientes.
             </p>
           </div>
-          <button
-            onClick={handleDescargar}
-            className="bg-[#4669AF] hover:bg-[#3a5a9b] text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 shadow-md hover:scale-105"
-          >
-            <Download className="w-4 h-4" />
-            Descargar
-          </button>
+
+          {!descargado ? (
+            <button
+              onClick={handleDescargar}
+              className="bg-[#4669AF] hover:bg-[#3a5a9b] text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 shadow-md hover:scale-105"
+            >
+              <Download className="w-4 h-4" />
+              Descargar
+            </button>
+          ) : (
+            <button
+              className="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded-lg font-medium transition-colors duration-200 shadow-md hover:scale-105"
+              onClick={() =>
+                alert('Este botón puede redirigir o confirmar carga.')
+              }
+            >
+              Cargar
+            </button>
+          )}
         </div>
 
         <div className="border border-gray-200 rounded-lg shadow-sm">
