@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Download } from 'lucide-react';
+import { Download, Upload } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import AlertFiltros from '../Alerts/AlertFiltros';
 import TablaRespMasiv from './TablaConsolidadoNomina';
@@ -99,74 +99,74 @@ const VistaArchRespMasiv: React.FC<{ filtros?: FiltroParaNom }> = ({
   >([]);
   const [loading, setLoading] = useState(false);
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
+  const [descargado, setDescargado] = useState(false);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  const fetchData = async () => {
+    setLoading(true);
+    setDatos([]);
+    setDatosOriginales([]);
+
+    try {
+      const params = new URLSearchParams();
+      if (filtros?.tienda) params.append('tienda', filtros.tienda);
+      if (filtros?.tipo) params.append('tipo', filtros.tipo);
+      if (filtros?.desde) params.append('desde', filtros.desde);
+      if (filtros?.hasta) params.append('hasta', filtros.hasta);
+
+      const response = await axios.get<SolicitudConIdDetalle[]>(
+        'http://localhost:3000/novedad/consolidado-pendientes-nomina',
+        {
+          params: Object.fromEntries(params.entries()),
+          withCredentials: true,
+        },
+      );
+
+      const datosFormateados: filas[] = response.data.map((s) => ({
+        id: s.id_novedad,
+        numero: s.n ?? 0,
+        fechaReporte: formatearFecha(s.fecha),
+        cedula: s.cedula,
+        nombre: s.nombre,
+        categoria: s.categoria,
+        tienda: s.tienda,
+        jefe: s.jefe,
+        detalle: s.detalle,
+        jornadaEmAc: s.jornada_empleado,
+        jornadaOtrSiTem: s.jornada_otro_si,
+        fechainicio: formatearFecha(s.fecha_inicio),
+        fechafin: formatearFecha(s.fecha_fin),
+        salarioActual: s.salario_actual,
+        salarioOtroSiTemp: s.salario_otro_si,
+        consForms: s.consecutivo_forms,
+        concepto: s.concepto,
+        codigo: Number(s.codigo_concepto),
+        unidades: s.unidades,
+        fechaNove: formatearFecha(s.fecha_novedad),
+        fechInicioDisfrute: formatearFecha(s.fecha_inicio_disfrute),
+        fechaFinDisfrute: formatearFecha(s.fecha_fin_disfrute),
+        ResponsableValidacion: s.responsable_validacion,
+        RespuestaValidacion: s.respuesta_validacion,
+        ajuste: s.ajuste,
+        Fechapago: formatearFecha(s.fecha_pago),
+        AreaRespon: s.area_responsable,
+        CategInconsitencia: s.categoria_inconsistencia,
+      }));
+
+      setDatos(datosFormateados);
+      setDatosOriginales(response.data);
+      setMostrarAlerta(datosFormateados.length === 0);
+    } catch (error) {
+      console.error('❌ Error al cargar el consolidado:', error);
+      setMostrarAlerta(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setDatos([]);
-      setDatosOriginales([]);
-
-      try {
-        const params = new URLSearchParams();
-        if (filtros?.tienda) params.append('tienda', filtros.tienda);
-        if (filtros?.tipo) params.append('tipo', filtros.tipo);
-        if (filtros?.desde) params.append('desde', filtros.desde);
-        if (filtros?.hasta) params.append('hasta', filtros.hasta);
-
-        const response = await axios.get<SolicitudConIdDetalle[]>(
-          'http://localhost:3000/novedad/consolidado-pendientes-nomina',
-          {
-            params: Object.fromEntries(params.entries()),
-            withCredentials: true,
-          },
-        );
-
-        const datosFormateados: filas[] = response.data.map((s) => ({
-          id: s.id_novedad,
-          numero: s.n ?? 0,
-          fechaReporte: formatearFecha(s.fecha),
-          cedula: s.cedula,
-          nombre: s.nombre,
-          categoria: s.categoria,
-          tienda: s.tienda,
-          jefe: s.jefe,
-          detalle: s.detalle,
-          jornadaEmAc: s.jornada_empleado,
-          jornadaOtrSiTem: s.jornada_otro_si,
-          fechainicio: formatearFecha(s.fecha_inicio),
-          fechafin: formatearFecha(s.fecha_fin),
-          salarioActual: s.salario_actual,
-          salarioOtroSiTemp: s.salario_otro_si,
-          consForms: s.consecutivo_forms,
-          concepto: s.concepto,
-          codigo: Number(s.codigo_concepto),
-          unidades: s.unidades,
-          fechaNove: formatearFecha(s.fecha_novedad),
-          fechInicioDisfrute: formatearFecha(s.fecha_inicio_disfrute),
-          fechaFinDisfrute: formatearFecha(s.fecha_fin_disfrute),
-          ResponsableValidacion: s.responsable_validacion,
-          RespuestaValidacion: s.respuesta_validacion,
-          ajuste: s.ajuste,
-          Fechapago: formatearFecha(s.fecha_pago),
-          AreaRespon: s.area_responsable,
-          CategInconsitencia: s.categoria_inconsistencia,
-        }));
-
-        setDatos(datosFormateados);
-        setDatosOriginales(response.data);
-        setMostrarAlerta(datosFormateados.length === 0);
-      } catch (error) {
-        console.error('❌ Error al cargar el consolidado:', error);
-        setMostrarAlerta(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
   }, [filtros?.tienda, filtros?.tipo, filtros?.desde, filtros?.hasta]);
-
-  const [descargado, setDescargado] = useState(false);
 
   const handleDescargar = async () => {
     if (!datosOriginales.length) {
@@ -175,7 +175,6 @@ const VistaArchRespMasiv: React.FC<{ filtros?: FiltroParaNom }> = ({
     }
 
     try {
-      // Mapear los datos al formato que espera el backend
       const payload = datosOriginales.map((d) => ({
         id: d.id_novedad,
         numero: d.n ?? 0,
@@ -216,7 +215,6 @@ const VistaArchRespMasiv: React.FC<{ filtros?: FiltroParaNom }> = ({
         },
       );
 
-      //DESCARGAR ARCHIVO
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -228,13 +226,13 @@ const VistaArchRespMasiv: React.FC<{ filtros?: FiltroParaNom }> = ({
       link.click();
       link.remove();
 
-      //CAMBIAR ESTADOS A "EN GESTIÓN"
+      // Cambiar estado a "EN GESTIÓN"
       const ids = datosOriginales.map((d) => d.id_novedad);
       await axios.put(
-        `http://localhost:3000/novedad/cambiar-estados-respuesta-masiva`,
+        'http://localhost:3000/novedad/cambiar-estados-respuesta-masiva',
         {
           idsNovedades: ids,
-          nuevoEstadoId: 2, // ESTADO EN GESTIÓN
+          nuevoEstadoId: 2,
         },
         { withCredentials: true },
       );
@@ -246,8 +244,49 @@ const VistaArchRespMasiv: React.FC<{ filtros?: FiltroParaNom }> = ({
     }
   };
 
+  const handleCargarArchivo = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await axios.post(
+        'http://localhost:3000/archivo-adjunto/cargar-respuesta-masiva',
+        formData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+          withCredentials: true,
+        },
+      );
+
+      alert(
+        `✅ Archivo procesado correctamente.\nActualizados: ${res.data.actualizados}`,
+      );
+
+      // Recargar datos para ver el cambio
+      setDescargado(false);
+      await fetchData();
+    } catch (error) {
+      console.error('❌ Error al procesar el archivo:', error);
+      alert('Ocurrió un error al cargar el archivo de respuestas.');
+    }
+  };
+
   return (
     <div className="p-6 min-h-screen">
+      <input
+        title="Carga"
+        ref={inputRef}
+        type="file"
+        accept=".xlsx"
+        onChange={handleCargarArchivo}
+        className="hidden"
+      />
+
       <div className="bg-white p-8 rounded-lg border border-gray-300 shadow-[2px_8px_12px_rgba(0,0,0,0.8)] hover:shadow-[4px_10px_14px_rgba(0,0,0,1)] hover:scale-105 transition-all duration-300">
         <div className="flex justify-between items-start mb-6">
           <div>
@@ -270,12 +309,10 @@ const VistaArchRespMasiv: React.FC<{ filtros?: FiltroParaNom }> = ({
             </button>
           ) : (
             <button
+              onClick={() => inputRef.current?.click()}
               className="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 shadow-md hover:scale-105"
-              onClick={() =>
-                alert('Este botón puede redirigir o confirmar carga.')
-              }
             >
-              <Download className="w-4 h-4" />
+              <Upload className="w-4 h-4" />
               Cargar
             </button>
           )}

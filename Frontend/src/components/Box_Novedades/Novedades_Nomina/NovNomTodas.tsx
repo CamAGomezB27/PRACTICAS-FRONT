@@ -246,49 +246,49 @@ const NovedadesNomTodas: React.FC<Props> = ({
                     </span>
                   )}
                 </div>
-
-                <div className="flex gap-4 items-center mt-4">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      gestionarNovedad(novedad.id_novedad);
-                      navigate(
-                        `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`,
-                        {
-                          state: {
-                            ...stateVista,
-                            modoGestionInicial: true,
-                          },
-                        },
-                      );
-                      console.log('Gestionar', novedad.id_novedad);
-                    }}
-                    className="bg-[#4669AF] hover:bg-[#3a5a9b] text-white text-xs px-6 py-1.5 rounded-md focus:outline-none"
-                  >
-                    Gestionar
-                  </button>
-
-                  {/* Solo mostrar el botón VER si NO está en EN GESTIÓN */}
-                  {estadoVisual !== 'EN GESTIÓN' && (
+                {estadoVisual !== 'GESTIONADA' && (
+                  <div className="flex gap-4 items-center mt-4">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
+                        gestionarNovedad(novedad.id_novedad);
                         navigate(
                           `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`,
                           {
                             state: {
                               ...stateVista,
-                              modoGestionInicial: false,
+                              modoGestionInicial: true,
                             },
                           },
                         );
+                        console.log('Gestionar', novedad.id_novedad);
                       }}
-                      className="bg-gray-500 hover:bg-gray-600 text-white text-xs px-6 py-1.5 rounded-md focus:outline-none"
+                      className="bg-[#4669AF] hover:bg-[#3a5a9b] text-white text-xs px-6 py-1.5 rounded-md focus:outline-none"
                     >
-                      Ver
+                      Gestionar
                     </button>
-                  )}
-                </div>
+
+                    {estadoVisual !== 'EN GESTIÓN' && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(
+                            `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`,
+                            {
+                              state: {
+                                ...stateVista,
+                                modoGestionInicial: false,
+                              },
+                            },
+                          );
+                        }}
+                        className="bg-gray-500 hover:bg-gray-600 text-white text-xs px-6 py-1.5 rounded-md focus:outline-none"
+                      >
+                        Ver
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
