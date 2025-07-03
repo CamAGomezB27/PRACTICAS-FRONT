@@ -11,6 +11,11 @@ import {
   FaUmbrellaBeach,
 } from 'react-icons/fa';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import {
+  Estado,
+  getColorPorEstado,
+  getIconoPorEstado,
+} from '../../../utils/iconosPorEstado';
 import TablePrevMasiva from '../../Table_VistPrev/TableVPTienda';
 
 // Tipos
@@ -141,7 +146,6 @@ const FormVistaPrevMasivaNom = () => {
 
   const {
     id_novedad,
-    descripcion,
     tipo,
     estado,
     tienda,
@@ -149,12 +153,16 @@ const FormVistaPrevMasivaNom = () => {
     cantidad,
     iconName,
     modoGestionInicial,
+    mensajeTexto, // <- esto
   } = location.state || {};
 
-  const [estadoLocal, setEstadoLocal] = useState<string>(
-    modoGestionInicial ? 'EN GESTIÓN' : (estado ?? 'PENDIENTE'),
+  const estadoInicial: Estado = modoGestionInicial
+    ? 'EN GESTIÓN'
+    : (estado ?? 'PENDIENTE');
+  const [estadoLocal, setEstadoLocal] = useState<Estado>(estadoInicial);
+  const [modoGestion, setModoGestion] = useState<boolean>(
+    estado === 'EN GESTIÓN' || !!modoGestionInicial,
   );
-  const [modoGestion, setModoGestion] = useState<boolean>(!!modoGestionInicial);
   const [solicitudes, setSolicitudes] = useState<SolicitudConIdDetalle[]>([]);
 
   useEffect(() => {
@@ -173,18 +181,8 @@ const FormVistaPrevMasivaNom = () => {
     if (id) fetchDatos();
   }, [id]);
 
-  if (!location.state) {
-    return (
-      <div className="text-center text-red-600 p-4">
-        ⚠️ No se encontró información de la solicitud. Por favor, vuelve al
-        panel principal.
-      </div>
-    );
-  }
-
   const handleDescargar = async () => {
     const filasParaEnviar = mapSolicitudesToFilas(solicitudes);
-
     try {
       const response = await axios.post(
         'http://localhost:3000/archivo-adjunto/exportar-archivo-respuesta',
@@ -194,15 +192,12 @@ const FormVistaPrevMasivaNom = () => {
           withCredentials: true,
         },
       );
-
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-
       const contentDisposition = response.headers['content-disposition'];
       const match = contentDisposition?.match(/filename="(.+)"/);
       const filename = match?.[1] ?? 'VistaPrevia.xlsx';
-
       link.setAttribute('download', filename);
       document.body.appendChild(link);
       link.click();
@@ -217,11 +212,9 @@ const FormVistaPrevMasivaNom = () => {
     try {
       await axios.put(
         `http://localhost:3000/novedad/${id}/cambiar-estado`,
-        { nuevoEstadoId: 2 }, // Estado 2 = EN GESTIÓN
+        { nuevoEstadoId: 2 },
         { withCredentials: true },
       );
-
-      // Actualizamos el estado visual local
       setEstadoLocal('EN GESTIÓN');
       setModoGestion(true);
     } catch (error) {
@@ -230,43 +223,49 @@ const FormVistaPrevMasivaNom = () => {
     }
   };
 
+  if (!location.state) {
+    return (
+      <div className="text-center text-red-600 p-4">
+        ⚠️ No se encontró información de la solicitud. Por favor, vuelve al
+        panel principal.
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-7xl mx-auto p-6 bg-white">
-      <div className="bg-white p-4 rounded-lg border border-gray-300 shadow-[2px_8px_12px_rgba(0,0,0,0.8)] hover:shadow-[4px_10px_14px_rgba(0,0,0,1)] hover:scale-[1.02] transition-all duration-300">
+    <div className="max-w-7xl mx-auto p-4 bg-white">
+      <div className="bg-white p-2 rounded-lg border border-gray-300 shadow-[2px_8px_12px_rgba(0,0,0,0.8)] hover:shadow-[4px_10px_14px_rgba(0,0,0,1)] hover:scale-105 transition-all duration-300">
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center space-x-3">
-            <div className="w-14 h-14 bg-[#4669AF] rounded-full flex items-center justify-center">
+            <div
+              className={`w-12 h-12 rounded-full flex items-center justify-center ${getColorPorEstado(estadoLocal)}`}
+            >
               {iconMap[iconName] ?? <FaList className="text-white text-sm" />}
             </div>
             <div>
-              <h1 className="text-xl font-semibold text-gray-900">
+              <h1 className="text-lg font-semibold text-gray-900">
                 {tipo ?? 'Tipo de novedad'}
               </h1>
-              <p className="text-sm text-gray-600">
-                {descripcion ?? 'Descripción no disponible'}
-              </p>
+              <div className="flex items-center gap-2 mt-1">
+                {getIconoPorEstado(estadoLocal, true)}
+                <span className="text-xs font-semibold text-gray-500">
+                  {mensajeTexto}
+                </span>
+              </div>
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <div className="text-right">
-              <p className="text-sm font-medium text-gray-900">
-                Solicitud #{id_novedad} • {tienda}{' '}
-                {fecha &&
-                  `/ ${new Date(fecha).toLocaleDateString('es-CO', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric',
-                  })}`}
-              </p>
-            </div>
+            <p className="text-sm font-medium text-gray-900">
+              Solicitud #{id_novedad} • {tienda}
+              {fecha &&
+                ` / ${new Date(fecha).toLocaleDateString('es-CO', {
+                  day: '2-digit',
+                  month: 'short',
+                  year: 'numeric',
+                })}`}
+            </p>
             <span
-              className={`${
-                estadoLocal === 'PENDIENTE'
-                  ? 'bg-blue-500'
-                  : estadoLocal === 'EN GESTIÓN'
-                    ? 'bg-yellow-500'
-                    : 'bg-gray-400'
-              } text-white text-xs font-semibold px-3 py-1 rounded-full`}
+              className={`${getColorPorEstado(estadoLocal)} text-white text-xs font-semibold px-3 py-1 rounded-full`}
             >
               {estadoLocal}
             </span>
@@ -287,10 +286,8 @@ const FormVistaPrevMasivaNom = () => {
             <div className="bg-[#4669AF] text-white text-center py-2 font-medium text-sm rounded-t-md">
               Vista Previa del Documento
             </div>
-            <div className="border border-gray-200 rounded-lg shadow-sm flex-1">
-              <div className="max-h-[400px] overflow-auto">
-                <TablePrevMasiva datos={mapSolicitudesToFilas(solicitudes)} />
-              </div>
+            <div className="border border-gray-200 rounded-lg shadow-sm flex-1 max-h-[400px] overflow-auto">
+              <TablePrevMasiva datos={mapSolicitudesToFilas(solicitudes)} />
             </div>
           </div>
 
