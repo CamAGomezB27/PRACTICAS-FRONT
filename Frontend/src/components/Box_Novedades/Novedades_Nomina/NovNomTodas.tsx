@@ -154,20 +154,23 @@ const NovedadesNomTodas: React.FC<Props> = ({
             <div
               className="p-4 flex flex-col cursor-pointer"
               onClick={() =>
-                navigate(`/vista-previa-masiva-tienda/${novedad.id_novedad}`, {
-                  state: {
-                    id_novedad: novedad.id_novedad,
-                    descripcion: novedad.descripcion,
-                    tipo: novedad.tipo_novedad?.nombre_tipo ?? 'Sin tipo',
-                    estado: estadoVisual,
-                    tienda: tiendaNombre,
-                    fecha: novedad.fecha_creacion,
-                    cantidad: novedad.cantidad_solicitudes ?? 'N/A',
-                    iconName: getIconNameByTipoNovedad(
-                      novedad.tipo_novedad?.nombre_tipo,
-                    ),
+                navigate(
+                  `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`,
+                  {
+                    state: {
+                      id_novedad: novedad.id_novedad,
+                      descripcion: novedad.descripcion,
+                      tipo: novedad.tipo_novedad?.nombre_tipo ?? 'Sin tipo',
+                      estado: estadoVisual,
+                      tienda: tiendaNombre,
+                      fecha: novedad.fecha_creacion,
+                      cantidad: novedad.cantidad_solicitudes ?? 'N/A',
+                      iconName: getIconNameByTipoNovedad(
+                        novedad.tipo_novedad?.nombre_tipo,
+                      ),
+                    },
                   },
-                })
+                )
               }
             >
               <div className="flex justify-between items-start">
