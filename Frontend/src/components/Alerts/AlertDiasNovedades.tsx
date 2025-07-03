@@ -75,14 +75,14 @@ const AlertDiasNovedades: React.FC<AlertDiasNovedadesProps> = ({
 
     if (hoy >= inicioPost && hoy <= finPost) {
       setEstado('postnomina');
-      const largo = `Tienes hasta el ${fechaStr} para subir novedades postnómina correspondientes a la última nómina.`;
+      const largo = `Las novedades cargadas hasta el ${fechaStr} serán analízadas y procesadas para la primera postnomina.`;
       const corto = `Tienes hasta el ${fechaStr}.`;
       setMensajeLargo(largo);
       setMensajeCorto(corto);
       setMensajeVisible(mostrarSoloCorto ? corto : largo);
     } else if (hoy > finPost && dia <= 20) {
       const mesStr = hoy.toLocaleString('es-CO', { month: 'long' });
-      const largo = `Recuerda que puedes subir novedades hasta el 20 de ${mesStr} para que se incluyan en la nómina de este mes.`;
+      const largo = `Las novedades cargadas hasta el 20 de ${mesStr} serán analízadas y procesadas para el pago de la nómina del mes actual.`;
       const corto = `Hasta el 20 de ${mesStr}.`;
       setEstado('antes20');
       setMensajeLargo(largo);
@@ -90,7 +90,7 @@ const AlertDiasNovedades: React.FC<AlertDiasNovedadesProps> = ({
       setMensajeVisible(mostrarSoloCorto ? corto : largo);
     } else if (hoy > finPost && dia > 20) {
       const mesStr = hoy.toLocaleString('es-CO', { month: 'long' });
-      const largo = `Las novedades subidas después del 20 de ${mesStr} serán pagadas como postnómina el siguiente mes.`;
+      const largo = `Las novedades cargadas después del 20 de ${mesStr} serán analízadas y procesadas para la primera postnomina del proximo mes`;
       const corto = `Después del 20 de ${mesStr}.`;
       setEstado('despues20');
       setMensajeLargo(largo);

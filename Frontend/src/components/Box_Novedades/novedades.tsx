@@ -62,7 +62,13 @@ const NovedadesRecientes: React.FC = () => {
         'http://localhost:3000/novedad',
         { withCredentials: true },
       );
-      setNovedades(response.data);
+      setNovedades(
+        response.data.sort(
+          (a, b) =>
+            new Date(b.fecha_creacion).getTime() -
+            new Date(a.fecha_creacion).getTime(),
+        ),
+      );
     } catch (error) {
       console.error('Error al obtener novedades: ', error);
     }
@@ -148,9 +154,10 @@ const NovedadesRecientes: React.FC = () => {
                 )}
               </div>
               <span className="text-[10px] text-gray-800 absolute top-2 right-3">
-                {new Date(novedad.fecha_creacion).toLocaleTimeString('es-CO', {
-                  hour: '2-digit',
-                  minute: '2-digit',
+                {new Date(novedad.fecha_creacion).toLocaleDateString('es-CO', {
+                  day: '2-digit',
+                  month: 'long',
+                  year: 'numeric',
                 })}
               </span>
             </div>
