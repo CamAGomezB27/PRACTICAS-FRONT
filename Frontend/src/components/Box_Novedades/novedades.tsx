@@ -89,80 +89,86 @@ const NovedadesRecientes: React.FC = () => {
   return (
     <div className="text-sm font-bold w-[500px] bg-gray-400 rounded-2xl shadow-inner flex flex-col space-y-3 p-3">
       <div className="flex flex-col space-y-3 max-h-[200px] overflow-y-auto pr-1">
-        {novedades.map((novedad) => {
-          const tiendaNombre =
-            novedad.usuario?.usuario_tienda?.[0]?.tienda?.nombre_tienda ??
-            'Sin tienda asociada';
+        {[...novedades]
+          .sort((a, b) => b.id_novedad - a.id_novedad)
+          .map((novedad) => {
+            const tiendaNombre =
+              novedad.usuario?.usuario_tienda?.[0]?.tienda?.nombre_tienda ??
+              'Sin tienda asociada';
 
-          const estadoVisual = mostrarEstado(novedad);
-          const icono = getIconoPorEstado(estadoVisual, user?.esNomina);
-          const mensajeTexto = novedad.descripcion;
+            const estadoVisual = mostrarEstado(novedad);
+            const icono = getIconoPorEstado(estadoVisual, user?.esNomina);
+            const mensajeTexto = novedad.descripcion;
 
-          return (
-            <div
-              key={novedad.id_novedad}
-              className="flex items-start bg-white rounded-xl shadow-sm p-3 relative cursor-pointer transform transition-transform duration-150 hover:scale-[1.01]"
-              onClick={() =>
-                navigate(
-                  user?.esNomina
-                    ? `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`
-                    : `/vista-previa-masiva-tienda/${novedad.id_novedad}`,
-                  {
-                    state: {
-                      id_novedad: novedad.id_novedad,
-                      descripcion: novedad.descripcion,
-                      tipo: novedad.tipo_novedad?.nombre_tipo ?? 'Sin tipo',
-                      estado: estadoVisual,
-                      tienda: tiendaNombre,
-                      fecha: novedad.fecha_creacion,
-                      cantidad: novedad.cantidad_solicitudes ?? 'N/A',
-                      iconName: getIconNameByTipoNovedad(
-                        novedad.tipo_novedad?.nombre_tipo,
-                      ),
-                      iconoEstado: getIconNamePorEstado(
-                        estadoVisual,
-                        user?.esNomina,
-                      ),
-                      mensajeTexto: mensajeTexto,
-                    },
-                  },
-                )
-              }
-            >
+            return (
               <div
-                className={`w-1.5 h-full rounded-l-md absolute left-0 top-0 bottom-0 ${getColorPorEstado(estadoVisual)}`}
-              />
-              <div className="pl-3 pr-1 flex-1">
-                <p className="text-sm font-semibold text-gray-800">
-                  {`SOLICITUD #0${novedad.id_novedad} ${estadoVisual} - ${
-                    novedad.tipo_novedad?.nombre_tipo ?? 'Sin tipo'
-                  }`}
-                </p>
-
-                {mensajeTexto && (
-                  <div className="flex items-center gap-1 text-xs text-gray-500">
-                    <span>{icono}</span>
-                    <span>{mensajeTexto}</span>
-                  </div>
-                )}
-
-                {novedad.es_masiva && (
-                  <p className="text-[10px] text-gray-500 italic">
-                    Tienda: {tiendaNombre} • Solicitudes:{' '}
-                    {novedad.cantidad_solicitudes ?? 'N/A'} • 📎 Archivo adjunto
+                key={novedad.id_novedad}
+                className="flex items-start bg-white rounded-xl shadow-sm p-3 relative cursor-pointer transform transition-transform duration-150 hover:scale-[1.01]"
+                onClick={() =>
+                  navigate(
+                    user?.esNomina
+                      ? `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`
+                      : `/vista-previa-masiva-tienda/${novedad.id_novedad}`,
+                    {
+                      state: {
+                        id_novedad: novedad.id_novedad,
+                        descripcion: novedad.descripcion,
+                        tipo: novedad.tipo_novedad?.nombre_tipo ?? 'Sin tipo',
+                        estado: estadoVisual,
+                        tienda: tiendaNombre,
+                        fecha: novedad.fecha_creacion,
+                        cantidad: novedad.cantidad_solicitudes ?? 'N/A',
+                        iconName: getIconNameByTipoNovedad(
+                          novedad.tipo_novedad?.nombre_tipo,
+                        ),
+                        iconoEstado: getIconNamePorEstado(
+                          estadoVisual,
+                          user?.esNomina,
+                        ),
+                        mensajeTexto: mensajeTexto,
+                      },
+                    },
+                  )
+                }
+              >
+                <div
+                  className={`w-1.5 h-full rounded-l-md absolute left-0 top-0 bottom-0 ${getColorPorEstado(estadoVisual)}`}
+                />
+                <div className="pl-3 pr-1 flex-1">
+                  <p className="text-sm font-semibold text-gray-800">
+                    {`SOLICITUD #0${novedad.id_novedad} ${estadoVisual} - ${
+                      novedad.tipo_novedad?.nombre_tipo ?? 'Sin tipo'
+                    }`}
                   </p>
-                )}
+
+                  {mensajeTexto && (
+                    <div className="flex items-center gap-1 text-xs text-gray-500">
+                      <span>{icono}</span>
+                      <span>{mensajeTexto}</span>
+                    </div>
+                  )}
+
+                  {novedad.es_masiva && (
+                    <p className="text-[10px] text-gray-500 italic">
+                      Tienda: {tiendaNombre} • Solicitudes:{' '}
+                      {novedad.cantidad_solicitudes ?? 'N/A'} • 📎 Archivo
+                      adjunto
+                    </p>
+                  )}
+                </div>
+                <span className="text-[10px] text-gray-800 absolute top-2 right-3">
+                  {new Date(novedad.fecha_creacion).toLocaleDateString(
+                    'es-CO',
+                    {
+                      day: '2-digit',
+                      month: 'long',
+                      year: 'numeric',
+                    },
+                  )}
+                </span>
               </div>
-              <span className="text-[10px] text-gray-800 absolute top-2 right-3">
-                {new Date(novedad.fecha_creacion).toLocaleDateString('es-CO', {
-                  day: '2-digit',
-                  month: 'long',
-                  year: 'numeric',
-                })}
-              </span>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
     </div>
   );
