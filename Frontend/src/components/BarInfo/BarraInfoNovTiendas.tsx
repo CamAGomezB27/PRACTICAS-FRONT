@@ -12,7 +12,7 @@ const BarraInformativaTiendas: React.FC<Props> = ({
   onEstadoChange,
 }) => {
   return (
-    <div className="w-full bg-[#4669AF] text-white flex items-center justify-between px-4 py-2 rounded-full shadow-md text-sm font-semibold mb-4">
+    <div className="w-full bg-[#4669AF] text-white flex items-center justify-between px-4 py-2 rounded-full shadow-md text-sm font-semibold mb-2">
       <span>
         Hay {cantidad}{' '}
         {estadoSeleccionado === 'TODAS'

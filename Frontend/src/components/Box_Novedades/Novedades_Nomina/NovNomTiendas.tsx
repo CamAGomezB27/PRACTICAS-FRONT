@@ -2,6 +2,10 @@ import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/useAuth';
+import {
+  getColorPorEstado,
+  getIconoPorEstado,
+} from '../../../utils/iconosPorEstado';
 
 type Estado =
   | 'CREADA'
@@ -42,20 +46,6 @@ interface Props {
   onCantidadChange?: (cantidad: number) => void;
 }
 
-const getColor = (estado: Estado) => {
-  switch (estado) {
-    case 'CREADA':
-    case 'PENDIENTE':
-      return 'bg-blue-600';
-    case 'GESTIONADA':
-      return 'bg-green-500';
-    case 'EN GESTIÓN':
-      return 'bg-yellow-400';
-    case 'RECHAZADA':
-      return 'bg-red-500';
-  }
-};
-
 function getIconNameByTipoNovedad(tipo: string = ''): string {
   const tipoLower = tipo.toLowerCase();
   if (tipoLower.includes('transporte')) return 'FaBus';
@@ -67,34 +57,6 @@ function getIconNameByTipoNovedad(tipo: string = ''): string {
   if (tipoLower.includes('vacaciones')) return 'FaUmbrellaBeach';
   return 'FaList';
 }
-
-const getMensajePorEstado = (estado: Estado, esNomina?: boolean): string => {
-  if (esNomina) {
-    switch (estado) {
-      case 'CREADA':
-      case 'PENDIENTE':
-        return '📤 Solicitud recibida. Aún no ha sido gestionada.';
-      case 'EN GESTIÓN':
-        return '🛠️ Se está gestionando esta novedad.';
-      case 'GESTIONADA':
-        return '✅ Validación completada. Esta novedad ya fue gestionada.';
-      default:
-        return '';
-    }
-  } else {
-    switch (estado) {
-      case 'CREADA':
-      case 'PENDIENTE':
-        return '✅ Archivo subido correctamente. Tu solicitud está lista para ser validada por el equipo de Nómina.';
-      case 'EN GESTIÓN':
-        return '🔄 El equipo de Nómina se encuentra validando tus solicitudes de esta novedad.';
-      case 'GESTIONADA':
-        return '📋 El equipo de Nómina ya validó tu novedad. Verifica si hay anotaciones o comentarios.';
-      default:
-        return '';
-    }
-  }
-};
 
 const NovedadesNomTiendas: React.FC<Props> = ({
   filtros,
@@ -157,7 +119,7 @@ const NovedadesNomTiendas: React.FC<Props> = ({
   };
 
   return (
-    <div className="text-sm font-bold w-full bg-white rounded-2xl shadow-md flex flex-col space-y-4 p-2 overflow-y-auto max-h-[500px]">
+    <div className="text-sm font-bold w-full bg-white rounded-2xl shadow-md flex flex-col space-y-4 p-2 overflow-y-auto max-h-[450px]">
       {novedades.map((novedad) => {
         const tiendaNombre =
           novedad.usuario?.usuario_tienda?.[0]?.tienda?.nombre_tienda ??
@@ -165,7 +127,7 @@ const NovedadesNomTiendas: React.FC<Props> = ({
         const estadoVisual = mostrarEstado(
           novedad.estado_novedad.nombre_estado,
         );
-        const mensaje = getMensajePorEstado(estadoVisual, user?.esNomina);
+        const mensajeTexto = novedad.descripcion;
 
         const stateVista = {
           id_novedad: novedad.id_novedad,
@@ -184,9 +146,9 @@ const NovedadesNomTiendas: React.FC<Props> = ({
             className="flex flex-col bg-white rounded-xl shadow border border-gray-200 hover:shadow-lg transition-all duration-150 transform hover:scale-[1.01]"
           >
             {/* Línea lateral por estado */}
-            <div
-              className={`w-full h-3 rounded-t-md ${getColor(estadoVisual)}`}
-            />
+            <span
+              className={`text-xs font-semibold text-white px-2 py-1 rounded-full ${getColorPorEstado(estadoVisual)}`}
+            ></span>
 
             {/* Contenido */}
             <div
@@ -209,20 +171,29 @@ const NovedadesNomTiendas: React.FC<Props> = ({
               }
             >
               <div className="flex justify-between items-start">
-                <p className="text-gray-800">
-                  {`Solicitud ${novedad.es_masiva ? 'Masiva' : 'Individual'} ${novedad.tipo_novedad?.nombre_tipo ? `- ${novedad.tipo_novedad.nombre_tipo}` : ''}`}
-                </p>
+                <div className="pl-1 pr-2 flex-1">
+                  <p className="text-sm font-semibold text-gray-800">
+                    {`SOLICITUD #0${novedad.id_novedad} ${estadoVisual} - ${
+                      novedad.tipo_novedad?.nombre_tipo ?? 'Sin tipo'
+                    }`}
+                  </p>
+
+                  {mensajeTexto && (
+                    <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
+                      {getIconoPorEstado(estadoVisual, user?.esNomina)}
+                      <span>{mensajeTexto}</span>
+                    </div>
+                  )}
+                </div>
 
                 <span
-                  className={`text-xs font-semibold text-white px-2 py-1 rounded-full ${getColor(
+                  className={`text-xs font-semibold text-white px-2 py-1 rounded-full ${getColorPorEstado(
                     estadoVisual,
                   )}`}
                 >
                   {estadoVisual}
                 </span>
               </div>
-
-              <div className="text-xs text-gray-500 mt-1">{mensaje}</div>
 
               <div className="flex items-center justify-between mt-2 text-xs text-black">
                 <div className="flex flex-col">
