@@ -110,7 +110,7 @@ const FiltrosNom: React.FC<Props> = ({ onApply, tiendaInicial }) => {
         </div>
         <div>
           <h2 className="text-sm font-semibold text-gray-700 leading-tight">
-            Aplica tus filtros para ver las solicitudes pendientes
+            Aplica los filtros para organizar las novedades
           </h2>
         </div>
       </div>
