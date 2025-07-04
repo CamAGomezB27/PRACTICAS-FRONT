@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Download } from 'lucide-react';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useCallback, useEffect, useState } from 'react';
 import {
   FaBus,
   FaClock,
@@ -143,6 +143,7 @@ const FormVistaPrevMasivaNom = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const location = useLocation();
+  const [descargadoYa, setDescargadoYa] = useState<boolean>(false);
 
   const {
     id_novedad,
@@ -165,21 +166,20 @@ const FormVistaPrevMasivaNom = () => {
   );
   const [solicitudes, setSolicitudes] = useState<SolicitudConIdDetalle[]>([]);
 
-  useEffect(() => {
-    const fetchDatos = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:3000/novedad/${id}/masiva`,
-          { withCredentials: true },
-        );
-        setSolicitudes(response.data);
-      } catch (error) {
-        console.error('❌ Error al cargar datos de novedad masiva:', error);
-      }
-    };
-
-    if (id) fetchDatos();
+  const fetchDatos = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/novedad/${id}/masiva`,
+        { withCredentials: true },
+      );
+      setSolicitudes(response.data);
+    } catch (error) {
+      console.error('❌ Error al cargar datos de novedad masiva:', error);
+    }
   }, [id]);
+  useEffect(() => {
+    if (id) fetchDatos();
+  }, [id, fetchDatos]);
 
   const handleDescargar = async () => {
     const filasParaEnviar = mapSolicitudesToFilas(solicitudes);
@@ -201,10 +201,47 @@ const FormVistaPrevMasivaNom = () => {
       link.setAttribute('download', filename);
       document.body.appendChild(link);
       link.click();
+      // Si la novedad ya estaba en GESTIÓN al llegar aquí, guardamos que ya descargó
+      if (estadoLocal === 'EN GESTIÓN') {
+        sessionStorage.setItem(`descargado_${id}`, 'true');
+        setDescargadoYa(true);
+      }
       link.remove();
     } catch (error) {
       console.error('❌ Error al descargar el archivo:', error);
       alert('Error al exportar la tabla');
+    }
+  };
+
+  const handleCargarArchivo = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await axios.post(
+        'http://localhost:3000/archivo-adjunto/cargar-respuesta-masiva',
+        formData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+          withCredentials: true,
+        },
+      );
+
+      alert(
+        `✅ Archivo procesado correctamente.\nActualizados: ${res.data.actualizados}`,
+      );
+
+      // Recargar datos para ver el cambio
+      setDescargadoYa(false);
+      await fetchDatos();
+    } catch (error) {
+      console.error('❌ Error al procesar el archivo:', error);
+      alert('Ocurrió un error al cargar el archivo de respuestas.');
     }
   };
 
@@ -217,11 +254,23 @@ const FormVistaPrevMasivaNom = () => {
       );
       setEstadoLocal('EN GESTIÓN');
       setModoGestion(true);
+      // Si ya descargó antes de gestionar, mantenemos el estado de descarga
+      const yaDescargado = sessionStorage.getItem(`descargado_${id}`);
+      if (yaDescargado === 'true') {
+        setDescargadoYa(true);
+      }
     } catch (error) {
       console.error('❌ Error al gestionar la novedad:', error);
       alert('No se pudo actualizar el estado de la novedad.');
     }
   };
+
+  useEffect(() => {
+    const yaDescargado = id && sessionStorage.getItem(`descargado_${id}`);
+    if (yaDescargado === 'true') {
+      setDescargadoYa(true);
+    }
+  }, [id]);
 
   if (!location.state) {
     return (
@@ -295,12 +344,28 @@ const FormVistaPrevMasivaNom = () => {
 
           <div className="w-[15%] flex flex-col justify-between items-center h-full py-4 gap-28">
             <button
-              onClick={handleDescargar}
+              onClick={() => {
+                if (descargadoYa) {
+                  // Si ya descargó → abrir input para cargar archivo
+                  document.getElementById('archivo-respuesta')?.click();
+                } else {
+                  // Si no ha descargado → descargar el archivo
+                  handleDescargar();
+                }
+              }}
               className="bg-yellow-300 hover:bg-yellow-400 text-black px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full flex items-center justify-center gap-2"
             >
               <Download size={18} />
-              {modoGestion ? 'Cargar' : 'Descargar'}
+              {descargadoYa ? 'Cargar' : 'Descargar'}
             </button>
+            <input
+              title="cargar"
+              type="file"
+              id="archivo-respuesta"
+              accept=".xlsx"
+              onChange={handleCargarArchivo}
+              className="hidden"
+            />
 
             {!modoGestion ? (
               <div className="flex flex-col w-full gap-2">

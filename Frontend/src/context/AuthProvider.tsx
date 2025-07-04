@@ -1,7 +1,7 @@
-import { ReactNode, useEffect, useState, useCallback } from 'react';
-import { AuthContext, AuthContextType } from './AuthContext';
-import SplashScreen from '../components/Loading/SplashScreen';
 import axios from 'axios';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
+import SplashScreen from '../components/Loading/SplashScreen';
+import { AuthContext, AuthContextType } from './AuthContext';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<AuthContextType['user']>(null);
@@ -66,7 +66,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error('error al cerrar sesión:', error);
     } finally {
+      // 🔥 Limpiar sesión local
       setUser(null);
+      sessionStorage.clear();
+
       // Limpiar el flag del splash al hacer logout para que aparezca en el próximo login
       sessionStorage.removeItem('splashShown');
     }
