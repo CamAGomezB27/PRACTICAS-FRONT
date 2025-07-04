@@ -16,7 +16,7 @@ import {
   getColorPorEstado,
   getIconoPorEstado,
 } from '../../../utils/iconosPorEstado';
-import TablePrevMasiva from '../../Table_VistPrev/TableVPTienda';
+import TablaVistaPreviaMasivaNom from '../../Table_VistPrev/TableVPTienda';
 
 // Tipos
 interface Solicitud {
@@ -287,7 +287,9 @@ const FormVistaPrevMasivaNom = () => {
               Vista Previa del Documento
             </div>
             <div className="border border-gray-200 rounded-lg shadow-sm flex-1 max-h-[400px] overflow-auto">
-              <TablePrevMasiva datos={mapSolicitudesToFilas(solicitudes)} />
+              <TablaVistaPreviaMasivaNom
+                datos={mapSolicitudesToFilas(solicitudes)}
+              />
             </div>
           </div>
 
