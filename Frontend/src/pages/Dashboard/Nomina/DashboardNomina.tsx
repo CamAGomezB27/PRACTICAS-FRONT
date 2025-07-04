@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { FaClipboardList, FaListAlt, FaStore } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Franco from '../../../assets/images/Franco_Pensando_1-removebg-preview.png';
+import FormAccionMasiva from '../../../components/Alerts/AlertFormElegirRespuesta';
 import FormElegirTienda from '../../../components/Alerts/AlertFormTiendas';
 import NovedadesRecientes from '../../../components/Box_Novedades/novedades';
 import ExportacionesConsolidadas from '../../../components/Card_Consolidado/AccesoConsExport';
@@ -16,6 +17,7 @@ const DashboardNomina: React.FC = () => {
   const navigate = useNavigate();
 
   const [mostrarFormTienda, setMostrarFormTienda] = useState(false);
+  const [mostrarAccionMasiva, setMostrarAccionMasiva] = useState(false);
 
   const handleElegirTienda = (tienda: string) => {
     setMostrarFormTienda(false);
@@ -73,7 +75,7 @@ const DashboardNomina: React.FC = () => {
                 title="Respuesta Masiva"
                 icon={<Download size={50} />}
                 className="h-[130px] w-[250px] rounded-2xl"
-                onClick={() => navigate('/respuesta-masiva')}
+                onClick={() => setMostrarAccionMasiva(true)}
               />
             </div>
           </div>
@@ -103,6 +105,19 @@ const DashboardNomina: React.FC = () => {
         <FormElegirTienda
           onClose={() => setMostrarFormTienda(false)}
           onSelect={handleElegirTienda}
+        />
+      )}
+
+      {mostrarAccionMasiva && (
+        <FormAccionMasiva
+          onClose={() => setMostrarAccionMasiva(false)}
+          onArchivoSeleccionado={(file) => {
+            console.log('📁 Archivo cargado:', file);
+            // Aquí puedes manejar la lógica de carga, por ahora solo lo mostramos
+          }}
+          onSeleccionarDescargar={() => {
+            navigate('/respuesta-masiva'); // Aquí decides tú a dónde mandar
+          }}
         />
       )}
     </div>
