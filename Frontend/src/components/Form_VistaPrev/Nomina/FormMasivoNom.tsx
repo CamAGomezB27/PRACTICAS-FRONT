@@ -18,7 +18,7 @@ import {
   getIconoPorEstado,
 } from '../../../utils/iconosPorEstado';
 import FormConfirmarDescarga from '../../Alerts/AlertConfirDes';
-import TablaVistaPreviaMasivaNom from '../../Table_VistPrev/TableVPTienda';
+import TablaVistaPreviaMasivaNom from '../../Table_VistPrev/TableVPNomina';
 
 // Tipos
 interface Solicitud {
@@ -148,9 +148,17 @@ const FormVistaPrevMasivaNom = () => {
 
   const location = useLocation();
 
-  const [descargadoYa, setDescargadoYa] = useState<boolean>(false);
-
   const [mostrarModalConfirmar, setMostrarModalConfirmar] = useState(false);
+
+  const [descargadoYa, setDescargadoYa] = useState(false);
+
+  useEffect(() => {
+    if (id) {
+      const descargado = sessionStorage.getItem(`descargado_${id}`) === 'true';
+      console.log('📦 descargado del sessionStorage:', descargado);
+      setDescargadoYa(descargado);
+    }
+  }, [id]);
 
   const [mensajeInfo, setMensajeInfo] = useState<{
     tipo: 'warning' | 'success';
@@ -204,6 +212,7 @@ const FormVistaPrevMasivaNom = () => {
           withCredentials: true,
         },
       );
+
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -213,12 +222,12 @@ const FormVistaPrevMasivaNom = () => {
       link.setAttribute('download', filename);
       document.body.appendChild(link);
       link.click();
-      // Si la novedad ya estaba en GESTIÓN al llegar aquí, guardamos que ya descargó
-      if (estadoLocal === 'EN GESTIÓN') {
-        sessionStorage.setItem(`descargado_${id}`, 'true');
-        setDescargadoYa(true);
-      }
       link.remove();
+
+      // ✅ Marcar como descargado SIEMPRE que se descargue
+      sessionStorage.setItem(`descargado_${id}`, 'true');
+      setDescargadoYa(true);
+      console.log('✅ descargadoYa actualizado (handleDescargar):', true);
     } catch (error) {
       console.error('❌ Error al descargar el archivo:', error);
       alert('Error al exportar la tabla');
@@ -248,8 +257,6 @@ const FormVistaPrevMasivaNom = () => {
         `✅ Archivo procesado correctamente.\nActualizados: ${res.data.actualizados}`,
       );
 
-      // Recargar datos para ver el cambio
-      setDescargadoYa(false);
       await fetchDatos();
     } catch (error) {
       console.error('❌ Error al procesar el archivo:', error);
@@ -258,10 +265,13 @@ const FormVistaPrevMasivaNom = () => {
   };
 
   const handleGestionar = () => {
-    if (!descargadoYa) {
+    const descargado = sessionStorage.getItem(`descargado_${id}`) === 'true';
+
+    if (!descargado && !descargadoYa) {
       setMostrarModalConfirmar(true);
       return;
     }
+
     gestionarAhora();
   };
 
@@ -274,10 +284,6 @@ const FormVistaPrevMasivaNom = () => {
       );
       setEstadoLocal('EN GESTIÓN');
       setModoGestion(true);
-      const yaDescargado = sessionStorage.getItem(`descargado_${id}`);
-      if (yaDescargado === 'true') {
-        setDescargadoYa(true);
-      }
     } catch (error) {
       console.error('❌ Error al gestionar la novedad:', error);
       alert('No se pudo actualizar el estado de la novedad.');
@@ -290,13 +296,6 @@ const FormVistaPrevMasivaNom = () => {
       return () => clearTimeout(timer);
     }
   }, [mensajeInfo]);
-
-  useEffect(() => {
-    const yaDescargado = id && sessionStorage.getItem(`descargado_${id}`);
-    if (yaDescargado === 'true') {
-      setDescargadoYa(true);
-    }
-  }, [id]);
 
   if (!location.state) {
     return (
@@ -440,8 +439,7 @@ const FormVistaPrevMasivaNom = () => {
           onCerrar={() => setMostrarModalConfirmar(false)}
           onConfirmar={() => {
             gestionarAhora();
-            setDescargadoYa(true); // 👈 Cambia el botón a "Cargar"
-            sessionStorage.setItem(`descargado_${id}`, 'true'); // 👈 Opcional para persistencia
+            sessionStorage.setItem(`descargado_${id}`, 'true');
             setMostrarModalConfirmar(false);
           }}
           setMensajeInfo={setMensajeInfo}

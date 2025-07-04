@@ -80,7 +80,7 @@ const TablaVistaPreviaMasivaNom = ({ datos }: { datos: filas[] }) => {
           <tbody className="bg-white">
             {datos.map((fila, rowIndex) => (
               <tr
-                key={fila.id}
+                key={fila.numero}
                 className={`hover:bg-gray-50 ${
                   rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'
                 }`}
