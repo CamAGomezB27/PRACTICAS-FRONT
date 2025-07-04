@@ -10,12 +10,14 @@ import {
   FaMoneyBillAlt,
   FaUmbrellaBeach,
 } from 'react-icons/fa';
+import { FiAlertTriangle, FiCheckCircle } from 'react-icons/fi';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
   Estado,
   getColorPorEstado,
   getIconoPorEstado,
 } from '../../../utils/iconosPorEstado';
+import FormConfirmarDescarga from '../../Alerts/AlertConfirDes';
 import TablaVistaPreviaMasivaNom from '../../Table_VistPrev/TableVPTienda';
 
 // Tipos
@@ -141,9 +143,19 @@ const iconMap: Record<string, ReactElement> = {
 
 const FormVistaPrevMasivaNom = () => {
   const navigate = useNavigate();
+
   const { id } = useParams();
+
   const location = useLocation();
+
   const [descargadoYa, setDescargadoYa] = useState<boolean>(false);
+
+  const [mostrarModalConfirmar, setMostrarModalConfirmar] = useState(false);
+
+  const [mensajeInfo, setMensajeInfo] = useState<{
+    tipo: 'warning' | 'success';
+    texto: string;
+  } | null>(null);
 
   const {
     id_novedad,
@@ -245,7 +257,15 @@ const FormVistaPrevMasivaNom = () => {
     }
   };
 
-  const handleGestionar = async () => {
+  const handleGestionar = () => {
+    if (!descargadoYa) {
+      setMostrarModalConfirmar(true);
+      return;
+    }
+    gestionarAhora();
+  };
+
+  const gestionarAhora = async () => {
     try {
       await axios.put(
         `http://localhost:3000/novedad/${id}/cambiar-estado`,
@@ -254,7 +274,6 @@ const FormVistaPrevMasivaNom = () => {
       );
       setEstadoLocal('EN GESTIÓN');
       setModoGestion(true);
-      // Si ya descargó antes de gestionar, mantenemos el estado de descarga
       const yaDescargado = sessionStorage.getItem(`descargado_${id}`);
       if (yaDescargado === 'true') {
         setDescargadoYa(true);
@@ -264,6 +283,13 @@ const FormVistaPrevMasivaNom = () => {
       alert('No se pudo actualizar el estado de la novedad.');
     }
   };
+
+  useEffect(() => {
+    if (mensajeInfo) {
+      const timer = setTimeout(() => setMensajeInfo(null), 8000);
+      return () => clearTimeout(timer);
+    }
+  }, [mensajeInfo]);
 
   useEffect(() => {
     const yaDescargado = id && sessionStorage.getItem(`descargado_${id}`);
@@ -283,6 +309,25 @@ const FormVistaPrevMasivaNom = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-4 bg-white">
+      {mensajeInfo && (
+        <div className="flex justify-center mb-4">
+          <div
+            className={`flex items-center gap-3 max-w-md px-4 py-3 rounded-lg shadow text-sm font-semibold border transition-all duration-300 ${
+              mensajeInfo.tipo === 'success'
+                ? 'bg-green-100 text-green-800 border-green-400'
+                : 'bg-yellow-100 text-yellow-800 border-yellow-400'
+            }`}
+          >
+            {mensajeInfo.tipo === 'success' ? (
+              <FiCheckCircle className="text-green-600 text-lg" />
+            ) : (
+              <FiAlertTriangle className="text-yellow-600 text-lg" />
+            )}
+            <span>{mensajeInfo.texto}</span>
+          </div>
+        </div>
+      )}
+
       <div className="bg-white p-2 rounded-lg border border-gray-300 shadow-[2px_8px_12px_rgba(0,0,0,0.8)] hover:shadow-[4px_10px_14px_rgba(0,0,0,1)] hover:scale-105 transition-all duration-300">
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center space-x-3">
@@ -390,6 +435,16 @@ const FormVistaPrevMasivaNom = () => {
           </div>
         </div>
       </div>
+      {mostrarModalConfirmar && (
+        <FormConfirmarDescarga
+          onCerrar={() => setMostrarModalConfirmar(false)}
+          onConfirmar={() => {
+            gestionarAhora();
+            setMostrarModalConfirmar(false);
+          }}
+          setMensajeInfo={setMensajeInfo} // 👈 NUEVO
+        />
+      )}
     </div>
   );
 };
