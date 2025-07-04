@@ -41,7 +41,7 @@ const DashboardJefe: React.FC = () => {
           </div>
 
           {/* Alerta */}
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 ">
             <AlertDiasNovedades />
           </div>
 

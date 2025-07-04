@@ -25,8 +25,6 @@ interface filas {
   RespuestaValidacion: string;
   ajuste: string;
   Fechapago: string;
-  AreaRespon: string;
-  CategInconsitencia: string;
 }
 
 const TablaConsTienda = ({ datos }: { datos: filas[] }) => {
@@ -57,8 +55,6 @@ const TablaConsTienda = ({ datos }: { datos: filas[] }) => {
     'RESPUESTA VALIDACIÓN',
     'AJUSTE',
     'FECHA DE PAGO',
-    'ÁREA RESPONSABLE',
-    'CATEGORIA INCONSISTENCIA',
   ];
 
   return (
@@ -123,8 +119,6 @@ const TablaConsTienda = ({ datos }: { datos: filas[] }) => {
                 fila.RespuestaValidacion,
                 fila.ajuste,
                 fila.Fechapago,
-                fila.AreaRespon,
-                fila.CategInconsitencia,
               ].map((valor: string | number, idx: number) => (
                 <td
                   key={idx}

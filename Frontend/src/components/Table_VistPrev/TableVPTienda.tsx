@@ -25,8 +25,6 @@ interface filas {
   RespuestaValidacion: string;
   ajuste: string;
   Fechapago: string;
-  AreaRespon: string;
-  CategInconsitencia: string;
 }
 
 const TablaVistaPreviaMasiva = ({ datos }: { datos: filas[] }) => {
@@ -57,8 +55,6 @@ const TablaVistaPreviaMasiva = ({ datos }: { datos: filas[] }) => {
     'RESPUESTA VALIDACIÓN',
     'AJUSTE',
     'FECHA DE PAGO',
-    'ÁREA RESPONSABLE',
-    'CATEGORÍA INCONSISTENCIA',
   ];
 
   return (
@@ -124,8 +120,6 @@ const TablaVistaPreviaMasiva = ({ datos }: { datos: filas[] }) => {
                   fila.RespuestaValidacion,
                   fila.ajuste,
                   fila.Fechapago,
-                  fila.AreaRespon,
-                  fila.CategInconsitencia,
                 ].map((valor, idx) => (
                   <td
                     key={idx}

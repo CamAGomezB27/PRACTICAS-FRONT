@@ -56,8 +56,6 @@ interface filas {
   RespuestaValidacion: string;
   ajuste: string;
   Fechapago: string;
-  AreaRespon: string;
-  CategInconsitencia: string;
 }
 
 interface SolicitudConIdDetalle extends Solicitud {
@@ -80,8 +78,6 @@ interface SolicitudConIdDetalle extends Solicitud {
   respuesta_validacion: string;
   ajuste: string;
   fecha_pago: string;
-  area_responsable: string;
-  categoria_inconsistencia: string;
 }
 
 const formatearFecha = (fecha: string | Date | null | undefined): string => {
@@ -127,8 +123,6 @@ const mapSolicitudesToFilas = (solicitudes: SolicitudConIdDetalle[]): filas[] =>
     RespuestaValidacion: s.respuesta_validacion ?? '',
     ajuste: s.ajuste ?? '',
     Fechapago: formatearFecha(s.fecha_pago),
-    AreaRespon: s.area_responsable ?? '',
-    CategInconsitencia: s.categoria_inconsistencia ?? '',
   }));
 
 // Mapeo del nombre al componente del ícono

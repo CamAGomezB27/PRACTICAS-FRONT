@@ -87,7 +87,7 @@ const NovedadesRecientes: React.FC = () => {
   };
 
   return (
-    <div className="text-sm font-bold w-[500px] bg-gray-400 rounded-2xl shadow-inner flex flex-col space-y-3 p-3">
+    <div className="text-sm font-bold w-[550px] -translate-x-7 bg-gray-400 rounded-2xl shadow-inner flex flex-col space-y-3 p-3">
       <div className="flex flex-col space-y-3 max-h-[200px] overflow-y-auto pr-1">
         {[...novedades]
           .sort((a, b) => b.id_novedad - a.id_novedad)
