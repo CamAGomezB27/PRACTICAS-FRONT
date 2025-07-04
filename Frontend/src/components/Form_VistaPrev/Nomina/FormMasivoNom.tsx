@@ -440,9 +440,11 @@ const FormVistaPrevMasivaNom = () => {
           onCerrar={() => setMostrarModalConfirmar(false)}
           onConfirmar={() => {
             gestionarAhora();
+            setDescargadoYa(true); // 👈 Cambia el botón a "Cargar"
+            sessionStorage.setItem(`descargado_${id}`, 'true'); // 👈 Opcional para persistencia
             setMostrarModalConfirmar(false);
           }}
-          setMensajeInfo={setMensajeInfo} // 👈 NUEVO
+          setMensajeInfo={setMensajeInfo}
         />
       )}
     </div>
