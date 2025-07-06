@@ -64,14 +64,62 @@ const AlertDiasNovedades: React.FC<AlertDiasNovedadesProps> = ({
   const [mensajeLargo, setMensajeLargo] = useState('');
   const [transicionando, setTransicionando] = useState(false);
 
+  // Mostrar de una si es mensaje corto
   useEffect(() => {
+    if (mostrarSoloCorto) {
+      setMostrarContenedor(true);
+      return;
+    }
+
     const timerContenedor = setTimeout(() => {
       setMostrarContenedor(true);
-    }, 2000); // mostrar contenedor después de 2 segundos
+    }, 2000);
 
     return () => clearTimeout(timerContenedor);
-  }, []);
+  }, [mostrarSoloCorto]);
 
+  // Inicialización si mostrarSoloCorto es true (modo instantáneo)
+  useEffect(() => {
+    if (!mostrarSoloCorto) return;
+
+    const hoy = new Date();
+    const año = hoy.getFullYear();
+    const mes = hoy.getMonth();
+    const dia = hoy.getDate();
+
+    hoy.setHours(0, 0, 0, 0);
+    const penultimoHab = getPenultimateBusinessDay(año, mes - 1);
+    if (!penultimoHab) return;
+
+    penultimoHab.setHours(0, 0, 0, 0);
+    const diasPost = getNextBusinessDays(penultimoHab, 5);
+    const inicioPost = diasPost[0];
+    const finPost = diasPost[diasPost.length - 1];
+    const fechaStr = formatDate(finPost);
+
+    inicioPost.setHours(0, 0, 0, 0);
+    finPost.setHours(0, 0, 0, 0);
+
+    let corto = '';
+
+    if (hoy >= inicioPost && hoy <= finPost) {
+      setEstado('postnomina');
+      corto = `Novedades hasta el ${fechaStr}, primera postnómina.`;
+    } else if (hoy > finPost && dia <= 20) {
+      const mesStr = hoy.toLocaleString('es-CO', { month: 'long' });
+      setEstado('antes20');
+      corto = `Hasta el 20 de ${mesStr} serán tenidas en cuenta para la nómina.`;
+    } else if (hoy > finPost && dia > 20) {
+      const mesStr = hoy.toLocaleString('es-CO', { month: 'long' });
+      setEstado('despues20');
+      corto = `Después del 20 de ${mesStr}.`;
+    }
+
+    setMensajeCorto(corto);
+    setMensajeVisible(corto);
+  }, [mostrarSoloCorto]);
+
+  // Animación completa (solo si NO es mostrarSoloCorto)
   useEffect(() => {
     if (!mostrarContenedor || mostrarSoloCorto) return;
 
@@ -81,12 +129,10 @@ const AlertDiasNovedades: React.FC<AlertDiasNovedadesProps> = ({
     const dia = hoy.getDate();
 
     hoy.setHours(0, 0, 0, 0);
-
     const penultimoHab = getPenultimateBusinessDay(año, mes - 1);
     if (!penultimoHab) return;
 
     penultimoHab.setHours(0, 0, 0, 0);
-
     const diasPost = getNextBusinessDays(penultimoHab, 5);
     const inicioPost = diasPost[0];
     const finPost = diasPost[diasPost.length - 1];
@@ -117,11 +163,6 @@ const AlertDiasNovedades: React.FC<AlertDiasNovedadesProps> = ({
     setMensajeLargo(largo);
     setMensajeCorto(corto);
 
-    if (mostrarSoloCorto) {
-      setMensajeVisible(corto);
-      return;
-    }
-
     let escribirLargo: NodeJS.Timeout;
     let timeoutCambio: NodeJS.Timeout;
 
@@ -132,17 +173,15 @@ const AlertDiasNovedades: React.FC<AlertDiasNovedadesProps> = ({
         if (i >= largo.length) {
           clearInterval(escribirLargo);
           setFase('largo');
-
           timeoutCambio = setTimeout(() => {
             setTransicionando(true);
           }, 8000);
-
           return;
         }
         setMensajeVisible(largo.slice(0, i + 1));
         i++;
       }, 25);
-    }, 1000); // comienza escritura 1s después de aparecer el contenedor
+    }, 1000);
 
     return () => {
       clearTimeout(timerEscritura);
@@ -151,6 +190,7 @@ const AlertDiasNovedades: React.FC<AlertDiasNovedadesProps> = ({
     };
   }, [mostrarContenedor, mostrarSoloCorto]);
 
+  // Transición largo -> corto (solo si NO es mostrarSoloCorto)
   useEffect(() => {
     if (!transicionando || mostrarSoloCorto) return;
 
