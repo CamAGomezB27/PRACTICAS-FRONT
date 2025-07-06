@@ -7,6 +7,7 @@ import {
   getIconNamePorEstado,
   getIconoPorEstado,
 } from '../../utils/iconosPorEstado';
+import { getMensajePorEstado } from '../../utils/mensajesPorEstado';
 
 type Estado =
   | 'CREADA'
@@ -98,7 +99,10 @@ const NovedadesRecientes: React.FC = () => {
 
             const estadoVisual = mostrarEstado(novedad);
             const icono = getIconoPorEstado(estadoVisual, user?.esNomina);
-            const mensajeTexto = novedad.descripcion;
+            const mensajeTexto = getMensajePorEstado(
+              mostrarEstado(novedad), // ← eso te devuelve 'CREADA', 'GESTIONADA', etc.
+              user?.esNomina ?? false,
+            );
 
             return (
               <div
