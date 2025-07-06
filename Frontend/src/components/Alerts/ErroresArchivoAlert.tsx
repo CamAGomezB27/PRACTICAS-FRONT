@@ -13,7 +13,7 @@ const ErroresArchivoAlert: React.FC<ErroresArchivoAlertProps> = ({
   const [closing, setClosing] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setClosing(true), 15000); // autocierre
+    const timer = setTimeout(() => setClosing(true), 100000); // autocierre
     return () => clearTimeout(timer);
   }, []);
 
