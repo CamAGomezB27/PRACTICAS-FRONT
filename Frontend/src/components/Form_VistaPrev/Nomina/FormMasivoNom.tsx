@@ -375,7 +375,9 @@ const FormVistaPrevMasivaNom = () => {
         </div>
 
         <div className="flex flex-row gap-6 pt-4">
-          <div className="w-[85%] flex flex-col">
+          <div
+            className={`${estadoLocal === 'GESTIONADA' ? 'w-full' : 'w-[85%]'} flex flex-col`}
+          >
             <div className="bg-[#4669AF] text-white text-center py-2 font-medium text-sm rounded-t-md">
               Vista Previa del Documento
             </div>
@@ -386,52 +388,52 @@ const FormVistaPrevMasivaNom = () => {
             </div>
           </div>
 
-          <div className="w-[15%] flex flex-col justify-between items-center h-full py-4 gap-28">
-            <button
-              onClick={() => {
-                if (descargadoYa) {
-                  // Si ya descargó → abrir input para cargar archivo
-                  document.getElementById('archivo-respuesta')?.click();
-                } else {
-                  // Si no ha descargado → descargar el archivo
-                  handleDescargar();
-                }
-              }}
-              className="bg-yellow-300 hover:bg-yellow-400 text-black px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full flex items-center justify-center gap-2"
-            >
-              <Download size={18} />
-              {descargadoYa ? 'Cargar' : 'Descargar'}
-            </button>
-            <input
-              title="cargar"
-              type="file"
-              id="archivo-respuesta"
-              accept=".xlsx"
-              onChange={handleCargarArchivo}
-              className="hidden"
-            />
+          {estadoLocal !== 'GESTIONADA' && (
+            <div className="w-[15%] flex flex-col justify-between items-center h-full py-4 gap-28">
+              <button
+                onClick={() => {
+                  if (descargadoYa) {
+                    document.getElementById('archivo-respuesta')?.click();
+                  } else {
+                    handleDescargar();
+                  }
+                }}
+                className="bg-yellow-300 hover:bg-yellow-400 text-black px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full flex items-center justify-center gap-2"
+              >
+                <Download size={18} />
+                {descargadoYa ? 'Cargar' : 'Descargar'}
+              </button>
+              <input
+                title="cargar"
+                type="file"
+                id="archivo-respuesta"
+                accept=".xlsx"
+                onChange={handleCargarArchivo}
+                className="hidden"
+              />
 
-            {!modoGestion ? (
-              <div className="flex flex-col w-full gap-2">
-                <button
-                  className="bg-[#4669AF] hover:bg-[#3a5a9b] text-white px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full"
-                  onClick={handleGestionar}
-                >
+              {!modoGestion ? (
+                <div className="flex flex-col w-full gap-2">
+                  <button
+                    className="bg-[#4669AF] hover:bg-[#3a5a9b] text-white px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full"
+                    onClick={handleGestionar}
+                  >
+                    Gestionar
+                  </button>
+                  <button
+                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full"
+                    onClick={() => navigate('/dashboard-nomina')}
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              ) : (
+                <button className="bg-[#4669AF] hover:bg-[#3a5a9b] text-white px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full">
                   Gestionar
                 </button>
-                <button
-                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full"
-                  onClick={() => navigate('/dashboard-nomina')}
-                >
-                  Cancelar
-                </button>
-              </div>
-            ) : (
-              <button className="bg-[#4669AF] hover:bg-[#3a5a9b] text-white px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full">
-                Gestionar
-              </button>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
       {mostrarModalConfirmar && (
