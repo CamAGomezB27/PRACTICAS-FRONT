@@ -55,8 +55,6 @@ const TablaVistaPreviaMasiva = ({ datos }: { datos: filas[] }) => {
     'RESPUESTA VALIDACIÓN',
     'AJUSTE',
     'FECHA DE PAGO',
-    'CATEGORIA GENERAL INCONSISTENCIA',
-    'DETALLE ORIGEN DE LA INCONSISTENCIA',
   ];
 
   return (
