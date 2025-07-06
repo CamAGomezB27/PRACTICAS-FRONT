@@ -275,7 +275,7 @@ const Masivo: React.FC = () => {
         <div className="fixed inset-0 z-50 bg-white bg-opacity-90 flex flex-col items-center justify-center transition-opacity duration-300">
           <img
             src={Logo_home}
-            alt="Validando archivo..."
+            alt="Validando archivo"
             className="h-20 w-auto animate-bounce mb-4"
           />
           <p className="text-xl text-[#4669AF] font-semibold text-center flex items-center justify-center gap-2">

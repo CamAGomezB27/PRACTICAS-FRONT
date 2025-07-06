@@ -79,8 +79,8 @@ const FiltroExportConsTienda = ({
         </div>
         <div>
           <h2 className="text-sm font-semibold text-gray-700 leading-tight">
-            Aplica tus filtros para organizar el <br />
-            documento que quieres descargar
+            Utiliza los filtros para organizar el documento que quieres
+            descargar
           </h2>
         </div>
       </div>
