@@ -6,6 +6,7 @@ import {
   getColorPorEstado,
   getIconoPorEstado,
 } from '../../../utils/iconosPorEstado';
+import AlertFiltros from '../../Alerts/AlertFiltros';
 
 type Estado =
   | 'CREADA'
@@ -64,6 +65,7 @@ const NovedadesNomPendientes: React.FC<Props> = ({
   const navigate = useNavigate();
   const { user } = useAuth();
   const [novedades, setNovedades] = useState<Novedad[]>([]);
+  const [mostrarAlerta, setMostrarAlerta] = useState(false);
 
   const fetchNovedades = useCallback(async () => {
     try {
@@ -72,9 +74,13 @@ const NovedadesNomPendientes: React.FC<Props> = ({
         { params: filtros, withCredentials: true },
       );
 
-      setNovedades(response.data);
+      const data = response.data;
+
+      setNovedades(data);
+      setMostrarAlerta(data.length === 0);
       onCantidadChange?.(response.data.length);
     } catch (error) {
+      setMostrarAlerta(true);
       console.error('Error al obtener novedades: ', error);
     }
   }, [filtros, onCantidadChange]);
@@ -250,6 +256,10 @@ const NovedadesNomPendientes: React.FC<Props> = ({
           </div>
         );
       })}
+
+      {mostrarAlerta && (
+        <AlertFiltros onClose={() => setMostrarAlerta(false)} />
+      )}
     </div>
   );
 };

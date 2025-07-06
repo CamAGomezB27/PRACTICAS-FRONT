@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-
 import Footer from '../../components/Footer/Footer';
-import FiltrosNom from '../../components/Form_Filtros/Filtros_Nomina/FiltrosNomina';
+import FiltrosNomResM from '../../components/Form_Filtros/Filtros_Nomina/FiltrosNomResM';
 import Navbar from '../../components/Navbar/Navbar';
 import VistaArchRespMasiv from '../../components/ResMasiv/VistaArchivoExportNomina';
 
@@ -26,7 +25,7 @@ const RespuestaMasiva: React.FC = () => {
         <div className="flex justify-between mb-6">
           {/* FILTROS */}
           <div className="lg:w-1/4 px-4 lg:pl-10 lg:pr-0 translate-y-7">
-            <FiltrosNom onApply={aplicarFiltros} />
+            <FiltrosNomResM onApply={aplicarFiltros} />
           </div>
           {/* TABLA */}
           <div className="lg:w-3/4 px-4 lg:pl-0 lg:pr-6">

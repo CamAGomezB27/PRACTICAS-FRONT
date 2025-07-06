@@ -122,8 +122,6 @@ const TablaVistaPreviaMasivaNom = ({ datos }: { datos: filas[] }) => {
                   fila.RespuestaValidacion,
                   fila.ajuste,
                   fila.Fechapago,
-                  fila.AreaRespon,
-                  fila.CategInconsitencia,
                 ].map((valor, idx) => (
                   <td
                     key={idx}

@@ -24,7 +24,7 @@ interface Props {
   tiendaInicial?: string;
 }
 
-const FiltrosNom: React.FC<Props> = ({ onApply, tiendaInicial }) => {
+const FiltrosNomCons: React.FC<Props> = ({ onApply, tiendaInicial }) => {
   const [filtros, setFiltros] = useState<FiltroParaNom>({
     tienda: tiendaInicial || '',
     tipo: '',
@@ -110,7 +110,9 @@ const FiltrosNom: React.FC<Props> = ({ onApply, tiendaInicial }) => {
         </div>
         <div>
           <h2 className="text-sm font-semibold text-gray-700 leading-tight">
-            Aplica los filtros para organizar las novedades
+            Aplica los filtros para <br />
+            organizar el archivo <br />
+            de consolidado
           </h2>
         </div>
       </div>
@@ -248,4 +250,4 @@ const FiltrosNom: React.FC<Props> = ({ onApply, tiendaInicial }) => {
   );
 };
 
-export default FiltrosNom;
+export default FiltrosNomCons;

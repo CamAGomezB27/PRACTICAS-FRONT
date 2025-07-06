@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import BarraInformativaTodas from '../../components/BarInfo/BarraInfoNovTodas';
 import NovedadesNomTodas from '../../components/Box_Novedades/Novedades_Nomina/NovNomTodas';
 import Footer from '../../components/Footer/Footer';
-import FiltrosNom from '../../components/Form_Filtros/Filtros_Nomina/FiltrosNomina';
+import FiltrosNomTodas from '../../components/Form_Filtros/Filtros_Nomina/FiltrosNominaTod';
 import Navbar from '../../components/Navbar/Navbar';
 
 interface FiltroParaNom {
@@ -29,7 +29,7 @@ const TodasSolis: React.FC = () => {
         <div className="flex justify-between mb-6">
           {/* FILTROS */}
           <div className="lg:w-1/4 px-4 lg:pl-10 lg:pr-0 ">
-            <FiltrosNom onApply={aplicarFiltros} />
+            <FiltrosNomTodas onApply={aplicarFiltros} />
           </div>
 
           {/* NOVEDADES */}

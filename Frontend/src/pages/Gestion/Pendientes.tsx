@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import BarraInformativaNovPendientes from '../../components/BarInfo/BarraInfoNovPendientes';
 import NovedadesNomPendientes from '../../components/Box_Novedades/Novedades_Nomina/NovNomPendientes';
 import Footer from '../../components/Footer/Footer';
-import FiltrosNom from '../../components/Form_Filtros/Filtros_Nomina/FiltrosNomina';
+import FiltrosNomPen from '../../components/Form_Filtros/Filtros_Nomina/FiltrosNominaPen';
 import Navbar from '../../components/Navbar/Navbar';
 
 interface FiltroParaNom {
@@ -27,7 +27,7 @@ const SoliPendientes: React.FC = () => {
         <div className="flex justify-between mb-6">
           {/* FILTROS */}
           <div className="lg:w-1/4 px-4 lg:pl-10 lg:pr-0 translate-y-0">
-            <FiltrosNom onApply={aplicarFiltros} />
+            <FiltrosNomPen onApply={aplicarFiltros} />
           </div>
 
           {/* NOVEDADES */}

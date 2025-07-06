@@ -6,6 +6,7 @@ import {
   getColorPorEstado,
   getIconoPorEstado,
 } from '../../../utils/iconosPorEstado';
+import AlertFiltros from '../../Alerts/AlertFiltros';
 
 type Estado =
   | 'CREADA'
@@ -66,6 +67,7 @@ const NovedadesNomTiendas: React.FC<Props> = ({
   const navigate = useNavigate();
   const { user } = useAuth();
   const [novedades, setNovedades] = useState<Novedad[]>([]);
+  const [mostrarAlerta, setMostrarAlerta] = useState(false);
 
   const mostrarEstado = useCallback(
     (estado: Estado): Estado => {
@@ -91,8 +93,10 @@ const NovedadesNomTiendas: React.FC<Props> = ({
       }
 
       setNovedades(data);
+      setMostrarAlerta(data.length === 0);
       onCantidadChange?.(data.length);
     } catch (error) {
+      setMostrarAlerta(true);
       console.error('Error al obtener novedades: ', error);
     }
   }, [filtros, estado, onCantidadChange, mostrarEstado]);
@@ -255,6 +259,10 @@ const NovedadesNomTiendas: React.FC<Props> = ({
           </div>
         );
       })}
+
+      {mostrarAlerta && (
+        <AlertFiltros onClose={() => setMostrarAlerta(false)} />
+      )}
     </div>
   );
 };

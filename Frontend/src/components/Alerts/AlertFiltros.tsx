@@ -52,7 +52,7 @@ const AlertFiltros: React.FC<AlertFiltrosProps> = ({ onClose }) => {
 
         <p className="text-lg font-bold text-center">Sin resultados</p>
 
-        <p className="text-sm text-gray-700 text-center">
+        <p className="text-sm text-gray-700 text-center font-semibold">
           No se encontraron solicitudes que coincidan con los filtros
           seleccionados.
           <br />

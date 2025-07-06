@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import BarraInformativaTiendas from '../../components/BarInfo/BarraInfoNovTiendas';
 import NovedadesNomTiendas from '../../components/Box_Novedades/Novedades_Nomina/NovNomTiendas';
 import Footer from '../../components/Footer/Footer';
-import FiltrosNom from '../../components/Form_Filtros/Filtros_Nomina/FiltrosNomina';
+import FiltrosNomTien from '../../components/Form_Filtros/Filtros_Nomina/FiltrosNominaTien';
 import Navbar from '../../components/Navbar/Navbar';
 
 interface FiltroParaNom {
@@ -16,10 +16,13 @@ interface FiltroParaNom {
 const SoliPorTiendas: React.FC = () => {
   const [cantidadSolicitudes, setCantidadSolicitudes] = useState(0);
   const location = useLocation();
-  const tiendaDesdeModal = location.state?.tiendaSeleccionada || '';
+  const tiendaInicial =
+    location.state?.tiendaSeleccionada ||
+    sessionStorage.getItem('tiendaSeleccionada') ||
+    '';
 
   const [filtros, setFiltros] = useState<FiltroParaNom>({
-    tienda: tiendaDesdeModal,
+    tienda: tiendaInicial,
     tipo: '',
     desde: '',
     hasta: '',
@@ -30,13 +33,32 @@ const SoliPorTiendas: React.FC = () => {
   };
 
   useEffect(() => {
-    if (tiendaDesdeModal) {
+    const tiendaDesdeRuta = location.state?.tiendaSeleccionada;
+
+    if (tiendaDesdeRuta) {
+      // Guardar en sessionStorage
+      sessionStorage.setItem('tiendaSeleccionada', tiendaDesdeRuta);
       setFiltros((prev) => ({
         ...prev,
-        tienda: tiendaDesdeModal,
+        tienda: tiendaDesdeRuta,
       }));
+    } else {
+      // Si no viene desde el state, intentamos recuperar de sessionStorage
+      const tiendaGuardada = sessionStorage.getItem('tiendaSeleccionada');
+      if (tiendaGuardada) {
+        setFiltros((prev) => ({
+          ...prev,
+          tienda: tiendaGuardada,
+        }));
+      }
     }
-  }, [tiendaDesdeModal]);
+  }, [location.state]);
+
+  useEffect(() => {
+    return () => {
+      sessionStorage.removeItem('tiendaSeleccionada');
+    };
+  }, []);
 
   const [estadoSeleccionado, setEstadoSeleccionado] = useState('TODAS');
 
@@ -47,9 +69,9 @@ const SoliPorTiendas: React.FC = () => {
         <div className="flex justify-between mb-6">
           {/* FILTROS */}
           <div className="lg:w-1/4 px-4 lg:pl-10 lg:pr-0 ">
-            <FiltrosNom
+            <FiltrosNomTien
               onApply={aplicarFiltros}
-              tiendaInicial={tiendaDesdeModal}
+              tiendaInicial={tiendaInicial}
             />
           </div>
 
