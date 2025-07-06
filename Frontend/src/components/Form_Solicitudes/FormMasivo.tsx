@@ -1,5 +1,7 @@
 import React, { useContext, useRef, useState } from 'react';
+import { FiClock } from 'react-icons/fi';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Logo_home from '../../assets/logos/Logo_home.png';
 import { AuthContext } from '../../context/AuthContext';
 import ErroresArchivoAlert from '../Alerts/ErroresArchivoAlert';
 import ExitoArchivoAlert from '../Alerts/ExitoArchivoAlert';
@@ -13,6 +15,8 @@ const Masivo: React.FC = () => {
   }
 
   const { user } = authContext;
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [archivoSubido, setArchivoSubido] = useState<{
     nombreArchivo: string;
@@ -93,6 +97,8 @@ const Masivo: React.FC = () => {
   const subirArchivo = async () => {
     if (!selectedFile) return;
 
+    setIsLoading(true);
+
     const formData = new FormData();
     formData.append('file', selectedFile!);
     formData.append('titulo', titulo); //Para Backend
@@ -134,6 +140,8 @@ const Masivo: React.FC = () => {
     } catch (error) {
       console.error('❌ Error al subir archivo:', error);
       alert('Hubo un problema al subir el archivo');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -261,6 +269,21 @@ const Masivo: React.FC = () => {
           idCaso={archivoSubido.idCaso}
           onClose={() => setArchivoSubido(null)}
         />
+      )}
+
+      {isLoading && (
+        <div className="fixed inset-0 z-50 bg-white bg-opacity-90 flex flex-col items-center justify-center transition-opacity duration-300">
+          <img
+            src={Logo_home}
+            alt="Validando archivo..."
+            className="h-20 w-auto animate-bounce mb-4"
+          />
+          <p className="text-xl text-[#4669AF] font-semibold text-center flex items-center justify-center gap-2">
+            Validando archivo
+            <br />
+            <FiClock className="animate-spin-slow text-2xl" />
+          </p>
+        </div>
       )}
     </div>
   );
