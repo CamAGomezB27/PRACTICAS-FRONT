@@ -7,7 +7,7 @@ import Navbar from '../../components/Navbar/Navbar';
 interface Usuario {
   nombre: string;
   correo: string;
-  rol: string; // ya no es un objeto con nombre
+  rol: string;
   estado: 'Activo' | 'Inactivo';
   fecha_creacion: string;
 }
@@ -22,7 +22,6 @@ const UsuariosRegis: React.FC = () => {
         const response = await axios.get(
           'http://localhost:3000/usuario/listar',
         );
-        console.log('🧪 Usuarios:', response.data);
         setUsers(response.data);
       } catch (error) {
         console.error('Error al traer usuarios:', error);
@@ -32,12 +31,25 @@ const UsuariosRegis: React.FC = () => {
     fetchUsuarios();
   }, []);
 
-  const filteredUsers = users.filter(
-    (user) =>
-      user.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.correo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.rol?.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const filteredUsers = users
+    .filter(
+      (user) =>
+        user.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.correo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.rol?.toLowerCase().includes(searchTerm.toLowerCase()),
+    )
+    .sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+  const formatFechaConHoraFija = (fecha: string): string => {
+    const [fechaParte] = fecha.split(' '); // "2025-07-06"
+    const fechaConHoraFija = new Date(`${fechaParte}T05:00:00`);
+
+    return fechaConHoraFija.toLocaleDateString('es-CO', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  };
 
   return (
     <div className="min-h-screen w-screen flex flex-col bg-white relative">
@@ -86,7 +98,7 @@ const UsuariosRegis: React.FC = () => {
               <tbody>
                 {filteredUsers.map((user, idx) => (
                   <tr
-                    key={user.correo}
+                    key={user.nombre}
                     className={`${
                       idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'
                     } hover:bg-[#e8effc] transition-all`}
@@ -111,9 +123,7 @@ const UsuariosRegis: React.FC = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-gray-700">
-                      {new Date(user.fecha_creacion).toLocaleDateString(
-                        'es-CO',
-                      )}
+                      {formatFechaConHoraFija(user.fecha_creacion)}
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex space-x-2">
