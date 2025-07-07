@@ -3,7 +3,11 @@ import { es } from 'date-fns/locale';
 import React, { forwardRef, useEffect, useState } from 'react';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { FiClock } from 'react-icons/fi';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Logo_home from '../../assets/logos/Logo_home.png';
+import ErroresArchivoAlert from '../Alerts/ErroresArchivoAlert';
+import ExitoArchivoAlert from '../Alerts/ExitoArchivoAlert';
 
 registerLocale('es', es);
 
@@ -26,6 +30,14 @@ const FormularioOtroSiTemporal: React.FC = () => {
   const [consecutivo, setConsecutivo] = useState('');
   const [detalle, setDetalle] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
+
+  const [erroresArchivo, setErroresArchivo] = useState<string[] | null>(null);
+  const [archivoSubido, setArchivoSubido] = useState<{
+    nombreArchivo: string;
+    tituloNovedad: string;
+    idCaso: number;
+  } | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const [inicio, fin] = rangoFechas;
@@ -66,8 +78,8 @@ const FormularioOtroSiTemporal: React.FC = () => {
       inicio && fin
         ? `${inicio.toLocaleDateString('es-CO')} - ${fin.toLocaleDateString('es-CO')}`
         : inicio
-          ? `${inicio.toLocaleDateString('es-CO')} - ...`
-          : '';
+          ? `${inicio.toLocaleDateString('es-CO')} - selecciona fecha final`
+          : 'Selecciona rango de fechas';
 
     return (
       <input
@@ -76,13 +88,17 @@ const FormularioOtroSiTemporal: React.FC = () => {
         ref={ref}
         placeholder="Fecha de inicio - Fecha final"
         readOnly
-        className="w-full border rounded px-3 py-2 bg-white border-gray-600 text-black"
+        className="w-[280px] md:w-[250px] border rounded px-3 py-2 bg-white border-gray-600 text-black"
         value={formattedValue}
       />
     );
   });
 
   const handleSubmit = async () => {
+    setIsLoading(true);
+    setErroresArchivo(null);
+    setArchivoSubido(null);
+
     const [fecha_inicio, fecha_fin] = rangoFechas;
 
     const payload = {
@@ -111,37 +127,38 @@ const FormularioOtroSiTemporal: React.FC = () => {
       console.log('✅ Respuesta del backend:', response.data);
 
       if (response.data?.valido) {
-        alert(
-          `✅ ${response.data.message || 'Novedad registrada correctamente'}`,
-        );
-        navigate('/dashboard-jefe');
+        setArchivoSubido({
+          nombreArchivo: 'Formulario individual',
+          tituloNovedad: titulo,
+          idCaso: response.data.novedadId,
+        });
+        return;
       } else {
-        alert(
-          `⚠️ Ocurrió un problema: ${response.data.message || 'No se pudo crear la novedad'}`,
-        );
+        const errores = response.data.errores || [
+          response.data.message || 'No se pudo crear la novedad',
+        ];
+        setErroresArchivo(errores);
       }
     } catch (error: unknown) {
       console.error('❌ Error al enviar el formulario:', error);
       if (axios.isAxiosError(error)) {
-        if (error.response) {
-          alert(
-            `❌ Error del servidor: ${error.response.data?.message || 'Algo salió mal'}`,
-          );
-        } else if (error.request) {
-          alert('❌ No se pudo conectar con el servidor. Intenta más tarde.');
+        if (error.response?.data?.errores) {
+          setErroresArchivo(error.response.data.errores);
         } else {
-          alert(`❌ Error inesperado de Axios: ${error.message}`);
+          setErroresArchivo([
+            error.response?.data?.message || 'Algo salió mal en el servidor',
+          ]);
         }
       } else {
-        alert('❌ Error desconocido al enviar el formulario.');
+        setErroresArchivo(['Error inesperado al enviar el formulario.']);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
-      {/* Campos individuales (igual que antes)... */}
-
       {/* CÉDULA */}
       <div>
         <label className="text-black font-medium mb-1 block">
@@ -324,6 +341,40 @@ const FormularioOtroSiTemporal: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {erroresArchivo && (
+        <ErroresArchivoAlert
+          errores={erroresArchivo}
+          onClose={() => setErroresArchivo(null)}
+        />
+      )}
+
+      {archivoSubido && (
+        <ExitoArchivoAlert
+          nombreArchivo={archivoSubido.nombreArchivo}
+          tituloNovedad={archivoSubido.tituloNovedad}
+          idCaso={archivoSubido.idCaso}
+          onClose={() => {
+            setArchivoSubido(null);
+            navigate('/dashboard-jefe');
+          }}
+        />
+      )}
+
+      {isLoading && (
+        <div className="fixed inset-0 z-50 bg-white bg-opacity-90 flex flex-col items-center justify-center transition-opacity duration-300">
+          <img
+            src={Logo_home}
+            alt="Validando archivo"
+            className="h-20 w-auto animate-bounce mb-4"
+          />
+          <p className="text-xl text-[#4669AF] font-semibold text-center flex items-center justify-center gap-2">
+            Validando formulario
+            <br />
+            <FiClock className="animate-spin-slow text-2xl" />
+          </p>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,6 +1,10 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { FiClock } from 'react-icons/fi';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Logo_home from '../../assets/logos/Logo_home.png';
+import ErroresArchivoAlert from '../Alerts/ErroresArchivoAlert';
+import ExitoArchivoAlert from '../Alerts/ExitoArchivoAlert';
 
 const FormularioBasico: React.FC = () => {
   const [cedula, setCedula] = useState('');
@@ -11,6 +15,14 @@ const FormularioBasico: React.FC = () => {
   const titulo = location.state?.titulo || 'No disponible';
 
   const [isFormValid, setIsFormValid] = useState(false);
+
+  const [erroresArchivo, setErroresArchivo] = useState<string[] | null>(null);
+  const [archivoSubido, setArchivoSubido] = useState<{
+    nombreArchivo: string;
+    tituloNovedad: string;
+    idCaso: number;
+  } | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const isValid =
@@ -24,6 +36,10 @@ const FormularioBasico: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
+      setIsLoading(true);
+      setErroresArchivo(null);
+      setArchivoSubido(null);
+
       const payload = {
         cedula: Number(cedula),
         nombre,
@@ -41,33 +57,40 @@ const FormularioBasico: React.FC = () => {
       console.log('✅ Respuesta del backend:', response.data);
 
       if (response.data?.valido) {
-        alert(`✅ ${response.data.message || 'Novedad creada correctamente'}`);
-        navigate('/dashboard-jefe');
+        setArchivoSubido({
+          nombreArchivo: 'Formulario Individual',
+          tituloNovedad: titulo,
+          idCaso: response.data.novedadId,
+        });
+
+        // Podés esperar unos segundos o navegar directo
+        setTimeout(() => navigate('/dashboard-jefe'), 2500);
       } else {
-        alert(
-          `⚠️ Ocurrió un problema: ${response.data.message || 'No se pudo crear la novedad'}`,
+        setErroresArchivo(
+          response.data.errores || [
+            response.data.message || 'No se pudo crear la novedad',
+          ],
         );
       }
     } catch (error: unknown) {
       console.error('❌ Error al enviar el formulario:', error);
 
       if (axios.isAxiosError(error)) {
-        // Error generado por Axios
         if (error.response) {
           console.error('📥 Error Response Data:', error.response.data);
-          alert(
-            `❌ Error del servidor: ${error.response.data?.message || 'Algo salió mal'}`,
-          );
+          setErroresArchivo([
+            error.response.data?.message || 'Error del servidor inesperado',
+          ]);
         } else if (error.request) {
-          console.error('📭 No se recibió respuesta del servidor');
-          alert('❌ No se pudo conectar con el servidor. Intenta más tarde.');
+          setErroresArchivo(['No se pudo conectar con el servidor.']);
         } else {
-          alert(`❌ Error inesperado de Axios: ${error.message}`);
+          setErroresArchivo([`Error inesperado de Axios: ${error.message}`]);
         }
       } else {
-        // Otro tipo de error que no es de Axios
-        alert('❌ Error desconocido al enviar el formulario.');
+        setErroresArchivo(['Error desconocido al enviar el formulario.']);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -151,6 +174,37 @@ const FormularioBasico: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {erroresArchivo && (
+        <ErroresArchivoAlert
+          errores={erroresArchivo}
+          onClose={() => setErroresArchivo(null)}
+        />
+      )}
+
+      {archivoSubido && (
+        <ExitoArchivoAlert
+          nombreArchivo={archivoSubido.nombreArchivo}
+          tituloNovedad={archivoSubido.tituloNovedad}
+          idCaso={archivoSubido.idCaso}
+          onClose={() => setArchivoSubido(null)}
+        />
+      )}
+
+      {isLoading && (
+        <div className="fixed inset-0 z-50 bg-white bg-opacity-90 flex flex-col items-center justify-center transition-opacity duration-300">
+          <img
+            src={Logo_home}
+            alt="Validando archivo"
+            className="h-20 w-auto animate-bounce mb-4"
+          />
+          <p className="text-xl text-[#4669AF] font-semibold text-center flex items-center justify-center gap-2">
+            Validando formulario
+            <br />
+            <FiClock className="animate-spin-slow text-2xl" />
+          </p>
+        </div>
+      )}
     </div>
   );
 };
