@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { FiClock } from 'react-icons/fi';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Logo_home from '../../assets/logos/Logo_home.png';
+import { useAuth } from '../../context/useAuth';
 import ErroresArchivoAlert from '../Alerts/ErroresArchivoAlert';
 import ExitoArchivoAlert from '../Alerts/ExitoArchivoAlert';
 
 const FormularioBasico: React.FC = () => {
+  const { user } = useAuth();
   const [cedula, setCedula] = useState('');
   const [nombre, setNombre] = useState('');
   const [detalle, setDetalle] = useState('');
@@ -45,6 +47,18 @@ const FormularioBasico: React.FC = () => {
         nombre,
         detalle,
         titulo,
+        categoria: titulo, // 👈 obligatorio para que no quede como '-'
+        tienda: user?.nombreTienda ?? '',
+        jefe: user?.nombre ?? '',
+        fecha: new Date(
+          new Date().getFullYear(),
+          new Date().getMonth(),
+          new Date().getDate(),
+          5,
+          0,
+          0,
+          0,
+        ).toISOString(), // 👈 igual que los masivos
       };
 
       console.log('📤 Enviando payload:', payload);
