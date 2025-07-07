@@ -155,13 +155,16 @@ const NovedadesRecientes: React.FC = () => {
                     </div>
                   )}
 
-                  {novedad.es_masiva && (
-                    <p className="text-[10px] text-gray-500 italic">
-                      Tienda: {tiendaNombre} • Solicitudes:{' '}
-                      {novedad.cantidad_solicitudes ?? 'N/A'} • 📎 Archivo
-                      adjunto
-                    </p>
-                  )}
+                  <p className="text-[10px] text-gray-500 italic">
+                    Tienda: {tiendaNombre}
+                    {novedad.es_masiva && (
+                      <>
+                        {' • '}Solicitudes:{' '}
+                        {novedad.cantidad_solicitudes ?? 'N/A'}
+                        {' • '}📎 Archivo adjunto
+                      </>
+                    )}
+                  </p>
                 </div>
                 <span className="text-[10px] text-gray-800 absolute top-2 right-3">
                   {new Date(novedad.fecha_creacion).toLocaleDateString(
