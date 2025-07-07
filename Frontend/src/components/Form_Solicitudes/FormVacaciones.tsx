@@ -196,7 +196,8 @@ const FormularioVacaciones: React.FC = () => {
       {/* Rango de fechas */}
       <div>
         <label className="text-black font-medium mb-1 block">
-          Fecha Inicio y Fecha Fin <span className="text-red-500">*</span>
+          Fecha Inicio Disfrute y Fecha Fin Disfrute{' '}
+          <span className="text-red-500">*</span>
         </label>
         <DatePicker
           selected={rangoFechas[0]}

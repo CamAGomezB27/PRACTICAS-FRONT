@@ -20,14 +20,14 @@ const Individual: React.FC = () => {
         return <FormularioDesc />;
       case 'Otro Si Definitivo':
         return <FormularioOtroSiDef />;
+      case 'Otros':
+        return <FormularioOtros />;
       case 'Vacaciones':
         return <FormularioVacaciones />;
       case 'Otro Si Temporal':
         return <FormularioOtroSiTemporal />;
       case 'Horas Extra':
         return <FormularioHorasExtra />;
-      case 'Otros':
-        return <FormularioOtros />;
     }
   };
 

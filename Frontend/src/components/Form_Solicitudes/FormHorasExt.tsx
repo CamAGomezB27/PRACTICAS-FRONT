@@ -21,7 +21,7 @@ const FormularioHorasExtra: React.FC = () => {
   const [cedula, setCedula] = useState('');
   const [nombre, setNombre] = useState('');
   const [fechaNovedad, setFechaNovedad] = useState<Date | null>(null);
-  const [tipoJornada, setTipoJornada] = useState('');
+  const [concepto, setConcepto] = useState('');
   const [codigo, setCodigo] = useState('');
   const [unidad, setUnidad] = useState('');
   const [detalle, setDetalle] = useState('');
@@ -38,7 +38,7 @@ const FormularioHorasExtra: React.FC = () => {
     const isValid =
       /^\d{6,}$/.test(cedula) &&
       /^[A-Za-zÁÉÍÓÚÑáéíóúñ\s'.-]+$/.test(nombre) &&
-      tipoJornada.trim() !== '' &&
+      concepto.trim() !== '' &&
       codigo.trim() !== '' &&
       unidad.trim() !== '' &&
       detalle.trim().length > 0 &&
@@ -46,7 +46,7 @@ const FormularioHorasExtra: React.FC = () => {
       fechaNovedad !== null;
 
     setIsFormValid(isValid);
-  }, [cedula, nombre, fechaNovedad, tipoJornada, codigo, unidad, detalle]);
+  }, [cedula, nombre, fechaNovedad, concepto, codigo, unidad, detalle]);
 
   const CustomInput = forwardRef<
     HTMLInputElement,
@@ -72,7 +72,7 @@ const FormularioHorasExtra: React.FC = () => {
       nombre,
       titulo,
       fecha_novedad: fechaNovedad?.toISOString(),
-      tipo_jornada: tipoJornada,
+      concepto,
       codigo,
       unidad,
       detalle,
@@ -117,6 +117,16 @@ const FormularioHorasExtra: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const conceptosHorasExtra: { [descripcion: string]: string } = {
+    'Domingo Sin Compensatorio Diurno': '75',
+    'Domingo Sin Compensatorio Nocturno': '110',
+    'Dominical Con Compensatorio Diurno': '66',
+    'Dominical Con Compensatorio Nocturno': '78',
+    'Festivo Sin Compensatorio Diurno': '75',
+    'Hora extra Diurna': '55',
+    'Recargo Nocturno 35%': '45',
   };
 
   return (
@@ -175,18 +185,28 @@ const FormularioHorasExtra: React.FC = () => {
         />
       </div>
 
-      {/* Tipo de jornada */}
+      {/* Tipo de jornada (Concepto) */}
       <div>
         <label className="text-black font-medium mb-1 block">
           Concepto <span className="text-red-500">*</span>
         </label>
-        <input
-          type="text"
-          placeholder="Ej: Diurna, Nocturna..."
+        <select
+          title="Concepto"
           className="w-full border rounded px-3 py-2 bg-white border-gray-600 text-black"
-          value={tipoJornada}
-          onChange={(e) => setTipoJornada(e.target.value)}
-        />
+          value={concepto}
+          onChange={(e) => {
+            const seleccion = e.target.value;
+            setConcepto(seleccion);
+            setCodigo(conceptosHorasExtra[seleccion] || '');
+          }}
+        >
+          <option value="">Selecciona una opción</option>
+          {Object.entries(conceptosHorasExtra).map(([desc, cod]) => (
+            <option key={cod} value={desc}>
+              {desc}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Concepto Código */}
@@ -196,10 +216,10 @@ const FormularioHorasExtra: React.FC = () => {
         </label>
         <input
           type="text"
-          placeholder="Ej: 0321"
-          className="w-full border rounded px-3 py-2 bg-white border-gray-600 text-black"
+          placeholder="Código"
+          className="w-full border rounded px-3 py-2 bg-gray-100 border-gray-400 text-black"
           value={codigo}
-          onChange={(e) => setCodigo(e.target.value)}
+          readOnly
         />
       </div>
 

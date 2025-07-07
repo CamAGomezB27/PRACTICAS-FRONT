@@ -115,7 +115,7 @@ const FormularioOtroSiTemporal: React.FC = () => {
       fecha_fin: fecha_fin?.toISOString(),
       salario_actual: parseFloat(salarioActual),
       nuevo_salario: parseFloat(nuevoSalario),
-      consecutivo,
+      consecutivo: `OT${consecutivo.replace(/^OT/i, '')}`,
       categoria: titulo, // 👈 que no quede "-"
       tienda: user?.nombreTienda ?? '',
       jefe: user?.nombre ?? '',
@@ -216,30 +216,42 @@ const FormularioOtroSiTemporal: React.FC = () => {
         />
       </div>
 
-      {/* JORNADAS */}
+      {/* JORNADA ACTUAL */}
       <div>
         <label className="text-black font-medium mb-1 block">
           Jornada Actual <span className="text-red-500">*</span>
         </label>
-        <input
-          type="text"
-          placeholder="Ej: Tiempo completo"
+        <select
+          title="JornadaAct"
           className="w-full border rounded px-3 py-2 bg-white border-gray-600 text-black"
           value={jornadaActual}
           onChange={(e) => setJornadaActual(e.target.value)}
-        />
+        >
+          <option value="">Selecciona una opción</option>
+          <option value="JORNADA 33%">JORNADA 33%</option>
+          <option value="JORNADA 50%">JORNADA 50%</option>
+          <option value="JORNADA 75%">JORNADA 75%</option>
+          <option value="JORNADA 100%">JORNADA 100%</option>
+        </select>
       </div>
+
+      {/* NUEVA JORNADA */}
       <div>
         <label className="text-black font-medium mb-1 block">
           Nueva Jornada <span className="text-red-500">*</span>
         </label>
-        <input
-          type="text"
-          placeholder="Ej: Medio tiempo"
+        <select
+          title="nuevaJor"
           className="w-full border rounded px-3 py-2 bg-white border-gray-600 text-black"
           value={nuevaJornada}
           onChange={(e) => setNuevaJornada(e.target.value)}
-        />
+        >
+          <option value="">Selecciona una opción</option>
+          <option value="JORNADA 33%">JORNADA 33%</option>
+          <option value="JORNADA 50%">JORNADA 50%</option>
+          <option value="JORNADA 75%">JORNADA 75%</option>
+          <option value="JORNADA 100%">JORNADA 100%</option>
+        </select>
       </div>
 
       {/* RANGO DE FECHAS */}
@@ -304,10 +316,13 @@ const FormularioOtroSiTemporal: React.FC = () => {
         </label>
         <input
           type="text"
-          placeholder="Ej: OT-2025-001"
+          placeholder="Ej: OT2025-001"
           className="w-full border rounded px-3 py-2 bg-white border-gray-600 text-black"
-          value={consecutivo}
-          onChange={(e) => setConsecutivo(e.target.value)}
+          value={`OT${consecutivo.replace(/^OT/i, '')}`}
+          onChange={(e) => {
+            const valueSinOT = e.target.value.replace(/^OT/i, '');
+            setConsecutivo(valueSinOT);
+          }}
         />
       </div>
 
