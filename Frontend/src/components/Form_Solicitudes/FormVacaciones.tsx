@@ -1,12 +1,10 @@
-import React from 'react';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { registerLocale } from 'react-datepicker';
+import axios from 'axios';
 import { es } from 'date-fns/locale';
-import { forwardRef } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 registerLocale('es', es);
 
 const FormularioVacaciones: React.FC = () => {
@@ -20,6 +18,8 @@ const FormularioVacaciones: React.FC = () => {
   ]);
   const [detalle, setDetalle] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
+  const location = useLocation();
+  const titulo = location.state?.titulo || 'No disponible';
 
   useEffect(() => {
     const [start, end] = rangoFechas;
@@ -59,6 +59,58 @@ const FormularioVacaciones: React.FC = () => {
       />
     );
   });
+
+  const handleSubmit = async () => {
+    const [fecha_inicio, fecha_fin] = rangoFechas;
+
+    const payload = {
+      cedula: Number(cedula),
+      nombre,
+      detalle,
+      titulo,
+      fecha_inicio: fecha_inicio?.toISOString(),
+      fecha_fin: fecha_fin?.toISOString(),
+      dias: Number(dias),
+    };
+
+    try {
+      console.log('📤 Enviando payload:', payload);
+
+      const response = await axios.post(
+        'http://localhost:3000/archivo-adjunto/formulario-novedad',
+        payload,
+      );
+
+      console.log('✅ Respuesta del backend:', response.data);
+
+      if (response.data?.valido) {
+        alert(
+          `✅ ${response.data.message || 'Novedad de vacaciones registrada correctamente'}`,
+        );
+        navigate('/dashboard-jefe');
+      } else {
+        alert(
+          `⚠️ Ocurrió un problema: ${response.data.message || 'No se pudo crear la novedad'}`,
+        );
+      }
+    } catch (error: unknown) {
+      console.error('❌ Error al enviar el formulario:', error);
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          alert(
+            `❌ Error del servidor: ${error.response.data?.message || 'Algo salió mal'}`,
+          );
+        } else if (error.request) {
+          alert('❌ No se pudo conectar con el servidor. Intenta más tarde.');
+        } else {
+          alert(`❌ Error inesperado de Axios: ${error.message}`);
+        }
+      } else {
+        alert('❌ Error desconocido al enviar el formulario.');
+      }
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
       {/* Cédula */}
@@ -98,7 +150,7 @@ const FormularioVacaciones: React.FC = () => {
         />
       </div>
 
-      {/* Dias a tomar */}
+      {/* Días */}
       <div>
         <label className="text-black font-medium mb-1 block">
           Número de días a tomar <span className="text-red-500">*</span>
@@ -144,16 +196,16 @@ const FormularioVacaciones: React.FC = () => {
           popperPlacement="right-start"
         />
       </div>
-      {/* DETALLE + BOTONES (grid interna de 2 columnas) */}
+
+      {/* Detalle + Botones */}
       <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-[1fr_140px] gap-4 items-start">
-        {/* DETALLE */}
         <div>
           <label className="text-black block font-medium mb-1">
             Escribe el detalle de la novedad{' '}
             <span className="text-red-500">*</span>
           </label>
           <textarea
-            placeholder="Escribe detalladamente la situación que amerita el auxilio de transporte…"
+            placeholder="Describe las fechas y motivo del disfrute de vacaciones…"
             className="w-full border rounded px-3 py-2 bg-white border-gray-600 text-black"
             rows={4}
             maxLength={250}
@@ -165,7 +217,6 @@ const FormularioVacaciones: React.FC = () => {
           </div>
         </div>
 
-        {/* BOTONES al lado derecho */}
         <div className="flex flex-col gap-2 py-8 items-end">
           <button
             className={`w-full px-4 py-2 rounded-lg text-white ${
@@ -174,6 +225,7 @@ const FormularioVacaciones: React.FC = () => {
                 : 'bg-gray-400 cursor-not-allowed'
             }`}
             disabled={!isFormValid}
+            onClick={handleSubmit}
           >
             Guardar
           </button>

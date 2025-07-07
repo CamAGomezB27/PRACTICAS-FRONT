@@ -1,12 +1,14 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const FormularioBasico: React.FC = () => {
   const [cedula, setCedula] = useState('');
   const [nombre, setNombre] = useState('');
   const [detalle, setDetalle] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+  const titulo = location.state?.titulo || 'No disponible';
 
   const [isFormValid, setIsFormValid] = useState(false);
 
@@ -26,7 +28,7 @@ const FormularioBasico: React.FC = () => {
         cedula: Number(cedula),
         nombre,
         detalle,
-        titulo: 'Auxilio de transporte',
+        titulo,
       };
 
       console.log('📤 Enviando payload:', payload);

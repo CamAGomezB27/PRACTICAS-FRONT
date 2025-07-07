@@ -1,13 +1,16 @@
-import React, { useState, useEffect, forwardRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { registerLocale } from 'react-datepicker';
+import axios from 'axios';
 import { es } from 'date-fns/locale';
+import React, { forwardRef, useEffect, useState } from 'react';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 registerLocale('es', es);
 
 const FormularioHorasExtra: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const titulo = location.state?.titulo || 'No disponible';
 
   const [cedula, setCedula] = useState('');
   const [nombre, setNombre] = useState('');
@@ -45,6 +48,56 @@ const FormularioHorasExtra: React.FC = () => {
       className="w-full border rounded px-3 py-2 bg-white border-gray-600 text-black"
     />
   ));
+
+  const handleSubmit = async () => {
+    const payload = {
+      cedula: Number(cedula),
+      nombre,
+      titulo,
+      fecha_novedad: fechaNovedad?.toISOString(),
+      tipo_jornada: tipoJornada,
+      codigo,
+      unidad,
+      detalle,
+    };
+
+    try {
+      console.log('📤 Enviando payload:', payload);
+
+      const response = await axios.post(
+        'http://localhost:3000/archivo-adjunto/formulario-novedad',
+        payload,
+      );
+
+      console.log('✅ Respuesta del backend:', response.data);
+
+      if (response.data?.valido) {
+        alert(
+          `✅ ${response.data.message || 'Horas extra registradas correctamente'}`,
+        );
+        navigate('/dashboard-jefe');
+      } else {
+        alert(
+          `⚠️ Ocurrió un problema: ${response.data.message || 'No se pudo crear la novedad'}`,
+        );
+      }
+    } catch (error: unknown) {
+      console.error('❌ Error al enviar el formulario:', error);
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          alert(
+            `❌ Error del servidor: ${error.response.data?.message || 'Algo salió mal'}`,
+          );
+        } else if (error.request) {
+          alert('❌ No se pudo conectar con el servidor. Intenta más tarde.');
+        } else {
+          alert(`❌ Error inesperado de Axios: ${error.message}`);
+        }
+      } else {
+        alert('❌ Error desconocido al enviar el formulario.');
+      }
+    }
+  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -173,6 +226,7 @@ const FormularioHorasExtra: React.FC = () => {
                 : 'bg-gray-400 cursor-not-allowed'
             }`}
             disabled={!isFormValid}
+            onClick={handleSubmit}
           >
             Guardar
           </button>

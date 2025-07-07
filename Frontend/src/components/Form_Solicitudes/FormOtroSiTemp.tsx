@@ -1,16 +1,16 @@
-// src/components/FormOtroSiTemporal.tsx
-
-import React, { useState, useEffect, forwardRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { registerLocale } from 'react-datepicker';
+import axios from 'axios';
 import { es } from 'date-fns/locale';
+import React, { forwardRef, useEffect, useState } from 'react';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 registerLocale('es', es);
 
 const FormularioOtroSiTemporal: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const titulo = location.state?.titulo || 'No disponible';
 
   const [cedula, setCedula] = useState('');
   const [nombre, setNombre] = useState('');
@@ -25,7 +25,6 @@ const FormularioOtroSiTemporal: React.FC = () => {
   const [nuevoSalario, setNuevoSalario] = useState('');
   const [consecutivo, setConsecutivo] = useState('');
   const [detalle, setDetalle] = useState('');
-
   const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
@@ -83,8 +82,66 @@ const FormularioOtroSiTemporal: React.FC = () => {
     );
   });
 
+  const handleSubmit = async () => {
+    const [fecha_inicio, fecha_fin] = rangoFechas;
+
+    const payload = {
+      cedula: Number(cedula),
+      nombre,
+      titulo,
+      detalle,
+      fecha_novedad: fechaNovedad?.toISOString(),
+      jornada_actual: jornadaActual,
+      nueva_jornada: nuevaJornada,
+      fecha_inicio: fecha_inicio?.toISOString(),
+      fecha_fin: fecha_fin?.toISOString(),
+      salario_actual: parseFloat(salarioActual),
+      nuevo_salario: parseFloat(nuevoSalario),
+      consecutivo,
+    };
+
+    try {
+      console.log('📤 Enviando payload:', payload);
+
+      const response = await axios.post(
+        'http://localhost:3000/archivo-adjunto/formulario-novedad',
+        payload,
+      );
+
+      console.log('✅ Respuesta del backend:', response.data);
+
+      if (response.data?.valido) {
+        alert(
+          `✅ ${response.data.message || 'Novedad registrada correctamente'}`,
+        );
+        navigate('/dashboard-jefe');
+      } else {
+        alert(
+          `⚠️ Ocurrió un problema: ${response.data.message || 'No se pudo crear la novedad'}`,
+        );
+      }
+    } catch (error: unknown) {
+      console.error('❌ Error al enviar el formulario:', error);
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          alert(
+            `❌ Error del servidor: ${error.response.data?.message || 'Algo salió mal'}`,
+          );
+        } else if (error.request) {
+          alert('❌ No se pudo conectar con el servidor. Intenta más tarde.');
+        } else {
+          alert(`❌ Error inesperado de Axios: ${error.message}`);
+        }
+      } else {
+        alert('❌ Error desconocido al enviar el formulario.');
+      }
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
+      {/* Campos individuales (igual que antes)... */}
+
       {/* CÉDULA */}
       <div>
         <label className="text-black font-medium mb-1 block">
@@ -136,7 +193,7 @@ const FormularioOtroSiTemporal: React.FC = () => {
         />
       </div>
 
-      {/* JORNADA ACTUAL */}
+      {/* JORNADAS */}
       <div>
         <label className="text-black font-medium mb-1 block">
           Jornada Actual <span className="text-red-500">*</span>
@@ -149,8 +206,6 @@ const FormularioOtroSiTemporal: React.FC = () => {
           onChange={(e) => setJornadaActual(e.target.value)}
         />
       </div>
-
-      {/* NUEVA JORNADA */}
       <div>
         <label className="text-black font-medium mb-1 block">
           Nueva Jornada <span className="text-red-500">*</span>
@@ -185,7 +240,7 @@ const FormularioOtroSiTemporal: React.FC = () => {
         />
       </div>
 
-      {/* SALARIO ACTUAL */}
+      {/* SALARIOS */}
       <div>
         <label className="text-black font-medium mb-1 block">
           Salario Actual <span className="text-red-500">*</span>
@@ -202,8 +257,6 @@ const FormularioOtroSiTemporal: React.FC = () => {
           }
         />
       </div>
-
-      {/* NUEVO SALARIO */}
       <div>
         <label className="text-black font-medium mb-1 block">
           Nuevo Salario <span className="text-red-500">*</span>
@@ -245,7 +298,7 @@ const FormularioOtroSiTemporal: React.FC = () => {
           <textarea
             placeholder="Describe detalladamente el motivo del Otro Sí temporal..."
             className="w-full border rounded px-3 py-2 bg-white border-gray-600 text-black"
-            rows={2} // <- Cambiado de 4 a 2
+            rows={2}
             maxLength={250}
             value={detalle}
             onChange={(e) => setDetalle(e.target.value)}
@@ -257,12 +310,9 @@ const FormularioOtroSiTemporal: React.FC = () => {
 
         <div className="flex flex-col gap-2 py-4 items-end">
           <button
-            className={`w-full px-4 py-2 rounded-lg text-white ${
-              isFormValid
-                ? 'bg-[#4669AF] hover:opacity-90'
-                : 'bg-gray-400 cursor-not-allowed'
-            }`}
+            className={`w-full px-4 py-2 rounded-lg text-white ${isFormValid ? 'bg-[#4669AF] hover:opacity-90' : 'bg-gray-400 cursor-not-allowed'}`}
             disabled={!isFormValid}
+            onClick={handleSubmit}
           >
             Guardar
           </button>
