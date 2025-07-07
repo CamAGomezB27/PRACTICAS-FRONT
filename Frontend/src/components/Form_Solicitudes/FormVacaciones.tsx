@@ -6,12 +6,14 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { FiClock } from 'react-icons/fi';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Logo_home from '../../assets/logos/Logo_home.png';
+import { useAuth } from '../../context/useAuth';
 import ErroresArchivoAlert from '../Alerts/ErroresArchivoAlert';
 import ExitoArchivoAlert from '../Alerts/ExitoArchivoAlert';
 
 registerLocale('es', es);
 
 const FormularioVacaciones: React.FC = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [cedula, setCedula] = useState('');
   const [nombre, setNombre] = useState('');
@@ -84,6 +86,10 @@ const FormularioVacaciones: React.FC = () => {
       nombre,
       detalle,
       titulo,
+      categoria: titulo, // 👈 que no quede "-"
+      tienda: user?.nombreTienda ?? '',
+      jefe: user?.nombre ?? '',
+      fecha: new Date(new Date().setHours(5, 0, 0, 0)).toISOString(), // 👈 igual que masivos
       fecha_inicio: fecha_inicio?.toISOString(),
       fecha_fin: fecha_fin?.toISOString(),
       dias: Number(dias),

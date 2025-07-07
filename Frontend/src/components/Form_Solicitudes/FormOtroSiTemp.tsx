@@ -6,12 +6,14 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { FiClock } from 'react-icons/fi';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Logo_home from '../../assets/logos/Logo_home.png';
+import { useAuth } from '../../context/useAuth';
 import ErroresArchivoAlert from '../Alerts/ErroresArchivoAlert';
 import ExitoArchivoAlert from '../Alerts/ExitoArchivoAlert';
 
 registerLocale('es', es);
 
 const FormularioOtroSiTemporal: React.FC = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const titulo = location.state?.titulo || 'No disponible';
@@ -114,6 +116,10 @@ const FormularioOtroSiTemporal: React.FC = () => {
       salario_actual: parseFloat(salarioActual),
       nuevo_salario: parseFloat(nuevoSalario),
       consecutivo,
+      categoria: titulo, // 👈 que no quede "-"
+      tienda: user?.nombreTienda ?? '',
+      jefe: user?.nombre ?? '',
+      fecha: new Date(new Date().setHours(5, 0, 0, 0)).toISOString(), // 👈 igual que masivos
     };
 
     try {
