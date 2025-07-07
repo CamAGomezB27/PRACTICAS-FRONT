@@ -12,11 +12,13 @@ import {
 } from 'react-icons/fa';
 import { FiAlertTriangle, FiCheckCircle } from 'react-icons/fi';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useAuth } from '../../../context/useAuth';
 import {
   Estado,
   getColorPorEstado,
   getIconoPorEstado,
 } from '../../../utils/iconosPorEstado';
+import { getMensajePorEstado } from '../../../utils/mensajesPorEstado';
 import FormConfirmarDescarga from '../../Alerts/AlertConfirDes';
 import TablaVistaPreviaMasivaNom from '../../Table_VistPrev/TableVPNomina';
 
@@ -151,6 +153,8 @@ const FormVistaPrevMasivaNom = () => {
 
   const location = useLocation();
 
+  const { user } = useAuth(); // o puede que ya lo tengas
+
   const [mostrarModalConfirmar, setMostrarModalConfirmar] = useState(false);
 
   const [descargadoYa, setDescargadoYa] = useState(false);
@@ -177,13 +181,16 @@ const FormVistaPrevMasivaNom = () => {
     cantidad,
     iconName,
     modoGestionInicial,
-    mensajeTexto, // <- esto
   } = location.state || {};
 
   const estadoInicial: Estado = modoGestionInicial
     ? 'EN GESTIÓN'
     : (estado ?? 'PENDIENTE');
   const [estadoLocal, setEstadoLocal] = useState<Estado>(estadoInicial);
+  const mensajeTexto = getMensajePorEstado(
+    estadoLocal,
+    user?.esNomina ?? false,
+  );
   const [modoGestion, setModoGestion] = useState<boolean>(
     estado === 'EN GESTIÓN' || !!modoGestionInicial,
   );

@@ -6,6 +6,7 @@ import {
   getColorPorEstado,
   getIconoPorEstado,
 } from '../../../utils/iconosPorEstado';
+import { getMensajePorEstado } from '../../../utils/mensajesPorEstado';
 import AlertFiltros from '../../Alerts/AlertFiltros';
 
 type Estado =
@@ -119,7 +120,11 @@ const NovedadesNomPendientes: React.FC<Props> = ({
         const estadoVisual = mostrarEstado(
           novedad.estado_novedad.nombre_estado,
         );
-        const mensajeTexto = novedad.descripcion;
+
+        const mensajeTexto = getMensajePorEstado(
+          estadoVisual,
+          user?.esNomina ?? false,
+        );
 
         const stateVista = {
           id_novedad: novedad.id_novedad,
