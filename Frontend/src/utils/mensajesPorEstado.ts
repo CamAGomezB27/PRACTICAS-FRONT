@@ -5,7 +5,45 @@ export type Estado =
   | 'RECHAZADA'
   | 'PENDIENTE';
 
-export function getMensajePorEstado(estado: Estado, esNomina: boolean): string {
+export function getMensajePorEstado(
+  estado: Estado,
+  esNomina: boolean,
+  esIndividual: boolean = false, // 👈 nuevo parámetro opcional
+): string {
+  if (esIndividual) {
+    // 👉 Mensajes para NOVEDADES INDIVIDUALES
+    if (esNomina) {
+      switch (estado) {
+        case 'CREADA':
+        case 'PENDIENTE':
+          return 'Formulario recibido. Debes revisar y validar esta solicitud.';
+        case 'EN GESTIÓN':
+          return 'Estás gestionando esta novedad individual.';
+        case 'GESTIONADA':
+          return 'Formulario gestionado exitosamente.';
+        case 'RECHAZADA':
+          return 'Formulario rechazado por Nómina.';
+        default:
+          return '';
+      }
+    } else {
+      switch (estado) {
+        case 'CREADA':
+        case 'PENDIENTE':
+          return 'Formulario enviado. El equipo de Nómina revisará tu solicitud.';
+        case 'EN GESTIÓN':
+          return 'Nómina está validando tu solicitud individual.';
+        case 'GESTIONADA':
+          return 'Tu novedad individual fue gestionada correctamente.';
+        case 'RECHAZADA':
+          return 'Tu solicitud individual fue rechazada.';
+        default:
+          return '';
+      }
+    }
+  }
+
+  // 👉 Mensajes para NOVEDADES MASIVAS (ya existentes)
   if (esNomina) {
     switch (estado) {
       case 'CREADA':

@@ -1,6 +1,5 @@
-import React from 'react';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const FormularioBasico: React.FC = () => {
@@ -20,6 +19,55 @@ const FormularioBasico: React.FC = () => {
 
     setIsFormValid(isValid);
   }, [cedula, nombre, detalle]);
+
+  const handleSubmit = async () => {
+    try {
+      const payload = {
+        cedula: Number(cedula),
+        nombre,
+        detalle,
+        titulo: 'Auxilio de transporte',
+      };
+
+      console.log('📤 Enviando payload:', payload);
+
+      const response = await axios.post(
+        'http://localhost:3000/archivo-adjunto/formulario-novedad',
+        payload,
+      );
+
+      console.log('✅ Respuesta del backend:', response.data);
+
+      if (response.data?.valido) {
+        alert(`✅ ${response.data.message || 'Novedad creada correctamente'}`);
+        navigate('/dashboard-jefe');
+      } else {
+        alert(
+          `⚠️ Ocurrió un problema: ${response.data.message || 'No se pudo crear la novedad'}`,
+        );
+      }
+    } catch (error: unknown) {
+      console.error('❌ Error al enviar el formulario:', error);
+
+      if (axios.isAxiosError(error)) {
+        // Error generado por Axios
+        if (error.response) {
+          console.error('📥 Error Response Data:', error.response.data);
+          alert(
+            `❌ Error del servidor: ${error.response.data?.message || 'Algo salió mal'}`,
+          );
+        } else if (error.request) {
+          console.error('📭 No se recibió respuesta del servidor');
+          alert('❌ No se pudo conectar con el servidor. Intenta más tarde.');
+        } else {
+          alert(`❌ Error inesperado de Axios: ${error.message}`);
+        }
+      } else {
+        // Otro tipo de error que no es de Axios
+        alert('❌ Error desconocido al enviar el formulario.');
+      }
+    }
+  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -89,6 +137,7 @@ const FormularioBasico: React.FC = () => {
                 : 'bg-gray-400 cursor-not-allowed'
             }`}
             disabled={!isFormValid}
+            onClick={handleSubmit} // <- nuevo
           >
             Guardar
           </button>

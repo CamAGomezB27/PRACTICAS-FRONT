@@ -21,6 +21,7 @@ import NotificacionesAdmin from '../pages/Users/Notificaciones';
 import GestionUser from '../pages/Users/UsersGestion';
 import UsuariosRegis from '../pages/Users/UsuserRegis';
 import VistaPrevisMasivaNom from '../pages/VistaPrev/Nomina/VistaPrevMasiNom';
+import VistPrevTInd from '../pages/VistaPrev/Tienda/VistPrevIndi';
 import VistaPrevisMasivaT from '../pages/VistaPrev/Tienda/VistPrevMas';
 import ProtectedRoute from './ProtectedRoute';
 
@@ -67,6 +68,10 @@ const AppRoutes = () => {
         <Route path="/solicitud-OtroSiTemp" element={<OtroSiTemp />} />
         <Route path="/solicitud-vacaciones" element={<Vacaciones />} />
         <Route path="/solicitud-otros" element={<Otros />} />
+        <Route
+          path="/vista-previa-individual-tienda/:id"
+          element={<VistPrevTInd />}
+        />
         <Route
           path="/vista-previa-masiva-tienda/:id"
           element={<VistaPrevisMasivaT />}

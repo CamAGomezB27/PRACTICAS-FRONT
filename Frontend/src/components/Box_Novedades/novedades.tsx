@@ -102,6 +102,7 @@ const NovedadesRecientes: React.FC = () => {
             const mensajeTexto = getMensajePorEstado(
               mostrarEstado(novedad), // ← eso te devuelve 'CREADA', 'GESTIONADA', etc.
               user?.esNomina ?? false,
+              !novedad.es_masiva,
             );
 
             return (
@@ -110,9 +111,11 @@ const NovedadesRecientes: React.FC = () => {
                 className="flex items-start bg-white rounded-xl shadow-sm p-3 relative cursor-pointer transform transition-transform duration-150 hover:scale-[1.01]"
                 onClick={() =>
                   navigate(
-                    user?.esNomina
-                      ? `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`
-                      : `/vista-previa-masiva-tienda/${novedad.id_novedad}`,
+                    novedad.es_masiva
+                      ? user?.esNomina
+                        ? `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`
+                        : `/vista-previa-masiva-tienda/${novedad.id_novedad}`
+                      : `/vista-previa-individual-tienda/${novedad.id_novedad}`,
                     {
                       state: {
                         id_novedad: novedad.id_novedad,

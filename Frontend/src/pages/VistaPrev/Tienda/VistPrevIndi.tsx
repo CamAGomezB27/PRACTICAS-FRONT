@@ -1,0 +1,19 @@
+import React from 'react';
+import Footer from '../../../components/Footer/Footer';
+import FormVistaPrevIndiv from '../../../components/Form_VistaPrev/Tienda/FormIndividual';
+import Navbar from '../../../components/Navbar/Navbar';
+
+const VistPrevTInd: React.FC = () => {
+  return (
+    <div className="min-h-screen w-screen flex flex-col bg-white relative">
+      <Navbar />
+
+      <main className="flex-grow flex items-center justify-center px-4 py-6 transform -translate-y-8">
+        <FormVistaPrevIndiv />
+      </main>
+
+      <Footer />
+    </div>
+  );
+};
+export default VistPrevTInd;
