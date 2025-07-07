@@ -1,4 +1,5 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useState } from 'react';
 import {
   FaBell,
   FaUserCheck,
@@ -8,6 +9,7 @@ import {
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Franco from '../../../assets/images/Franco_Pensando_1-removebg-preview.png';
+import FormCrearUsuario from '../../../components/Alerts/AlerFormCrearUser';
 import Card from '../../../components/Cards/card';
 import Footer from '../../../components/Footer/Footer';
 import Navbar from '../../../components/Navbar/Navbar';
@@ -16,6 +18,31 @@ import { useAuth } from '../../../context/useAuth';
 const DashboardAdministrador: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [mostrarFormulario, setMostrarFormulario] = useState(false);
+
+  const handleCrearUsuario = async (formData: {
+    nombre: string;
+    correo: string;
+    rol: string;
+    esJefe: boolean;
+    tienda?: number;
+  }) => {
+    try {
+      const payload = {
+        nombre: formData.nombre,
+        correo: formData.correo,
+        rol: formData.rol,
+        tienda: formData.esJefe ? formData.tienda : undefined,
+      };
+
+      await axios.post('/usuario', payload);
+      alert('✅ Usuario creado correctamente');
+      setMostrarFormulario(false);
+    } catch (err) {
+      console.error('❌ Error al crear usuario:', err);
+      alert('Error al crear usuario');
+    }
+  };
 
   return (
     <div className="min-h-screen w-screen flex flex-col bg-white">
@@ -31,40 +58,33 @@ const DashboardAdministrador: React.FC = () => {
               monitorear su rendimiento.
             </p>
           </div>
-
           <div className="w-1/3 flex justify-center mt-2">
             <h2 className="text-xl font-bold text-black">
-              Acciones que puedes realziar
+              Acciones que puedes realizar
             </h2>
           </div>
         </div>
 
         <div className="flex justify-between pl-6">
-          {/* Columna izquierda*/}
           <div className="flex flex-col w-1/3 mt-28 pt-4">
             <div className="flex justify-between mb-4 gap-8">
-              <div className="pr-2 mr-4 items-center">
-                <Card
-                  title="Usuarios Registrados"
-                  icon={<FaUsers size={80} />}
-                  iconPosition="top"
-                  className="h-[150px] w-[250px] rounded-2xl"
-                  onClick={() => navigate('/usuarios-registrados')}
-                />
-              </div>
-              <div className="pl-2 items-center">
-                <Card
-                  title="Usuarios Activos"
-                  icon={<FaUserCheck size={80} />}
-                  iconPosition="top"
-                  className="h-[150px] w-[250px] rounded-2xl"
-                  onClick={() => navigate('/gestionar-usuarios')}
-                />
-              </div>
+              <Card
+                title="Usuarios Registrados"
+                icon={<FaUsers size={80} />}
+                iconPosition="top"
+                className="h-[150px] w-[250px] rounded-2xl"
+                onClick={() => navigate('/usuarios-registrados')}
+              />
+              <Card
+                title="Usuarios Activos"
+                icon={<FaUserCheck size={80} />}
+                iconPosition="top"
+                className="h-[150px] w-[250px] rounded-2xl"
+                onClick={() => navigate('/gestionar-usuarios')}
+              />
             </div>
           </div>
 
-          {/* Columna central*/}
           <div className="w-1/3 flex justify-center items-center pl-32">
             <img
               src={Franco}
@@ -73,15 +93,14 @@ const DashboardAdministrador: React.FC = () => {
             />
           </div>
 
-          {/* Columna derecha - Cards con ancho más reducido */}
           <div className="w-1/3 pl-5 flex flex-col space-y-8 items-center">
             <Card
               title="Registrar Usuario"
               icon={<FaUserPlus size={50} />}
               iconPosition="top"
               className="h-30 w-[200px] rounded-2xl"
+              onClick={() => setMostrarFormulario(true)}
             />
-
             <Card
               title="Gestionar Permisos"
               icon={<FaUserShield size={50} />}
@@ -89,7 +108,6 @@ const DashboardAdministrador: React.FC = () => {
               className="h-30 w-[200px] rounded-2xl"
               onClick={() => navigate('/gestionar-usuarios')}
             />
-
             <Card
               title="Notificaciones"
               icon={<FaBell size={50} />}
@@ -102,6 +120,13 @@ const DashboardAdministrador: React.FC = () => {
       </main>
 
       <Footer />
+
+      {mostrarFormulario && (
+        <FormCrearUsuario
+          onClose={() => setMostrarFormulario(false)}
+          onCrear={handleCrearUsuario}
+        />
+      )}
     </div>
   );
 };
