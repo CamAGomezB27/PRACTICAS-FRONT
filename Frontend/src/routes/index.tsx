@@ -17,6 +17,9 @@ import OtroSiDef from '../pages/Solicitudes/OtroSiDef';
 import OtroSiTemp from '../pages/Solicitudes/OtroSiTemp';
 import Vacaciones from '../pages/Solicitudes/Vacaciones';
 import Error403FORBBIDEN from '../pages/Unauthorized/Error403';
+import NotificacionesAdmin from '../pages/Users/Notificaciones';
+import GestionUser from '../pages/Users/UsersGestion';
+import UsuariosRegis from '../pages/Users/UsuserRegis';
 import VistaPrevisMasivaNom from '../pages/VistaPrev/Nomina/VistaPrevMasiNom';
 import VistaPrevisMasivaT from '../pages/VistaPrev/Tienda/VistPrevMas';
 import ProtectedRoute from './ProtectedRoute';
@@ -28,10 +31,16 @@ const AppRoutes = () => {
       <Route path="/" element={<LoginPage />} />
 
       {/* RUTAS PROTEGIDAS */}
+
+      {/* SOLO ADMINISTRADORES */}
       <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
         <Route path="/dashboard-administrador" element={<DashAdmin />} />
+        <Route path="/usuarios-registrados" element={<UsuariosRegis />} />
+        <Route path="/gestionar-usuarios" element={<GestionUser />} />
+        <Route path="/notificaciones" element={<NotificacionesAdmin />} />
       </Route>
 
+      {/* SOLO GESTORES DE NOMINA */}
       <Route element={<ProtectedRoute allowedRoles={['nomina']} />}>
         <Route path="/dashboard-nomina" element={<DashNomina />} />
         <Route
@@ -48,6 +57,7 @@ const AppRoutes = () => {
         />
       </Route>
 
+      {/* SOLO JEFES DE TIENDAS */}
       <Route element={<ProtectedRoute allowedRoles={['jefe']} />}>
         <Route path="/dashboard-jefe" element={<DashJefe />} />
         <Route path="/solicitud-AuxTrans" element={<SoliAuxTrans />} />

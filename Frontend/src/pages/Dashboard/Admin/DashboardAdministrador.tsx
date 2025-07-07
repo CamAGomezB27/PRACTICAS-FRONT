@@ -1,20 +1,21 @@
 import React from 'react';
 import {
-  FaUsers,
-  FaUserCheck,
-  FaThLarge,
-  FaUserPlus,
   FaBell,
+  FaUserCheck,
+  FaUserPlus,
+  FaUsers,
   FaUserShield,
 } from 'react-icons/fa';
-import Navbar from '../../../components/Navbar/Navbar';
-import Footer from '../../../components/Footer/Footer';
-import Card from '../../../components/Cards/card';
+import { useNavigate } from 'react-router-dom';
 import Franco from '../../../assets/images/Franco_Pensando_1-removebg-preview.png';
+import Card from '../../../components/Cards/card';
+import Footer from '../../../components/Footer/Footer';
+import Navbar from '../../../components/Navbar/Navbar';
 import { useAuth } from '../../../context/useAuth';
 
 const DashboardAdministrador: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen w-screen flex flex-col bg-white">
@@ -40,30 +41,26 @@ const DashboardAdministrador: React.FC = () => {
 
         <div className="flex justify-between pl-6">
           {/* Columna izquierda*/}
-          <div className="flex flex-col w-1/3 mt-6 pt-4">
-            <div className="flex justify-between mb-4">
-              <div className="pr-2 mr-4">
+          <div className="flex flex-col w-1/3 mt-28 pt-4">
+            <div className="flex justify-between mb-4 gap-8">
+              <div className="pr-2 mr-4 items-center">
                 <Card
                   title="Usuarios Registrados"
-                  icon={<FaUsers size={50} />}
-                  className="h-[130px] w-[250px] rounded-2xl"
+                  icon={<FaUsers size={80} />}
+                  iconPosition="top"
+                  className="h-[150px] w-[250px] rounded-2xl"
+                  onClick={() => navigate('/usuarios-registrados')}
                 />
               </div>
-              <div className="pl-2">
+              <div className="pl-2 items-center">
                 <Card
                   title="Usuarios Activos"
-                  icon={<FaUserCheck size={50} />}
-                  className="h-[130px] w-[250px] rounded-2xl"
+                  icon={<FaUserCheck size={80} />}
+                  iconPosition="top"
+                  className="h-[150px] w-[250px] rounded-2xl"
+                  onClick={() => navigate('/gestionar-usuarios')}
                 />
               </div>
-            </div>
-
-            <div className="flex justify-center mt-6 pl-12">
-              <Card
-                title="Módulos del Sistema"
-                icon={<FaThLarge size={50} />}
-                className="h-[130px] w-[270px] rounded-2xl"
-              />
             </div>
           </div>
 
@@ -90,6 +87,7 @@ const DashboardAdministrador: React.FC = () => {
               icon={<FaUserShield size={50} />}
               iconPosition="top"
               className="h-30 w-[200px] rounded-2xl"
+              onClick={() => navigate('/gestionar-usuarios')}
             />
 
             <Card
@@ -97,6 +95,7 @@ const DashboardAdministrador: React.FC = () => {
               icon={<FaBell size={50} />}
               iconPosition="top"
               className="h-30 w-[200px] rounded-2xl"
+              onClick={() => navigate('/notificaciones')}
             />
           </div>
         </div>
