@@ -19,6 +19,7 @@ interface filas {
   codigo: number;
   unidades: number;
   fechaNove: string;
+  diasATomar: number;
   fechInicioDisfrute: string;
   fechaFinDisfrute: string;
   ResponsableValidacion: string;
@@ -51,6 +52,7 @@ const TablaConsNomina = ({ datos }: { datos: filas[] }) => {
     'CON_CODIGO',
     'UNIDADES',
     'FECHA NOVEDAD',
+    'DIAS A TOMAR',
     'FECHA INICIO DISFRUTE',
     'FECHA FIN DISFRUTE',
     'RESPONSABLE VALIDACIÓN',
@@ -117,6 +119,7 @@ const TablaConsNomina = ({ datos }: { datos: filas[] }) => {
                 isNaN(fila.codigo) ? '' : fila.codigo,
                 isNaN(fila.unidades) ? '' : fila.unidades,
                 fila.fechaNove,
+                fila.diasATomar,
                 fila.fechInicioDisfrute,
                 fila.fechaFinDisfrute,
                 fila.ResponsableValidacion,

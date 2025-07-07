@@ -34,6 +34,7 @@ interface SolicitudConIdDetalle extends Solicitud {
   codigo_concepto: string;
   unidades: number;
   fecha_novedad: string;
+  dias_a_tomar: number;
   fecha_inicio_disfrute: string;
   fecha_fin_disfrute: string;
   responsable_validacion: string;
@@ -63,6 +64,7 @@ interface filas {
   codigo: number;
   unidades: number;
   fechaNove: string;
+  diasATomar: number;
   fechInicioDisfrute: string;
   fechaFinDisfrute: string;
   ResponsableValidacion: string;
@@ -140,6 +142,7 @@ const VistaArchConsTienda: React.FC<PropsVistaArchConsTienda> = ({
           codigo: Number(s.codigo_concepto),
           unidades: s.unidades,
           fechaNove: formatearFecha(s.fecha_novedad),
+          diasATomar: Number(s.dias_a_tomar),
           fechInicioDisfrute: formatearFecha(s.fecha_inicio_disfrute),
           fechaFinDisfrute: formatearFecha(s.fecha_fin_disfrute),
           ResponsableValidacion: s.responsable_validacion,

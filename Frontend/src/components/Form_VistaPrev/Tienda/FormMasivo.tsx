@@ -50,6 +50,7 @@ interface filas {
   codigo: number;
   unidades: number;
   fechaNove: string;
+  diasATomar: number;
   fechInicioDisfrute: string;
   fechaFinDisfrute: string;
   ResponsableValidacion: string;
@@ -72,6 +73,7 @@ interface SolicitudConIdDetalle extends Solicitud {
   codigo_concepto: string;
   unidades: number;
   fecha_novedad: string;
+  dias_a_tomar: number;
   fecha_inicio_disfrute: string;
   fecha_fin_disfrute: string;
   responsable_validacion: string;
@@ -117,6 +119,7 @@ const mapSolicitudesToFilas = (solicitudes: SolicitudConIdDetalle[]): filas[] =>
     codigo: Number(s.codigo_concepto) || 0,
     unidades: s.unidades ?? 0,
     fechaNove: formatearFecha(s.fecha_novedad),
+    diasATomar: s.dias_a_tomar ?? 0,
     fechInicioDisfrute: formatearFecha(s.fecha_inicio_disfrute),
     fechaFinDisfrute: formatearFecha(s.fecha_fin_disfrute),
     ResponsableValidacion: s.responsable_validacion ?? '',
@@ -163,6 +166,7 @@ const FormVistaPrevMasiva = () => {
           { withCredentials: true },
         );
         setSolicitudes(response.data);
+        console.log('🧾 Respuesta del backend:', response.data);
       } catch (error) {
         console.error('❌ Error al cargar datos de novedad masiva:', error);
       }
