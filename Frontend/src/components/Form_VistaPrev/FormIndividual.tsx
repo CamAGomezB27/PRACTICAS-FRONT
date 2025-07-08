@@ -10,15 +10,15 @@ import {
   FaUmbrellaBeach,
 } from 'react-icons/fa';
 import { useLocation, useParams } from 'react-router-dom';
-import { useAuth } from '../../../context/useAuth';
+import { useAuth } from '../../context/useAuth';
 import {
   Estado,
   getColorPorEstado,
   getIconoPorEstado,
-} from '../../../utils/iconosPorEstado';
-import { getMensajePorEstado } from '../../../utils/mensajesPorEstado';
-import CamposRespuestaNomina from '../CamposRespVistaPre';
-import CamposVistaPrevia from '../CamposVistaPrevia';
+} from '../../utils/iconosPorEstado';
+import { getMensajePorEstado } from '../../utils/mensajesPorEstado';
+import CamposRespuestaNomina from './CamposRespVistaPre';
+import CamposVistaPrevia from './CamposVistaPrevia';
 
 interface DetalleNovedad {
   id_novedad: number;
@@ -66,6 +66,20 @@ const FormVistaPrevIndiv = () => {
 
   const [novedad, setNovedad] = useState<DetalleNovedad | null>(null);
 
+  const [estadoNovedad, setEstadoNovedad] = useState<Estado>('CREADA');
+
+  const [modoEdicion, setModoEdicion] = useState(false);
+
+  const [respuestaNomina, setRespuestaNomina] = useState({
+    respuesta: '',
+    validacion: '',
+    ajuste: false,
+    fecha_ajuste: '',
+    area_responsable: '',
+    inconsistencia: '',
+    fecha_pago: '',
+  });
+
   useEffect(() => {
     if (id) {
       axios
@@ -88,6 +102,16 @@ const FormVistaPrevIndiv = () => {
           }
 
           setNovedad(data as DetalleNovedad);
+          setEstadoNovedad(data.estado);
+          setRespuestaNomina({
+            respuesta: data.respuesta,
+            validacion: data.validacion,
+            ajuste: data.ajuste,
+            fecha_ajuste: data.fecha_ajuste,
+            area_responsable: data.area_responsable,
+            inconsistencia: data.inconsistencia,
+            fecha_pago: data.fecha_pago,
+          });
         })
         .catch((err) => console.error('❌ Error al cargar novedad:', err));
     }
@@ -97,12 +121,13 @@ const FormVistaPrevIndiv = () => {
     return <p className="text-center">Cargando novedad...</p>;
   }
 
+  getMensajePorEstado(estadoNovedad, user?.esNomina ?? false, true);
+  const iconoEstado = getIconoPorEstado(estadoNovedad, user?.esNomina);
   const mensajeTexto = getMensajePorEstado(
-    novedad.estado,
+    estadoNovedad,
     user?.esNomina ?? false,
     true,
   );
-  const iconoEstado = getIconoPorEstado(novedad.estado, user?.esNomina);
 
   const formatearFecha = (fecha: string | Date | null | undefined): string => {
     if (!fecha) return '';
@@ -116,6 +141,22 @@ const FormVistaPrevIndiv = () => {
     });
   };
 
+  const gestionarNovedad = async () => {
+    try {
+      await axios.put(
+        `http://localhost:3000/novedad/${novedad?.id_novedad}/cambiar-estado`,
+        { nuevoEstadoId: 2 }, // ID 2 = EN GESTIÓN
+        { withCredentials: true },
+      );
+      setEstadoNovedad('EN GESTIÓN');
+      setNovedad((prev) => (prev ? { ...prev, estado: 'EN GESTIÓN' } : prev));
+      setModoEdicion(true); // 🔓 Activa edición
+    } catch (error) {
+      console.error('❌ Error al gestionar la novedad:', error);
+      alert('No se pudo actualizar el estado de la novedad.');
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto pt-0 px-4 pb-4 bg-white">
       <div className="bg-white p-2 rounded-lg border border-gray-300 shadow-[2px_8px_12px_rgba(0,0,0,0.8)] hover:shadow-[4px_10px_14px_rgba(0,0,0,1)] hover:scale-105 transition-all duration-300">
@@ -123,9 +164,7 @@ const FormVistaPrevIndiv = () => {
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center space-x-3">
             <div
-              className={`w-12 h-12 rounded-full flex items-center justify-center ${getColorPorEstado(
-                novedad.estado,
-              )}`}
+              className={`w-12 h-12 rounded-full flex items-center justify-center ${getColorPorEstado(estadoNovedad)}`}
             >
               {iconMap[iconName] ?? <FaList className="text-white text-2xl" />}
             </div>
@@ -182,13 +221,15 @@ const FormVistaPrevIndiv = () => {
                 <div className="w-full flex flex-col gap-2 text-xs">
                   {/* 🔁 Campos dinámicos por tipo de novedad */}
                   <CamposRespuestaNomina
-                    respuesta={novedad.respuesta}
-                    validacion={novedad.validacion}
-                    ajuste={novedad.ajuste}
-                    fecha_ajuste={formatearFecha(novedad.fecha_ajuste)}
-                    area_responsable={novedad.area_responsable}
-                    inconsistencia={novedad.inconsistencia}
-                    fecha_pago={formatearFecha(novedad.fecha_pago)}
+                    respuesta={respuestaNomina.respuesta}
+                    validacion={respuestaNomina.validacion}
+                    ajuste={respuestaNomina.ajuste}
+                    fecha_ajuste={respuestaNomina.fecha_ajuste}
+                    area_responsable={respuestaNomina.area_responsable}
+                    inconsistencia={respuestaNomina.inconsistencia}
+                    fecha_pago={respuestaNomina.fecha_pago}
+                    editable={modoEdicion}
+                    setRespuestaNomina={setRespuestaNomina}
                   />
                 </div>
               </div>
@@ -196,16 +237,23 @@ const FormVistaPrevIndiv = () => {
           )}
         </div>
         {/* Botón visible solo para Nómina */}
-        {user?.esNomina && (
+        {user?.esNomina && novedad.estado !== 'GESTIONADA' && (
           <div className="flex justify-end mt-2 px-4">
-            <button
-              className="bg-[#4669AF] hover:bg-[#375298] text-white font-semibold py-2 px-5 rounded-lg shadow transition duration-200"
-              onClick={() => {
-                console.log('🛠️ Click en Gestionar');
-              }}
-            >
-              Gestionar
-            </button>
+            {modoEdicion ? (
+              <button
+                className="bg-[#4669AF] hover:bg-[#375298] text-white font-semibold py-2 px-5 rounded-lg shadow transition duration-200"
+                // onClick={enviarRespuestaNomina}
+              >
+                Enviar respuesta
+              </button>
+            ) : (
+              <button
+                className="bg-[#4669AF] hover:bg-[#375298] text-white font-semibold py-2 px-5 rounded-lg shadow transition duration-200"
+                onClick={gestionarNovedad}
+              >
+                Gestionar
+              </button>
+            )}
           </div>
         )}
       </div>

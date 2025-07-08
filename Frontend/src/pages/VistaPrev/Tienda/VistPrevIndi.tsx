@@ -1,6 +1,6 @@
 import React from 'react';
 import Footer from '../../../components/Footer/Footer';
-import FormVistaPrevIndiv from '../../../components/Form_VistaPrev/Tienda/FormIndividual';
+import FormVistaPrevIndiv from '../../../components/Form_VistaPrev/FormIndividual';
 import Navbar from '../../../components/Navbar/Navbar';
 
 const VistPrevTInd: React.FC = () => {

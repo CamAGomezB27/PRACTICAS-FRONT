@@ -18,7 +18,7 @@ export function getMensajePorEstado(
         case 'PENDIENTE':
           return 'Formulario recibido. Debes revisar y validar esta solicitud.';
         case 'EN GESTIÓN':
-          return 'Estás gestionando esta novedad individual.';
+          return 'Está novedad individual se esta gestionando.';
         case 'GESTIONADA':
           return 'Formulario gestionado exitosamente.';
         case 'RECHAZADA':

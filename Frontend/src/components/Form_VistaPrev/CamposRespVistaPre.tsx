@@ -12,6 +12,18 @@ interface Props {
   area_responsable: string;
   inconsistencia: string;
   fecha_pago: string;
+  editable?: boolean;
+  setRespuestaNomina?: React.Dispatch<
+    React.SetStateAction<{
+      respuesta: string;
+      validacion: string;
+      ajuste: boolean;
+      fecha_ajuste: string;
+      area_responsable: string;
+      inconsistencia: string;
+      fecha_pago: string;
+    }>
+  >;
 }
 
 const CamposRespuestaNomina: React.FC<Props> = ({
@@ -22,6 +34,8 @@ const CamposRespuestaNomina: React.FC<Props> = ({
   area_responsable,
   inconsistencia,
   fecha_pago,
+  editable = false,
+  setRespuestaNomina,
 }) => {
   return (
     <div className="grid grid-cols-6 gap-2">
@@ -30,7 +44,13 @@ const CamposRespuestaNomina: React.FC<Props> = ({
         <label className={labelStyle}>Respuesta*</label>
         <input
           value={respuesta}
-          disabled
+          disabled={!editable}
+          onChange={(e) =>
+            setRespuestaNomina?.((prev) => ({
+              ...prev,
+              respuesta: e.target.value,
+            }))
+          }
           className={inputStyle}
           title="respuesta"
         />
@@ -41,7 +61,13 @@ const CamposRespuestaNomina: React.FC<Props> = ({
         <label className={labelStyle}>Resultado de Validación*</label>
         <input
           value={validacion}
-          disabled
+          disabled={!editable}
+          onChange={(e) =>
+            setRespuestaNomina?.((prev) => ({
+              ...prev,
+              validacion: e.target.value,
+            }))
+          }
           className={inputStyle}
           title="resultado"
         />
@@ -52,15 +78,25 @@ const CamposRespuestaNomina: React.FC<Props> = ({
         <label className={labelStyle}>Ajuste*</label>
         <div className="flex items-center gap-4 h-[30px] pl-1">
           <label className="flex items-center gap-1 text-xs text-gray-700">
-            <div
-              className={`w-4 h-4 rounded-full border border-gray-400 ${ajuste ? 'bg-gray-600' : 'bg-white'}`}
-            ></div>
+            <input
+              type="radio"
+              disabled={!editable}
+              checked={ajuste}
+              onChange={() =>
+                setRespuestaNomina?.((prev) => ({ ...prev, ajuste: true }))
+              }
+            />
             Sí
           </label>
           <label className="flex items-center gap-1 text-xs text-gray-700">
-            <div
-              className={`w-4 h-4 rounded-full border border-gray-400 ${!ajuste ? 'bg-gray-600' : 'bg-white'}`}
-            ></div>
+            <input
+              type="radio"
+              disabled={!editable}
+              checked={!ajuste}
+              onChange={() =>
+                setRespuestaNomina?.((prev) => ({ ...prev, ajuste: false }))
+              }
+            />
             No
           </label>
         </div>
@@ -71,7 +107,13 @@ const CamposRespuestaNomina: React.FC<Props> = ({
         <label className={labelStyle}>Fecha de Ajuste/Pago *</label>
         <input
           value={fecha_ajuste}
-          disabled
+          disabled={!editable}
+          onChange={(e) =>
+            setRespuestaNomina?.((prev) => ({
+              ...prev,
+              fecha_ajuste: e.target.value,
+            }))
+          }
           className={inputStyle}
           title="fecha_ajuste"
         />
@@ -82,7 +124,13 @@ const CamposRespuestaNomina: React.FC<Props> = ({
         <label className={labelStyle}>Área Responsable *</label>
         <input
           value={area_responsable}
-          disabled
+          disabled={!editable}
+          onChange={(e) =>
+            setRespuestaNomina?.((prev) => ({
+              ...prev,
+              area_responsable: e.target.value,
+            }))
+          }
           className={inputStyle}
           title="area_responsable"
         />
@@ -93,18 +141,30 @@ const CamposRespuestaNomina: React.FC<Props> = ({
         <label className={labelStyle}>Inconsistencia / Aclaración</label>
         <input
           value={inconsistencia}
-          disabled
+          disabled={!editable}
+          onChange={(e) =>
+            setRespuestaNomina?.((prev) => ({
+              ...prev,
+              inconsistencia: e.target.value,
+            }))
+          }
           className={inputStyle}
           title="inconsistencia"
         />
       </div>
 
-      {/* Fecha de Ajuste/Pago (segunda vez) */}
+      {/* Fecha de Pago */}
       <div className="col-span-3">
         <label className={labelStyle}>Fecha de Ajuste/Pago *</label>
         <input
           value={fecha_pago}
-          disabled
+          disabled={!editable}
+          onChange={(e) =>
+            setRespuestaNomina?.((prev) => ({
+              ...prev,
+              fecha_pago: e.target.value,
+            }))
+          }
           className={inputStyle}
           title="fecha_pago"
         />
