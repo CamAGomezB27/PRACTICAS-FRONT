@@ -1,4 +1,7 @@
+import { es } from 'date-fns/locale';
 import React from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const inputStyle =
   'w-full bg-gray-100 border border-gray-300 rounded px-[6px] py-[2px] h-[26px] text-[10px] text-black leading-tight truncate';
@@ -11,7 +14,7 @@ interface Props {
   ajuste: boolean;
   area_responsable: string;
   inconsistencia: string;
-  fecha_pago: string;
+  fecha_pago: Date | null;
   responsable_validacion: string;
   editable?: boolean;
   setRespuestaNomina?: React.Dispatch<
@@ -21,7 +24,7 @@ interface Props {
       ajuste: boolean;
       area_responsable: string;
       inconsistencia: string;
-      fecha_pago: string;
+      fecha_pago: Date | null;
       responsable_validacion: string;
     }>
   >;
@@ -123,17 +126,21 @@ const CamposRespuestaNomina: React.FC<Props> = ({
       {/* Fecha de Ajuste */}
       <div className="col-span-2">
         <label className={labelStyle}>Fecha de Ajuste/Pago *</label>
-        <input
-          value={fecha_pago}
-          disabled={!editable}
-          onChange={(e) =>
+        <DatePicker
+          selected={fecha_pago}
+          onChange={(date) =>
             setRespuestaNomina?.((prev) => ({
               ...prev,
-              fecha_ajuste: e.target.value,
+              fecha_pago: date,
             }))
           }
+          locale={es}
+          dateFormat="dd/MM/yyyy"
+          placeholderText="Selecciona una fecha"
+          disabled={!editable}
           className={inputStyle}
-          title="fecha_ajuste"
+          popperClassName="text-sm scale-90"
+          popperPlacement="right-start"
         />
       </div>
 

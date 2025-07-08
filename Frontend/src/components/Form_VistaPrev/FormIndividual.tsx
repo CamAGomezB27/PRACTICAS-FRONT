@@ -76,7 +76,7 @@ const FormVistaPrevIndiv = () => {
     ajuste: false,
     area_responsable: '',
     inconsistencia: '',
-    fecha_pago: '',
+    fecha_pago: null as Date | null,
     responsable_validacion: '', // ← nuevo
   });
 
@@ -89,7 +89,6 @@ const FormVistaPrevIndiv = () => {
         .then((res) => {
           const data = res.data;
 
-          // Validar que el estado es uno permitido
           const estadosValidos: Estado[] = [
             'CREADA',
             'EN GESTIÓN',
@@ -109,13 +108,22 @@ const FormVistaPrevIndiv = () => {
             validacion: data.validacion,
             ajuste: data.ajuste,
             area_responsable: data.area_responsable,
-            inconsistencia: data.inconsistencia,
-            fecha_pago: data.fecha_pago,
+            inconsistencia: data.categoria_inconsistencia,
+            fecha_pago: data.fecha_pago ? new Date(data.fecha_pago) : null,
           });
+
+          // Activar o desactivar modo edición según estado
+          if (data.estado === 'GESTIONADA') {
+            setModoEdicion(false);
+          } else if (data.estado === 'EN GESTIÓN') {
+            setModoEdicion(true);
+          } else if (data.estado === 'CREADA' && user?.esNomina) {
+            setModoEdicion(false); // editable solo al dar click en Gestionar
+          }
         })
         .catch((err) => console.error('❌ Error al cargar novedad:', err));
     }
-  }, [id]);
+  }, [id, user?.esNomina]);
 
   if (!novedad) {
     return <p className="text-center">Cargando novedad...</p>;
@@ -165,18 +173,38 @@ const FormVistaPrevIndiv = () => {
         `http://localhost:3000/novedad/guardar-respuesta-individual/${novedad.id_novedad}`,
         {
           respuesta_validacion: respuestaNomina.respuesta,
-          responsable_validacion: user?.nombre ?? 'Sin nombre',
+          responsable_validacion: respuestaNomina.responsable_validacion,
           ajuste: respuestaNomina.ajuste ? 'Sí' : 'No',
-          fecha_pago: respuestaNomina.fecha_pago,
+          fecha_pago: respuestaNomina.fecha_pago
+            ? respuestaNomina.fecha_pago.toISOString()
+            : null,
           area_responsable: respuestaNomina.area_responsable,
           categoria_inconsistencia: respuestaNomina.inconsistencia,
         },
         { withCredentials: true },
       );
 
-      alert('✅ Respuesta enviada con éxito');
+      // Volvemos a consultar la novedad para obtener su nuevo estado
+      const { data } = await axios.get(
+        `http://localhost:3000/novedad/${novedad.id_novedad}/individual`,
+        { withCredentials: true },
+      );
+
+      setNovedad(data);
+      setEstadoNovedad(data.estado);
       setModoEdicion(false);
-      setEstadoNovedad('GESTIONADA');
+
+      setRespuestaNomina({
+        responsable_validacion: data.responsable_validacion,
+        respuesta: data.respuesta,
+        validacion: data.validacion,
+        ajuste: data.ajuste === 'Sí',
+        area_responsable: data.area_responsable,
+        inconsistencia: data.categoria_inconsistencia,
+        fecha_pago: data.fecha_pago ? new Date(data.fecha_pago) : null,
+      });
+
+      alert('✅ Respuesta enviada con éxito');
     } catch (err) {
       console.error('❌ Error al enviar respuesta:', err);
       alert(
