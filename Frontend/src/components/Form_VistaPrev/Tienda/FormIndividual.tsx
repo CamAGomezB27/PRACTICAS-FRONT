@@ -17,6 +17,7 @@ import {
   getIconoPorEstado,
 } from '../../../utils/iconosPorEstado';
 import { getMensajePorEstado } from '../../../utils/mensajesPorEstado';
+import CamposRespuestaNomina from '../CamposRespVistaPre';
 import CamposVistaPrevia from '../CamposVistaPrevia';
 
 interface DetalleNovedad {
@@ -36,6 +37,15 @@ interface DetalleNovedad {
   fecha_inicio?: string;
   fecha_fin?: string;
   consecutivo?: string;
+
+  //ESPACIOS NOMINA
+  respuesta: string;
+  validacion: string;
+  ajuste: boolean;
+  fecha_ajuste: string;
+  area_responsable: string;
+  inconsistencia: string;
+  fecha_pago: string;
 }
 
 const iconMap: Record<string, ReactElement> = {
@@ -159,20 +169,30 @@ const FormVistaPrevIndiv = () => {
             />
           </div>
 
-          {/* 🧾 Línea separadora de "Respuesta de Nómina" bien centrada */}
-          <div className="relative my-8 flex items-center justify-center">
-            <div
-              className="absolute inset-0 flex items-center"
-              aria-hidden="true"
-            >
-              <div className="w-full border-t border-gray-300"></div>
-            </div>
-            <div className="relative bg-white px-4">
-              <span className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+          {['EN GESTIÓN', 'GESTIONADA'].includes(novedad.estado) && (
+            <>
+              {/* 🧾 Línea separadora de "Respuesta de Nómina" bien centrada */}
+              <div className="bg-[#4669AF] text-white text-center py-2 font-medium text-sm rounded-t-md">
                 Respuesta de Nómina
-              </span>
-            </div>
-          </div>
+              </div>
+
+              {/* Campos NOMINA */}
+              <div>
+                <div className="w-full flex flex-col gap-2 text-xs">
+                  {/* 🔁 Campos dinámicos por tipo de novedad */}
+                  <CamposRespuestaNomina
+                    respuesta={novedad.respuesta}
+                    validacion={novedad.validacion}
+                    ajuste={novedad.ajuste}
+                    fecha_ajuste={formatearFecha(novedad.fecha_ajuste)}
+                    area_responsable={novedad.area_responsable}
+                    inconsistencia={novedad.inconsistencia}
+                    fecha_pago={formatearFecha(novedad.fecha_pago)}
+                  />
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
