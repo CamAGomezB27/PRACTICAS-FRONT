@@ -26,6 +26,11 @@ type DetalleNovedad = {
   codigo_concepto?: number;
   unidades?: number;
   fecha_novedad?: string;
+
+  //VACAIONES
+  dias?: number;
+  fecha_inicio_disfrute?: string;
+  fecha_fin_disfrute?: string;
 };
 
 interface Props {
@@ -224,6 +229,107 @@ const CamposVistaPrevia: React.FC<Props> = ({
               disabled
               className="w-full bg-gray-100 border border-gray-300 rounded px-2 py-1 text-xs text-black leading-tight"
               rows={2}
+            />
+          </div>
+        </div>
+      );
+    case 'VACACIONES':
+      return (
+        <div className="grid grid-cols-6 gap-2">
+          {/* Cédula */}
+          <div className="col-span-3">
+            <label className={labelStyle}>Cédula del Empleado</label>
+            <input
+              title="cedula"
+              value={novedad.cedula}
+              disabled
+              className={inputStyle}
+            />
+          </div>
+
+          {/* Nombre */}
+          <div className="col-span-3">
+            <label className={labelStyle}>Nombres Completos</label>
+            <input
+              title="nombre"
+              value={novedad.nombre}
+              disabled
+              className={inputStyle}
+            />
+          </div>
+
+          {/* Rango de Fechas */}
+          <div className="col-span-3">
+            <label className={labelStyle}>Rango de Fechas Disfrute</label>
+            <input
+              title="fechas"
+              value={`${formatearFecha(novedad.fecha_inicio_disfrute)} a ${formatearFecha(novedad.fecha_fin_disfrute)}`}
+              disabled
+              className={inputStyle}
+            />
+          </div>
+
+          {/* Días a tomar */}
+          <div className="col-span-3">
+            <label className={labelStyle}>Número de días a tomar</label>
+            <input
+              title="dias"
+              value={novedad.dias?.toString() || ''}
+              disabled
+              className={inputStyle}
+            />
+          </div>
+
+          {/* Detalle */}
+          <div className="col-span-6">
+            <label className={labelStyle}>Detalle de la Novedad</label>
+            <textarea
+              title="detalle"
+              value={novedad.detalle}
+              disabled
+              className="w-full bg-gray-100 border border-gray-300 rounded px-2 py-1 text-xs text-black leading-tight"
+              rows={2}
+            />
+          </div>
+        </div>
+      );
+    case 'AUXILIO DE TRANSPORTE':
+    case 'DESCUENTO':
+    case 'OTRO SI DEFINITIVO':
+    case 'OTROS':
+      return (
+        <div className="grid grid-cols-6 gap-2">
+          {/* Cédula */}
+          <div className="col-span-3">
+            <label className={labelStyle}>Cédula del Empleado</label>
+            <input
+              title="cedula"
+              value={novedad.cedula}
+              disabled
+              className={inputStyle}
+            />
+          </div>
+
+          {/* Nombre */}
+          <div className="col-span-3">
+            <label className={labelStyle}>Nombres Completos</label>
+            <input
+              title="nombre"
+              value={novedad.nombre}
+              disabled
+              className={inputStyle}
+            />
+          </div>
+
+          {/* Detalle */}
+          <div className="col-span-6">
+            <label className={labelStyle}>Detalle de la Novedad</label>
+            <textarea
+              title="detalle"
+              value={novedad.detalle}
+              disabled
+              className="w-full bg-gray-100 border border-gray-300 rounded px-2 py-1 text-xs text-black leading-tight"
+              rows={3}
             />
           </div>
         </div>
