@@ -59,10 +59,26 @@ const FormVistaPrevIndiv = () => {
   useEffect(() => {
     if (id) {
       axios
-        .get<DetalleNovedad>(`http://localhost:3000/novedad/${id}/individual`, {
+        .get(`http://localhost:3000/novedad/${id}/individual`, {
           withCredentials: true,
         })
-        .then((res) => setNovedad(res.data))
+        .then((res) => {
+          const data = res.data;
+
+          // Validar que el estado es uno permitido
+          const estadosValidos: Estado[] = [
+            'CREADA',
+            'EN GESTIÓN',
+            'GESTIONADA',
+          ];
+
+          if (!estadosValidos.includes(data.estado)) {
+            console.warn('Estado no válido:', data.estado);
+            return;
+          }
+
+          setNovedad(data as DetalleNovedad);
+        })
         .catch((err) => console.error('❌ Error al cargar novedad:', err));
     }
   }, [id]);
@@ -91,7 +107,7 @@ const FormVistaPrevIndiv = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-4 bg-white">
+    <div className="max-w-7xl mx-auto pt-0 px-4 pb-4 bg-white">
       <div className="bg-white p-2 rounded-lg border border-gray-300 shadow-[2px_8px_12px_rgba(0,0,0,0.8)] hover:shadow-[4px_10px_14px_rgba(0,0,0,1)] hover:scale-105 transition-all duration-300">
         {/* Cabecera */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
