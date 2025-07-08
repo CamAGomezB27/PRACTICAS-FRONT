@@ -17,6 +17,7 @@ import {
   getIconoPorEstado,
 } from '../../../utils/iconosPorEstado';
 import { getMensajePorEstado } from '../../../utils/mensajesPorEstado';
+import CamposVistaPrevia from '../CamposVistaPrevia';
 
 interface DetalleNovedad {
   id_novedad: number;
@@ -27,9 +28,16 @@ interface DetalleNovedad {
   cedula: string;
   nombre: string;
   detalle: string;
+
+  jornada_actual?: string;
+  nueva_jornada?: string;
+  salario_actual?: number;
+  nuevo_salario?: number;
+  fecha_inicio?: string;
+  fecha_fin?: string;
+  consecutivo?: string;
 }
 
-// Íconos por tipo de novedad
 const iconMap: Record<string, ReactElement> = {
   FaBus: <FaBus className="text-white text-2xl" />,
   FaMoneyBillAlt: <FaMoneyBillAlt className="text-white text-2xl" />,
@@ -50,21 +58,16 @@ const FormVistaPrevIndiv = () => {
 
   useEffect(() => {
     if (id) {
-      console.log('🌐 Haciendo petición GET al backend con id:', id);
       axios
         .get<DetalleNovedad>(`http://localhost:3000/novedad/${id}/individual`, {
           withCredentials: true,
         })
-        .then((res) => {
-          console.log('✅ Respuesta del backend:', res.data);
-          setNovedad(res.data);
-        })
+        .then((res) => setNovedad(res.data))
         .catch((err) => console.error('❌ Error al cargar novedad:', err));
     }
   }, [id]);
 
   if (!novedad) {
-    console.log('⏳ Cargando novedad...');
     return <p className="text-center">Cargando novedad...</p>;
   }
 
@@ -115,8 +118,8 @@ const FormVistaPrevIndiv = () => {
           <div className="flex items-center space-x-4">
             <div className="text-right">
               <p className="text-sm font-medium text-gray-900">
-                Solicitud #{novedad.id_novedad} • {novedad.tienda}{' '}
-                {novedad.fecha && `/ ${formatearFecha(novedad.fecha)}`}
+                Solicitud #{novedad.id_novedad} • {novedad.tienda}
+                {novedad.fecha && ` / ${formatearFecha(novedad.fecha)}`}
               </p>
             </div>
             <span
@@ -129,42 +132,29 @@ const FormVistaPrevIndiv = () => {
           </div>
         </div>
 
-        {/* Campos del formulario */}
+        {/* Campos Específicos */}
         <div className="p-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Cédula del Empleado
-              </label>
-              <input
-                title="cedula"
-                value={novedad.cedula}
-                disabled
-                className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2 text-black"
-              />
+          <div className="w-full flex flex-col gap-2 text-xs">
+            {/* 🔁 Campos dinámicos por tipo de novedad */}
+            <CamposVistaPrevia
+              tipo={novedad.tipo}
+              novedad={novedad}
+              formatearFecha={formatearFecha}
+            />
+          </div>
+
+          {/* 🧾 Línea separadora de "Respuesta de Nómina" bien centrada */}
+          <div className="relative my-8 flex items-center justify-center">
+            <div
+              className="absolute inset-0 flex items-center"
+              aria-hidden="true"
+            >
+              <div className="w-full border-t border-gray-300"></div>
             </div>
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Nombres Completos
-              </label>
-              <input
-                title="nombre"
-                value={novedad.nombre}
-                disabled
-                className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2 text-black"
-              />
-            </div>
-            <div className="md:col-span-2">
-              <label className="block text-gray-700 font-medium mb-1">
-                Detalle de la Novedad
-              </label>
-              <textarea
-                title="detalle"
-                value={novedad.detalle}
-                disabled
-                rows={4}
-                className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2 text-black"
-              />
+            <div className="relative bg-white px-4">
+              <span className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+                Respuesta de Nómina
+              </span>
             </div>
           </div>
         </div>

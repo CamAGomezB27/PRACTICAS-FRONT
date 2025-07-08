@@ -1,5 +1,4 @@
 // src/utils/iconosPorEstado.tsx
-
 import { ReactNode } from 'react';
 import {
   FiCheckCircle,
