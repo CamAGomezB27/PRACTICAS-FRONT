@@ -2,6 +2,7 @@ import React from 'react';
 import { Estado } from '../../utils/iconosPorEstado';
 
 type DetalleNovedad = {
+  //sE REPITEN
   id_novedad: number;
   tipo: string;
   estado: Estado;
@@ -10,6 +11,8 @@ type DetalleNovedad = {
   cedula: string;
   nombre: string;
   detalle: string;
+
+  //OTRO SI TEMPORAL
   jornada_actual?: string;
   nueva_jornada?: string;
   salario_actual?: number;
@@ -17,6 +20,12 @@ type DetalleNovedad = {
   fecha_inicio?: string;
   fecha_fin?: string;
   consecutivo?: string;
+
+  //HORAS EXTRA
+  concepto?: string;
+  codigo_concepto?: number;
+  unidades?: number;
+  fecha_novedad?: string;
 };
 
 interface Props {
@@ -126,6 +135,87 @@ const CamposVistaPrevia: React.FC<Props> = ({
           </div>
 
           {/* Detalle de la novedad */}
+          <div className="col-span-6">
+            <label className={labelStyle}>Detalle de la Novedad</label>
+            <textarea
+              title="detalle"
+              value={novedad.detalle}
+              disabled
+              className="w-full bg-gray-100 border border-gray-300 rounded px-2 py-1 text-xs text-black leading-tight"
+              rows={2}
+            />
+          </div>
+        </div>
+      );
+    case 'HORAS EXTRA':
+      return (
+        <div className="grid grid-cols-6 gap-2">
+          {/* Cédula */}
+          <div className="col-span-3">
+            <label className={labelStyle}>Cédula del Empleado</label>
+            <input
+              title="cedula"
+              value={novedad.cedula}
+              disabled
+              className={inputStyle}
+            />
+          </div>
+
+          {/* Nombre */}
+          <div className="col-span-3">
+            <label className={labelStyle}>Nombres Completos</label>
+            <input
+              title="nombre"
+              value={novedad.nombre}
+              disabled
+              className={inputStyle}
+            />
+          </div>
+
+          {/* Concepto */}
+          <div className="col-span-2">
+            <label className={labelStyle}>Concepto</label>
+            <input
+              title="Concepto"
+              value={novedad.concepto || ''}
+              disabled
+              className={inputStyle}
+            />
+          </div>
+
+          {/* Código Concepto */}
+          <div className="col-span-1">
+            <label className={labelStyle}>Código Concepto</label>
+            <input
+              title="Cod"
+              value={novedad.codigo_concepto?.toString() || ''}
+              disabled
+              className={inputStyle}
+            />
+          </div>
+
+          {/* Unidades */}
+          <div className="col-span-1">
+            <label className={labelStyle}>Unidades</label>
+            <input
+              title="Unid"
+              value={novedad.unidades?.toString() || ''}
+              disabled
+              className={inputStyle}
+            />
+          </div>
+
+          {/* Fecha de la Novedad */}
+          <div className="col-span-2">
+            <label className={labelStyle}>Fecha de la Novedad</label>
+            <input
+              title="FechaNov"
+              value={formatearFecha(novedad.fecha_novedad)}
+              disabled
+              className={inputStyle}
+            />
+          </div>
+          {/* Detalle */}
           <div className="col-span-6">
             <label className={labelStyle}>Detalle de la Novedad</label>
             <textarea
