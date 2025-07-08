@@ -169,7 +169,8 @@ const FormVistaPrevIndiv = () => {
             />
           </div>
 
-          {['EN GESTIÓN', 'GESTIONADA'].includes(novedad.estado) && (
+          {(['EN GESTIÓN', 'GESTIONADA'].includes(novedad.estado) ||
+            (novedad.estado === 'CREADA' && user?.esNomina)) && (
             <>
               {/* 🧾 Línea separadora de "Respuesta de Nómina" bien centrada */}
               <div className="bg-[#4669AF] text-white text-center py-2 font-medium text-sm rounded-t-md">
@@ -194,6 +195,19 @@ const FormVistaPrevIndiv = () => {
             </>
           )}
         </div>
+        {/* Botón visible solo para Nómina */}
+        {user?.esNomina && (
+          <div className="flex justify-end mt-2 px-4">
+            <button
+              className="bg-[#4669AF] hover:bg-[#375298] text-white font-semibold py-2 px-5 rounded-lg shadow transition duration-200"
+              onClick={() => {
+                console.log('🛠️ Click en Gestionar');
+              }}
+            >
+              Gestionar
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

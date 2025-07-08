@@ -113,9 +113,12 @@ const NovedadesRecientes: React.FC = () => {
                   navigate(
                     novedad.es_masiva
                       ? user?.esNomina
-                        ? `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`
-                        : `/vista-previa-masiva-tienda/${novedad.id_novedad}`
-                      : `/vista-previa-individual-tienda/${novedad.id_novedad}`,
+                        ? `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}` // Masiva Nómina
+                        : `/vista-previa-masiva-tienda/${novedad.id_novedad}` //  Masiva Tienda
+                      : user?.esNomina
+                        ? `/vista-previa-individual-nomina/${novedad.id_novedad}` // Individual Nómina
+                        : `/vista-previa-individual-tienda/${novedad.id_novedad}`, // Individual Tienda
+
                     {
                       state: {
                         id_novedad: novedad.id_novedad,

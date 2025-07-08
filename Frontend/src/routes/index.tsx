@@ -20,6 +20,7 @@ import Error403FORBBIDEN from '../pages/Unauthorized/Error403';
 import NotificacionesAdmin from '../pages/Users/Notificaciones';
 import GestionUser from '../pages/Users/UsersGestion';
 import UsuariosRegis from '../pages/Users/UsuserRegis';
+import VistPrevNom from '../pages/VistaPrev/Nomina/VistaPrevIndivNom';
 import VistaPrevisMasivaNom from '../pages/VistaPrev/Nomina/VistaPrevMasiNom';
 import VistPrevTInd from '../pages/VistaPrev/Tienda/VistPrevIndi';
 import VistaPrevisMasivaT from '../pages/VistaPrev/Tienda/VistPrevMas';
@@ -44,6 +45,10 @@ const AppRoutes = () => {
       {/* SOLO GESTORES DE NOMINA */}
       <Route element={<ProtectedRoute allowedRoles={['nomina']} />}>
         <Route path="/dashboard-nomina" element={<DashNomina />} />
+        <Route
+          path="/vista-previa-individual-nomina/:id"
+          element={<VistPrevNom />}
+        />
         <Route
           path="/vista-previa-masiva-novedad-nomina/:id"
           element={<VistaPrevisMasivaNom />}
