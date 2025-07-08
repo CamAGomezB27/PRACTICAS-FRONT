@@ -90,7 +90,7 @@ const DashboardJefe: React.FC = () => {
                 }
               />
               <CardsTitle
-                title="Horas Extra"
+                title="Horas Extra/Recargos"
                 icon={<FaClock size={40} />}
                 headerLabel="SOLICITUD"
                 color="bg-[#2C3333]"
