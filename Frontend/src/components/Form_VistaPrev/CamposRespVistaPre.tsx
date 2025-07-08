@@ -1,36 +1,37 @@
 import React from 'react';
 
 const inputStyle =
-  'w-full bg-gray-100 border border-gray-300 rounded px-2 py-1 h-[30px] text-xs text-black leading-tight truncate';
-const labelStyle = 'block text-gray-600 text-[11px] font-medium mb-0.5';
+  'w-full bg-gray-100 border border-gray-300 rounded px-[6px] py-[2px] h-[26px] text-[10px] text-black leading-tight truncate';
+
+const labelStyle = 'block text-gray-600 text-[10px] font-medium mb-[2px]';
 
 interface Props {
   respuesta: string;
   validacion: string;
   ajuste: boolean;
-  fecha_ajuste: string;
   area_responsable: string;
   inconsistencia: string;
   fecha_pago: string;
+  responsable_validacion: string;
   editable?: boolean;
   setRespuestaNomina?: React.Dispatch<
     React.SetStateAction<{
       respuesta: string;
       validacion: string;
       ajuste: boolean;
-      fecha_ajuste: string;
       area_responsable: string;
       inconsistencia: string;
       fecha_pago: string;
+      responsable_validacion: string;
     }>
   >;
 }
 
 const CamposRespuestaNomina: React.FC<Props> = ({
+  responsable_validacion,
   respuesta,
   validacion,
   ajuste,
-  fecha_ajuste,
   area_responsable,
   inconsistencia,
   fecha_pago,
@@ -39,6 +40,23 @@ const CamposRespuestaNomina: React.FC<Props> = ({
 }) => {
   return (
     <div className="grid grid-cols-6 gap-2">
+      {/* RESPONSABLE VALIDACION */}
+      <div className="col-span-3">
+        <label className={labelStyle}>Responsable de Validación *</label>
+        <input
+          value={responsable_validacion}
+          disabled={!editable}
+          onChange={(e) =>
+            setRespuestaNomina?.((prev) => ({
+              ...prev,
+              responsable_validacion: e.target.value,
+            }))
+          }
+          className={inputStyle}
+          title="responsable_validacion"
+        />
+      </div>
+
       {/* Respuesta */}
       <div className="col-span-3">
         <label className={labelStyle}>Respuesta*</label>
@@ -106,7 +124,7 @@ const CamposRespuestaNomina: React.FC<Props> = ({
       <div className="col-span-2">
         <label className={labelStyle}>Fecha de Ajuste/Pago *</label>
         <input
-          value={fecha_ajuste}
+          value={fecha_pago}
           disabled={!editable}
           onChange={(e) =>
             setRespuestaNomina?.((prev) => ({
@@ -150,23 +168,6 @@ const CamposRespuestaNomina: React.FC<Props> = ({
           }
           className={inputStyle}
           title="inconsistencia"
-        />
-      </div>
-
-      {/* Fecha de Pago */}
-      <div className="col-span-3">
-        <label className={labelStyle}>Fecha de Ajuste/Pago *</label>
-        <input
-          value={fecha_pago}
-          disabled={!editable}
-          onChange={(e) =>
-            setRespuestaNomina?.((prev) => ({
-              ...prev,
-              fecha_pago: e.target.value,
-            }))
-          }
-          className={inputStyle}
-          title="fecha_pago"
         />
       </div>
     </div>

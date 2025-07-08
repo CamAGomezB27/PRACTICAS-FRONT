@@ -74,10 +74,10 @@ const FormVistaPrevIndiv = () => {
     respuesta: '',
     validacion: '',
     ajuste: false,
-    fecha_ajuste: '',
     area_responsable: '',
     inconsistencia: '',
     fecha_pago: '',
+    responsable_validacion: '', // ← nuevo
   });
 
   useEffect(() => {
@@ -104,10 +104,10 @@ const FormVistaPrevIndiv = () => {
           setNovedad(data as DetalleNovedad);
           setEstadoNovedad(data.estado);
           setRespuestaNomina({
+            responsable_validacion: data.responsable_validacion,
             respuesta: data.respuesta,
             validacion: data.validacion,
             ajuste: data.ajuste,
-            fecha_ajuste: data.fecha_ajuste,
             area_responsable: data.area_responsable,
             inconsistencia: data.inconsistencia,
             fecha_pago: data.fecha_pago,
@@ -157,11 +157,39 @@ const FormVistaPrevIndiv = () => {
     }
   };
 
+  const enviarRespuestaNomina = async () => {
+    if (!novedad) return;
+
+    try {
+      await axios.put(
+        `http://localhost:3000/novedad/guardar-respuesta-individual/${novedad.id_novedad}`,
+        {
+          respuesta_validacion: respuestaNomina.respuesta,
+          responsable_validacion: user?.nombre ?? 'Sin nombre',
+          ajuste: respuestaNomina.ajuste ? 'Sí' : 'No',
+          fecha_pago: respuestaNomina.fecha_pago,
+          area_responsable: respuestaNomina.area_responsable,
+          categoria_inconsistencia: respuestaNomina.inconsistencia,
+        },
+        { withCredentials: true },
+      );
+
+      alert('✅ Respuesta enviada con éxito');
+      setModoEdicion(false);
+      setEstadoNovedad('GESTIONADA');
+    } catch (err) {
+      console.error('❌ Error al enviar respuesta:', err);
+      alert(
+        'Error al enviar la respuesta. Revisa los datos e intenta nuevamente.',
+      );
+    }
+  };
+
   return (
-    <div className="max-w-7xl mx-auto pt-0 px-4 pb-4 bg-white">
+    <div className="max-w-4xl mx-auto pt-0 px-4 pb-2 bg-white">
       <div className="bg-white p-2 rounded-lg border border-gray-300 shadow-[2px_8px_12px_rgba(0,0,0,0.8)] hover:shadow-[4px_10px_14px_rgba(0,0,0,1)] hover:scale-105 transition-all duration-300">
         {/* Cabecera */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        <div className="flex items-center justify-between p-2 border-b border-gray-200">
           <div className="flex items-center space-x-3">
             <div
               className={`w-12 h-12 rounded-full flex items-center justify-center ${getColorPorEstado(estadoNovedad)}`}
@@ -198,7 +226,7 @@ const FormVistaPrevIndiv = () => {
         </div>
 
         {/* Campos Específicos */}
-        <div className="p-4">
+        <div className="p-2 mt-2">
           <div className="w-full flex flex-col gap-2 text-xs">
             {/* 🔁 Campos dinámicos por tipo de novedad */}
             <CamposVistaPrevia
@@ -212,7 +240,7 @@ const FormVistaPrevIndiv = () => {
             (novedad.estado === 'CREADA' && user?.esNomina)) && (
             <>
               {/* 🧾 Línea separadora de "Respuesta de Nómina" bien centrada */}
-              <div className="bg-[#4669AF] text-white text-center py-2 font-medium text-sm rounded-t-md">
+              <div className="bg-[#4669AF] text-white text-center py-2 font-medium text-sm rounded-t-md mt-2">
                 Respuesta de Nómina
               </div>
 
@@ -224,10 +252,12 @@ const FormVistaPrevIndiv = () => {
                     respuesta={respuestaNomina.respuesta}
                     validacion={respuestaNomina.validacion}
                     ajuste={respuestaNomina.ajuste}
-                    fecha_ajuste={respuestaNomina.fecha_ajuste}
+                    fecha_pago={respuestaNomina.fecha_pago}
                     area_responsable={respuestaNomina.area_responsable}
                     inconsistencia={respuestaNomina.inconsistencia}
-                    fecha_pago={respuestaNomina.fecha_pago}
+                    responsable_validacion={
+                      respuestaNomina.responsable_validacion
+                    }
                     editable={modoEdicion}
                     setRespuestaNomina={setRespuestaNomina}
                   />
@@ -238,11 +268,11 @@ const FormVistaPrevIndiv = () => {
         </div>
         {/* Botón visible solo para Nómina */}
         {user?.esNomina && novedad.estado !== 'GESTIONADA' && (
-          <div className="flex justify-end mt-2 px-4">
+          <div className="flex justify-end px-4">
             {modoEdicion ? (
               <button
                 className="bg-[#4669AF] hover:bg-[#375298] text-white font-semibold py-2 px-5 rounded-lg shadow transition duration-200"
-                // onClick={enviarRespuestaNomina}
+                onClick={enviarRespuestaNomina}
               >
                 Enviar respuesta
               </button>
