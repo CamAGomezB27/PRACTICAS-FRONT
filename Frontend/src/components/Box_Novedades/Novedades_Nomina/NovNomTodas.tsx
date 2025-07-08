@@ -230,10 +230,11 @@ const NovedadesNomTodas: React.FC<Props> = ({
                 </div>
                 {estadoVisual !== 'GESTIONADA' && (
                   <div className="flex gap-4 items-center mt-4">
+                    {/* BOTÓN GESTIONAR */}
                     <button
-                      onClick={(e) => {
+                      onClick={async (e) => {
                         e.stopPropagation();
-                        gestionarNovedad(novedad.id_novedad);
+                        await gestionarNovedad(novedad.id_novedad); // ✅ SOLO acá se cambia el estado
                         navigate(
                           `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`,
                           {
@@ -243,13 +244,13 @@ const NovedadesNomTodas: React.FC<Props> = ({
                             },
                           },
                         );
-                        console.log('Gestionar', novedad.id_novedad);
                       }}
                       className="bg-[#4669AF] hover:bg-[#3a5a9b] text-white text-xs px-6 py-1.5 rounded-md focus:outline-none"
                     >
                       Gestionar
                     </button>
 
+                    {/* BOTÓN VER */}
                     {estadoVisual !== 'EN GESTIÓN' && (
                       <button
                         onClick={(e) => {
@@ -259,7 +260,7 @@ const NovedadesNomTodas: React.FC<Props> = ({
                             {
                               state: {
                                 ...stateVista,
-                                modoGestionInicial: false,
+                                modoGestionInicial: false, // ✅ MODO VER
                               },
                             },
                           );

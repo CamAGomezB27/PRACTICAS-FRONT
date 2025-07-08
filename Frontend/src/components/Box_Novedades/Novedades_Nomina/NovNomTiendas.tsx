@@ -135,6 +135,7 @@ const NovedadesNomTiendas: React.FC<Props> = ({
         const mensajeTexto = getMensajePorEstado(
           estadoVisual,
           user?.esNomina ?? false,
+          novedad.es_masiva ?? false,
         );
 
         const stateVista = {
@@ -231,12 +232,16 @@ const NovedadesNomTiendas: React.FC<Props> = ({
                     onClick={(e) => {
                       e.stopPropagation();
                       gestionarNovedad(novedad.id_novedad);
-                      navigate(
-                        `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`,
-                        {
-                          state: stateVista,
+                      const ruta = novedad.es_masiva
+                        ? `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`
+                        : `/vista-previa-individual-nomina/${novedad.id_novedad}`;
+
+                      navigate(ruta, {
+                        state: {
+                          ...stateVista,
+                          modoGestionInicial: true,
                         },
-                      );
+                      });
                       console.log('Gestionar', novedad.id_novedad);
                     }}
                     className="bg-[#4669AF] hover:bg-[#3a5a9b] text-white text-xs px-6 py-1.5 rounded-md focus:outline-none"
@@ -246,12 +251,16 @@ const NovedadesNomTiendas: React.FC<Props> = ({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      navigate(
-                        `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`,
-                        {
-                          state: stateVista,
+                      const ruta = novedad.es_masiva
+                        ? `/vista-previa-masiva-novedad-nomina/${novedad.id_novedad}`
+                        : `/vista-previa-individual-nomina/${novedad.id_novedad}`;
+
+                      navigate(ruta, {
+                        state: {
+                          ...stateVista,
+                          modoGestionInicial: true,
                         },
-                      );
+                      });
                     }}
                     className="bg-gray-500 hover:bg-gray-600 text-white text-xs px-6 py-1.5 rounded-md focus:outline-none"
                   >
