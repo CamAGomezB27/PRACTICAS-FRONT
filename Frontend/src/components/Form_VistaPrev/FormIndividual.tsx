@@ -88,6 +88,7 @@ const FormVistaPrevIndiv = () => {
         })
         .then((res) => {
           const data = res.data;
+          console.log('✅ Datos recibidos del backend:', data); // 🔍 Aquí revisamos qué trae
 
           const estadosValidos: Estado[] = [
             'CREADA',
@@ -195,13 +196,16 @@ const FormVistaPrevIndiv = () => {
       setModoEdicion(false);
 
       setRespuestaNomina({
-        responsable_validacion: data.responsable_validacion,
-        respuesta: data.respuesta,
-        validacion: data.validacion,
-        ajuste: data.ajuste === 'Sí',
-        area_responsable: data.area_responsable,
-        inconsistencia: data.categoria_inconsistencia,
-        fecha_pago: data.fecha_pago ? new Date(data.fecha_pago) : null,
+        responsable_validacion: data.responsable_validacion || '',
+        respuesta: data.respuesta || '',
+        validacion: data.validacion || '',
+        ajuste: data.ajuste === true || data.ajuste === 'Sí',
+        area_responsable: data.area_responsable || '',
+        inconsistencia: data.categoria_inconsistencia || '',
+        fecha_pago:
+          data.fecha_pago && data.fecha_pago !== ''
+            ? new Date(data.fecha_pago)
+            : null,
       });
 
       alert('✅ Respuesta enviada con éxito');
