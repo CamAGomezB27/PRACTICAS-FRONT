@@ -8,6 +8,7 @@ interface FiltroExportacion {
   tipo: string;
   desde: string;
   hasta: string;
+  cedula: string;
 }
 
 interface Solicitud {
@@ -112,6 +113,9 @@ const VistaArchConsTienda: React.FC<PropsVistaArchConsTienda> = ({
         if (filtros?.tipo) params.append('tipo', filtros.tipo);
         if (filtros?.desde) params.append('desde', filtros.desde);
         if (filtros?.hasta) params.append('hasta', filtros.hasta);
+        if (filtros?.cedula !== undefined && filtros.cedula !== null) {
+          params.append('cedula', filtros.cedula);
+        }
 
         const response = await axios.get<SolicitudConIdDetalle[]>(
           'http://localhost:3000/novedad/masiva/tienda',
@@ -163,7 +167,7 @@ const VistaArchConsTienda: React.FC<PropsVistaArchConsTienda> = ({
     };
 
     fetchData();
-  }, [filtros?.tipo, filtros?.desde, filtros?.hasta]);
+  }, [filtros?.tipo, filtros?.desde, filtros?.hasta, filtros?.cedula]);
 
   const handleDescargar = async () => {
     if (!datosOriginales.length) {

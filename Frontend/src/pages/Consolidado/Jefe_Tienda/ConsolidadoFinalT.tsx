@@ -8,6 +8,7 @@ interface FiltroExportacion {
   tipo: string;
   desde: string;
   hasta: string;
+  cedula: string;
 }
 
 const ExportConsTienda: React.FC = () => {
