@@ -9,6 +9,7 @@ interface FiltroParaNom {
   tipo: string;
   desde: string;
   hasta: string;
+  cedula: string;
 }
 
 interface Solicitud {
@@ -124,6 +125,9 @@ const VistaArchConsNom: React.FC<PropsVistaArchConsNom> = ({
         if (filtros?.tipo) params.append('tipo', filtros.tipo);
         if (filtros?.desde) params.append('desde', filtros.desde);
         if (filtros?.hasta) params.append('hasta', filtros.hasta);
+        if (filtros?.cedula !== undefined && filtros.cedula !== null) {
+          params.append('cedula', filtros.cedula);
+        }
 
         let response;
 
@@ -196,6 +200,7 @@ const VistaArchConsNom: React.FC<PropsVistaArchConsNom> = ({
     filtros?.tipo,
     filtros?.desde,
     filtros?.hasta,
+    filtros?.cedula,
     modoRespuesta,
   ]);
 

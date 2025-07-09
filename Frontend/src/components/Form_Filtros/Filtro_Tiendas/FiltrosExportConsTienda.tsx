@@ -35,6 +35,33 @@ const FiltroExportConsTienda = ({
     setFiltros({ ...filtros, [e.target.name]: e.target.value });
   };
 
+  const [sugerencias, setSugerencias] = useState<
+    { cedula: number; nombre: string }[]
+  >([]);
+  const [mostrarSugerencias, setMostrarSugerencias] = useState(false);
+
+  const buscarCedulas = async (q: string) => {
+    if (!q || isNaN(Number(q))) {
+      setSugerencias([]);
+      return;
+    }
+
+    try {
+      const res = await axios.get<{ cedula: number; nombre: string }[]>(
+        'http://localhost:3000/novedad/masiva/cedulas-sugeridas',
+        {
+          params: { q },
+          withCredentials: true,
+        },
+      );
+      setSugerencias(res.data);
+      setMostrarSugerencias(true);
+    } catch (err) {
+      console.error('Error buscando sugerencias:', err);
+      setSugerencias([]);
+    }
+  };
+
   const handleCedulaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const valor = e.target.value;
 
@@ -80,33 +107,6 @@ const FiltroExportConsTienda = ({
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}T23:59:59.999`;
-  };
-
-  const [sugerencias, setSugerencias] = useState<
-    { cedula: number; nombre: string }[]
-  >([]);
-  const [mostrarSugerencias, setMostrarSugerencias] = useState(false);
-
-  const buscarCedulas = async (q: string) => {
-    if (!q || isNaN(Number(q))) {
-      setSugerencias([]);
-      return;
-    }
-
-    try {
-      const res = await axios.get<{ cedula: number; nombre: string }[]>(
-        'http://localhost:3000/novedad/masiva/cedulas-sugeridas',
-        {
-          params: { q },
-          withCredentials: true,
-        },
-      );
-      setSugerencias(res.data);
-      setMostrarSugerencias(true);
-    } catch (err) {
-      console.error('Error buscando sugerencias:', err);
-      setSugerencias([]);
-    }
   };
 
   return (
@@ -157,7 +157,7 @@ const FiltroExportConsTienda = ({
       {/* CEDULA */}
       <div className="mb-4">
         <label className="block text-sm text-gray-700 mb-1 font-medium">
-          Cedula Empelado
+          Cedula Colaborador
         </label>
         <input
           type="text"

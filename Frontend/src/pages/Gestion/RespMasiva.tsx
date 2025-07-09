@@ -9,6 +9,7 @@ interface FiltroParaNom {
   tipo: string;
   desde: string;
   hasta: string;
+  cedula: string;
 }
 
 const RespuestaMasiva: React.FC = () => {
@@ -24,7 +25,7 @@ const RespuestaMasiva: React.FC = () => {
       <main className="flex-grow px-8 pt-8 pb-4">
         <div className="flex justify-between mb-6">
           {/* FILTROS */}
-          <div className="lg:w-1/4 px-4 lg:pl-10 lg:pr-0 translate-y-7">
+          <div className="lg:w-1/4 px-4 lg:pl-10 lg:pr-0">
             <FiltrosNomResM onApply={aplicarFiltros} />
           </div>
           {/* TABLA */}

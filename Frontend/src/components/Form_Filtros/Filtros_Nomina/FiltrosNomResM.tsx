@@ -12,6 +12,7 @@ interface FiltroParaNom {
   tipo: string;
   desde: string;
   hasta: string;
+  cedula: string;
 }
 
 interface Tienda {
@@ -30,6 +31,7 @@ const FiltrosNomResM: React.FC<Props> = ({ onApply, tiendaInicial }) => {
     tipo: '',
     desde: '',
     hasta: '',
+    cedula: '',
   });
 
   const [tiendas, setTiendas] = useState<Tienda[]>([]);
@@ -58,12 +60,51 @@ const FiltrosNomResM: React.FC<Props> = ({ onApply, tiendaInicial }) => {
     setFiltros({ ...filtros, [e.target.name]: e.target.value });
   };
 
+  const [sugerencias, setSugerencias] = useState<
+    { cedula: number; nombre: string }[]
+  >([]);
+  const [mostrarSugerencias, setMostrarSugerencias] = useState(false);
+
+  const buscarCedulas = async (q: string) => {
+    if (!q || isNaN(Number(q))) {
+      setSugerencias([]);
+      return;
+    }
+
+    try {
+      const res = await axios.get<{ cedula: number; nombre: string }[]>(
+        'http://localhost:3000/novedad/masiva/cedulas-sugeridas',
+        {
+          params: { q },
+          withCredentials: true,
+        },
+      );
+      setSugerencias(res.data);
+      setMostrarSugerencias(true);
+    } catch (err) {
+      console.error('Error buscando sugerencias:', err);
+      setSugerencias([]);
+    }
+  };
+
+  const handleCedulaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const valor = e.target.value;
+
+    setFiltros((prev) => ({
+      ...prev,
+      cedula: valor,
+    }));
+
+    buscarCedulas(valor);
+  };
+
   const limpiar = () => {
     setFiltros({
       tienda: tiendaInicial ? tiendaInicial : '', // <- solo borra tienda si NO hay tiendaInicial
       tipo: '',
       desde: '',
       hasta: '',
+      cedula: '',
     });
     setFechaDesde(null);
     setFechaHasta(null);
@@ -100,7 +141,7 @@ const FiltrosNomResM: React.FC<Props> = ({ onApply, tiendaInicial }) => {
   };
 
   return (
-    <div className="bg-white p-8 rounded-lg border border-gray-300 shadow-[2px_8px_12px_rgba(0,0,0,0.8)] hover:shadow-[4px_10px_14px_rgba(0,0,0,1)] hover:scale-105 transition-all duration-300 w-[280px]">
+    <div className="bg-white p-4 rounded-lg border border-gray-300 shadow-[2px_8px_12px_rgba(0,0,0,0.8)] hover:shadow-[4px_10px_14px_rgba(0,0,0,1)] hover:scale-105 transition-all duration-300 w-[280px]">
       {/* HEADER */}
       <div className="flex items-start mb-6">
         <div className="mr-3 mt-1">
@@ -172,6 +213,41 @@ const FiltrosNomResM: React.FC<Props> = ({ onApply, tiendaInicial }) => {
         </div>
       </div>
 
+      {/* CEDULA */}
+      <div className="mb-4">
+        <label className="block text-sm text-gray-700 mb-1 font-medium">
+          Cedula Colaborador
+        </label>
+        <input
+          type="text"
+          name="cedula"
+          placeholder="Escribe la cédula"
+          value={filtros.cedula || ''}
+          onChange={handleCedulaChange}
+          onFocus={() => filtros.cedula && setMostrarSugerencias(true)}
+          onBlur={() => setTimeout(() => setMostrarSugerencias(false), 200)} // da tiempo para hacer clic
+          className="w-full h-10 px-3 border border-gray-300 rounded-md bg-white text-sm text-gray-700 focus:outline-none focus:ring-1 focus:ring-[#4669AF]"
+          inputMode="numeric"
+          pattern="[0-9]*"
+        />
+        {mostrarSugerencias && sugerencias.length > 0 && (
+          <ul className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-md max-h-40 overflow-auto text-sm">
+            {sugerencias.map((s) => (
+              <li
+                key={s.cedula}
+                onClick={() => {
+                  setFiltros((prev) => ({ ...prev, cedula: String(s.cedula) }));
+                  setMostrarSugerencias(false);
+                }}
+                className="px-3 py-2 hover:bg-[#f0f4ff] cursor-pointer text-black"
+              >
+                {s.cedula} • {s.nombre}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
       {/* Fecha Desde */}
       <div className="mb-4">
         <label className="block text-sm text-gray-700 mb-1 font-medium">
@@ -232,12 +308,14 @@ const FiltrosNomResM: React.FC<Props> = ({ onApply, tiendaInicial }) => {
             !filtros.tipo &&
             !filtros.desde &&
             !filtros.hasta &&
+            !filtros.cedula &&
             (!!tiendaInicial || !filtros.tienda) // <- ¡corregido aquí!
           }
           className={`flex-1 text-white text-sm font-medium rounded-md h-10 transition-colors flex items-center justify-center text-center ${
             filtros.tipo ||
             filtros.desde ||
             filtros.hasta ||
+            filtros.cedula ||
             (!tiendaInicial && filtros.tienda)
               ? 'bg-gray-700 hover:bg-gray-900 cursor-pointer'
               : 'bg-gray-300 cursor-not-allowed opacity-50 text-black'
