@@ -34,9 +34,11 @@ const DashboardJefe: React.FC = () => {
             <h2 className="text-xl font-bold text-black">
               ¡Bienvenido, {user?.nombre || 'Nombre No disponible'}!
             </h2>
-            <p className="text-sm text-gray-600">
-              Desde aquí puedes revisar y gestionar todas las novedades enviadas
-              por las tiendas.
+            <p className="text-md mt-4 text-gray-600">
+              Desde aquí puedes cargar y gestionar todas tus solicitudes{' '}
+              <span className=" text-gray-800 font-semibold">
+                Post - Nómina.
+              </span>
             </p>
           </div>
 
@@ -184,7 +186,7 @@ const DashboardJefe: React.FC = () => {
           </div>
 
           {/* Columna 3 - Novedades */}
-          <div className="w-1/3 pl-5s flex flex-col items-center space-y-3">
+          <div className="w-1/3 pl-5s flex flex-col items-center space-y-8">
             {/* Novedades Recientes */}
             <NovedadesRecientes />
             {/* HISTÓRICO DE SOLICITUDES */}

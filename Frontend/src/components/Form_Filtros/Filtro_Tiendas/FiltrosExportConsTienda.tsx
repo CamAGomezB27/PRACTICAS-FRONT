@@ -8,6 +8,7 @@ registerLocale('es', es);
 
 interface FiltroExportacion {
   tipo: string;
+  cedula: number;
   desde: string;
   hasta: string;
 }
@@ -19,6 +20,7 @@ const FiltroExportConsTienda = ({
 }) => {
   const [filtros, setFiltros] = useState<FiltroExportacion>({
     tipo: '',
+    cedula: 0,
     desde: '',
     hasta: '',
   });
@@ -33,7 +35,7 @@ const FiltroExportConsTienda = ({
   };
 
   const limpiar = () => {
-    setFiltros({ tipo: '', desde: '', hasta: '' });
+    setFiltros({ tipo: '', desde: '', hasta: '', cedula: 0 });
     setFechaDesde(null);
     setFechaHasta(null);
   };
@@ -106,6 +108,27 @@ const FiltroExportConsTienda = ({
             <option value="Descuento">Descuento</option>
             <option value="Auxilio de Transporte">Auxilio de Transporte</option>
             <option value="Otros">Otros</option>
+          </select>
+          <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+            <ChevronDown className="w-4 h-4 text-gray-400" />
+          </div>
+        </div>
+      </div>
+
+      {/* CEDULA */}
+      <div className="mb-4">
+        <label className="block text-sm text-gray-700 mb-1 font-medium">
+          Cedula Empelado
+        </label>
+        <div className="relative group">
+          <select
+            title="Tipo"
+            name="tipo"
+            value={filtros.cedula}
+            onChange={handleChange}
+            className="w-full h-10 px-3 border border-gray-300 rounded-md bg-white text-sm text-gray-700 appearance-none focus:outline-none focus:ring-1 focus:ring-[#4669AF] cursor-pointer"
+          >
+            <option value="">Cedulas Colaboradores</option>
           </select>
           <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
             <ChevronDown className="w-4 h-4 text-gray-400" />

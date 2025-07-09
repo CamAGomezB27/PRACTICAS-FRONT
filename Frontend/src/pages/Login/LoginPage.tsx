@@ -1,13 +1,12 @@
-import React from 'react';
-import LoginForm from '../../components/Form_Login/LoginForm';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Franco from '../../assets/images/Franco_saluda.png';
 import Trabajadores from '../../assets/images/Trabajadores.png';
 import Logo_Home from '../../assets/logos/Logo_home.png';
 import ErrorAlert from '../../components/Alerts/ErrorAlert';
-import { loginWithGoogle } from '../../services/authService';
-import { useNavigate } from 'react-router-dom';
+import LoginForm from '../../components/Form_Login/LoginForm';
 import { useAuth } from '../../context/useAuth';
-import { useState } from 'react';
+import { loginWithGoogle } from '../../services/authService';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -78,8 +77,8 @@ const LoginPage: React.FC = () => {
         {/* FORMULARIO */}
         <div className="bg-[#4669AF] p-10 rounded-3xl text-center space-y-6 shadow-2xl transform transition duration-300 hover:scale-105 w-full max-w-lg">
           <h2 className="text-xl font-bold text-white">
-            Bienvenido(a), aquí podrás gestionar tus diferentes procesos de
-            Nómina
+            Bienvenido(a), aquí podrás gestionar tus diferentes solicitudes de
+            Post - Nómina
           </h2>
 
           <LoginForm onGoogleLogin={handleLogin} />
