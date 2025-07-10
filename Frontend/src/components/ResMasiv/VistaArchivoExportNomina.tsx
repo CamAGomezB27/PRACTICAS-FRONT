@@ -9,6 +9,7 @@ interface FiltroParaNom {
   tipo: string;
   desde: string;
   hasta: string;
+  cedula: string;
 }
 
 interface Solicitud {
@@ -113,6 +114,9 @@ const VistaArchRespMasiv: React.FC<{ filtros?: FiltroParaNom }> = ({
       if (filtros?.tipo) params.append('tipo', filtros.tipo);
       if (filtros?.desde) params.append('desde', filtros.desde);
       if (filtros?.hasta) params.append('hasta', filtros.hasta);
+      if (filtros?.cedula !== undefined && filtros.cedula !== null) {
+        params.append('cedula', filtros.cedula);
+      }
 
       const response = await axios.get<SolicitudConIdDetalle[]>(
         'http://localhost:3000/novedad/consolidado-pendientes-nomina',
@@ -166,7 +170,13 @@ const VistaArchRespMasiv: React.FC<{ filtros?: FiltroParaNom }> = ({
 
   useEffect(() => {
     fetchData();
-  }, [filtros?.tienda, filtros?.tipo, filtros?.desde, filtros?.hasta]);
+  }, [
+    filtros?.tienda,
+    filtros?.tipo,
+    filtros?.desde,
+    filtros?.hasta,
+    filtros?.cedula,
+  ]);
 
   const handleDescargar = async () => {
     if (!datosOriginales.length) {

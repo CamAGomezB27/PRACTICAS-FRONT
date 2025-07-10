@@ -100,7 +100,7 @@ const FiltrosNomResM: React.FC<Props> = ({ onApply, tiendaInicial }) => {
 
   const limpiar = () => {
     setFiltros({
-      tienda: tiendaInicial ? tiendaInicial : '', // <- solo borra tienda si NO hay tiendaInicial
+      tienda: tiendaInicial ? tiendaInicial : '',
       tipo: '',
       desde: '',
       hasta: '',
