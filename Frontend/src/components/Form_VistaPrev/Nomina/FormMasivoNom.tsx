@@ -159,6 +159,8 @@ const FormVistaPrevMasivaNom = () => {
 
   const [descargadoYa, setDescargadoYa] = useState(false);
 
+  const [archivoCargado, setArchivoCargado] = useState(false);
+
   useEffect(() => {
     if (id) {
       const descargado = sessionStorage.getItem(`descargado_${id}`) === 'true';
@@ -268,6 +270,7 @@ const FormVistaPrevMasivaNom = () => {
       );
 
       await fetchDatos();
+      setArchivoCargado(true);
     } catch (error) {
       console.error('❌ Error al procesar el archivo:', error);
       alert('Ocurrió un error al cargar el archivo de respuestas.');
@@ -296,6 +299,25 @@ const FormVistaPrevMasivaNom = () => {
       setModoGestion(true);
     } catch (error) {
       console.error('❌ Error al gestionar la novedad:', error);
+      alert('No se pudo actualizar el estado de la novedad.');
+    }
+  };
+
+  const guardarNovedad = async () => {
+    try {
+      await axios.put(
+        `http://localhost:3000/novedad/${id}/cambiar-estado`,
+        { nuevoEstadoId: 3 }, // Asumiendo que 3 es GESTIONADA
+        { withCredentials: true },
+      );
+      setEstadoLocal('GESTIONADA');
+      setModoGestion(true);
+      setMensajeInfo({
+        tipo: 'success',
+        texto: '✅ La novedad fue gestionada exitosamente.',
+      });
+    } catch (error) {
+      console.error('❌ Error al guardar la novedad:', error);
       alert('No se pudo actualizar el estado de la novedad.');
     }
   };
@@ -438,9 +460,29 @@ const FormVistaPrevMasivaNom = () => {
                   </button>
                 </div>
               ) : (
-                <button className="bg-[#4669AF] hover:bg-[#3a5a9b] text-white px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full">
-                  Gestionar
-                </button>
+                <div className="flex flex-col w-full gap-2">
+                  {archivoCargado ? (
+                    <button
+                      className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full"
+                      onClick={guardarNovedad}
+                    >
+                      Guardar
+                    </button>
+                  ) : (
+                    <button
+                      className="bg-[#4669AF] hover:bg-[#3a5a9b] text-white px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full"
+                      disabled
+                    >
+                      Gestionar
+                    </button>
+                  )}
+                  <button
+                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 text-sm font-semibold rounded-lg shadow-md w-full"
+                    onClick={() => navigate('/dashboard-nomina')}
+                  >
+                    Cancelar
+                  </button>
+                </div>
               )}
             </div>
           )}
