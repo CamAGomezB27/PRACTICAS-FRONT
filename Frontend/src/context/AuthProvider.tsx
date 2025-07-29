@@ -66,7 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error('error al cerrar sesión:', error);
     } finally {
-      // 🔥 Limpiar sesión local
+      //  Limpiar sesión local
       setUser(null);
       sessionStorage.clear();
 
